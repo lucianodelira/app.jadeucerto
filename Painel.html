@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <base target="_top">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Painel Administrativo — Já Deu Certo</title>
@@ -22,11 +22,16 @@
     .status { display:inline-block; border-radius:30px; padding:5px 9px; background:#344159; font-weight:600; white-space:nowrap; }
     .resolvido { color:#86efac; } .nao_resolvido { color:#fca5a5; } .atendente_solicitado { color:#fcd34d; } .aguardando { color:#bfdbfe; }
     #notice { margin-top:14px; min-height:20px; color:var(--muted); font-size:13px; }
+    .auth { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0; }
+    .button.secondary { background:#334155; }
+    .button:disabled { opacity:.5; cursor:not-allowed; }
+    .hint { font-size:13px; line-height:1.5; }
   </style>
 </head>
 <body>
 <main>
-  <div class="top"><div><h1>📊 Painel Administrativo</h1><p>Suporte Inteligente | Já Deu Certo</p></div><button class="button" onclick="load()">🔄 Atualizar dados</button></div>
+  <div class="top"><div><h1>📊 Painel Administrativo</h1><p>Suporte Inteligente | Já Deu Certo</p></div><button class="button" id="refreshBtn" onclick="load()" disabled>🔄 Atualizar dados</button></div>
+  <div class="auth"><button id="loginBtn" class="button" onclick="login()">🔐 Entrar com Google</button><button id="logoutBtn" class="button secondary" onclick="logout()" hidden>🚪 Sair</button><span id="authState" class="hint">Entre com sua conta Google para consultar a planilha privada.</span></div>
   <div class="cards" id="cards"></div>
   <div class="filters">
     <input id="q" placeholder="Buscar banca ou assunto" oninput="renderTable()">
@@ -34,35 +39,134 @@
     <select id="platform" onchange="renderTable()"><option value="">Todas as bancas</option></select>
   </div>
   <div class="tablewrap"><table><thead><tr><th>Último evento</th><th>Plataforma</th><th>Assunto da dúvida</th><th>Situação atual</th><th>ID da dúvida</th></tr></thead><tbody id="tbody"></tbody></table></div>
-  <p id="notice">Carregando dados...</p>
+  <p id="notice">Conecte sua conta Google para carregar os dados.</p>
 </main>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
+  // CONFIGURAÇÃO: o ID da planilha já está preenchido.
+  const SPREADSHEET_ID = '13GMSqHfIsvZJKzboO62-WHn3gpHL2AMVLAB4kIaETXM';
+  const SHEET_NAME = 'Atendimentos';
+  // Obtenha em Google Cloud > Google Auth Platform > Clientes > Cliente Web.
+  const GOOGLE_CLIENT_ID = 'COLE_AQUI_SEU_CLIENT_ID.apps.googleusercontent.com';
+  const SCOPE = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+
+  let tokenClient = null;
+  let accessToken = '';
+  let tokenExpiresAt = 0;
   let rows = [];
+  let loading = false;
   const names = {aguardando:'Aguardando resposta', resolvido:'Resolvido', nao_resolvido:'Não resolvido', atendente_solicitado:'Atendente solicitado'};
-  function esc(v) { return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  function load() {
-    document.getElementById('notice').textContent = 'Atualizando dados...';
-    google.script.run.withSuccessHandler(data => {
-      rows = data.rows || [];
-      const s = data.summary;
-      const metrics = [['Dúvidas registradas', s.total], ['Resolvidas', s.resolvido], ['Não resolvidas', s.nao_resolvido], ['Aguardando', s.aguardando], ['Atendente solicitado', s.atendente_solicitado], ['Taxa de resolução', s.taxa + '%']];
-      document.getElementById('cards').innerHTML = metrics.map(([t,v])=>`<div class="card"><span>${esc(t)}</span><strong>${esc(v)}</strong></div>`).join('');
-      const selected = document.getElementById('platform').value;
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const formatDate = v => {
+    const d = new Date(v);
+    return Number.isNaN(d.getTime()) ? 'Data não disponível' : d.toLocaleString('pt-BR');
+  };
+  function notice(msg) { $('notice').textContent = msg; }
+  function updateAuthUI() {
+    const ok = !!accessToken && Date.now() < tokenExpiresAt;
+    $('loginBtn').textContent = ok ? '🔐 Renovar acesso' : '🔐 Entrar com Google';
+    $('logoutBtn').hidden = !accessToken;
+    $('refreshBtn').disabled = !ok || loading;
+    $('authState').textContent = ok ? 'Conectado ao Google Sheets (acesso somente leitura).' : 'Entre com a conta que tem permissão para acessar a planilha.';
+  }
+  function initGoogle() {
+    if (!window.google?.accounts?.oauth2) { notice('Não foi possível carregar o login Google. Recarregue a página.'); return; }
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: SCOPE,
+      callback: async response => {
+        if (response.error) { notice('Falha no login: ' + response.error); return; }
+        accessToken = response.access_token;
+        tokenExpiresAt = Date.now() + Math.max(0, (Number(response.expires_in) || 3600) - 60) * 1000;
+        updateAuthUI();
+        await load();
+      },
+      error_callback: err => notice('Login cancelado ou bloqueado: ' + (err.type || 'erro desconhecido'))
+    });
+  }
+  function login() {
+    if (GOOGLE_CLIENT_ID.startsWith('COLE_AQUI_')) {
+      notice('Configure GOOGLE_CLIENT_ID no arquivo index.html antes de publicar.'); return;
+    }
+    if (!tokenClient) { initGoogle(); if (!tokenClient) return; }
+    tokenClient.requestAccessToken({prompt: accessToken ? '' : 'consent'});
+  }
+  function logout() {
+    if (accessToken && window.google?.accounts?.oauth2) google.accounts.oauth2.revoke(accessToken, () => {});
+    accessToken = ''; tokenExpiresAt = 0; rows = [];
+    $('cards').innerHTML = ''; $('tbody').innerHTML = '';
+    $('platform').innerHTML = '<option value="">Todas as bancas</option>';
+    notice('Sessão encerrada. Os dados não são mais exibidos.'); updateAuthUI();
+  }
+  async function load() {
+    if (!accessToken || Date.now() >= tokenExpiresAt) {
+      notice('Sua sessão expirou. Clique em Entrar com Google para renovar o acesso.');
+      updateAuthUI(); return;
+    }
+    if (loading) return;
+    loading = true; updateAuthUI(); notice('Atualizando dados...');
+    try {
+      const range = encodeURIComponent("'" + SHEET_NAME.replace(/'/g,"''") + "'!A:H");
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(SPREADSHEET_ID)}/values/${range}?valueRenderOption=FORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`;
+      const res = await fetch(url, {headers:{Authorization:'Bearer ' + accessToken}, cache:'no-store'});
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || ('HTTP ' + res.status));
+      const values = (data.values || []).slice(1);
+      // Colunas do coletor: data, evento, sessão, ID da dúvida, banca, assunto, situação, origem.
+      const tickets = new Map();
+      values.forEach((r, index) => {
+        const id = String(r[3] || '').trim();
+        if (!id) return;
+        const status = String(r[6] || 'aguardando').trim();
+        const stamp = parseSheetDate(r[0]);
+        const old = tickets.get(id);
+        if (!old) tickets.set(id, {id, platform:String(r[4]||''),topic:String(r[5]||''),status,timestamp:stamp,index});
+        else {
+          // A última linha da planilha representa o evento mais recente.
+          old.status = status;
+          old.timestamp = stamp || old.timestamp;
+          old.index = index;
+          if (!old.platform) old.platform = String(r[4]||'');
+          if (!old.topic) old.topic = String(r[5]||'');
+        }
+      });
+      rows = [...tickets.values()].sort((a,b)=>b.index-a.index);
+      const s = {total:rows.length, resolvido:0,nao_resolvido:0,aguardando:0,atendente_solicitado:0};
+      rows.forEach(r=>{ if (Object.hasOwn(s,r.status) && r.status!=='total') s[r.status]++; else s.aguardando++; });
+      s.taxa = s.total ? Math.round(s.resolvido/s.total*100) : 0;
+      const metrics = [['Dúvidas registradas',s.total],['Resolvidas',s.resolvido],['Não resolvidas',s.nao_resolvido],['Aguardando',s.aguardando],['Atendente solicitado',s.atendente_solicitado],['Taxa de resolução',s.taxa+'%']];
+      $('cards').innerHTML = metrics.map(([t,v])=>`<div class="card"><span>${esc(t)}</span><strong>${esc(v)}</strong></div>`).join('');
+      const selected = $('platform').value;
       const banks = [...new Set(rows.map(r=>r.platform).filter(Boolean))].sort();
-      document.getElementById('platform').innerHTML = '<option value="">Todas as bancas</option>' + banks.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
-      document.getElementById('platform').value = banks.includes(selected) ? selected : '';
+      $('platform').innerHTML = '<option value="">Todas as bancas</option>' + banks.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+      $('platform').value = banks.includes(selected) ? selected : '';
       renderTable();
-    }).withFailureHandler(err => { document.getElementById('notice').textContent = 'Erro ao ler planilha: ' + err.message; }).getDashboardData();
+    } catch(err) {
+      notice('Erro ao acessar Google Sheets: ' + err.message + '. Verifique as permissões da planilha, a API ativada e o login Google.');
+    } finally { loading = false; updateAuthUI(); }
+  }
+  function parseSheetDate(v) {
+    const raw = String(v||'').trim();
+    // Datas formatadas como dd/MM/yyyy HH:mm:ss pelo Google Sheets.
+    const m = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ ,]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if (m) return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||0),+(m[5]||0),+(m[6]||0)).getTime();
+    const time = Date.parse(raw);
+    return Number.isFinite(time) ? time : 0;
   }
   function renderTable() {
-    const q = document.getElementById('q').value.toLocaleLowerCase('pt-BR');
-    const st = document.getElementById('status').value;
-    const bank = document.getElementById('platform').value;
-    const filtered = rows.filter(r => (!st || r.status === st) && (!bank || r.platform === bank) && (!q || (r.platform+' '+r.topic).toLocaleLowerCase('pt-BR').includes(q)));
-    document.getElementById('tbody').innerHTML = filtered.slice(0,500).map(r=>`<tr><td>${esc(new Date(r.timestamp).toLocaleString('pt-BR'))}</td><td>${esc(r.platform)}</td><td>${esc(r.topic)}</td><td><span class="status ${esc(r.status)}">${esc(names[r.status]||r.status)}</span></td><td>${esc(r.id)}</td></tr>`).join('') || '<tr><td colspan="5">Nenhuma dúvida encontrada.</td></tr>';
-    document.getElementById('notice').textContent = `${filtered.length} dúvidas encontradas. Mostrando até 500 registros nesta página. Atualização manual.`;
+    const q = $('q').value.toLocaleLowerCase('pt-BR');
+    const st = $('status').value;
+    const bank = $('platform').value;
+    const filtered = rows.filter(r=>(!st||r.status===st)&&(!bank||r.platform===bank)&&(!q||(r.platform+' '+r.topic).toLocaleLowerCase('pt-BR').includes(q)));
+    $('tbody').innerHTML = filtered.slice(0,500).map(r=>`<tr><td>${esc(r.timestamp?formatDate(r.timestamp):'Não disponível')}</td><td>${esc(r.platform)}</td><td>${esc(r.topic)}</td><td><span class="status ${esc(r.status)}">${esc(names[r.status]||r.status)}</span></td><td>${esc(r.id)}</td></tr>`).join('') || '<tr><td colspan="5">Nenhuma dúvida encontrada.</td></tr>';
+    notice(`${filtered.length} dúvidas encontradas. Mostrando até 500 registros nesta página. Atualização manual.`);
   }
-  load();
+  window.addEventListener('load', () => {
+    updateAuthUI();
+    if (window.google?.accounts?.oauth2) initGoogle();
+    else notice('Clique em Entrar com Google após carregar a página.');
+  });
 </script>
 </body>
 </html>
