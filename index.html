@@ -95,6 +95,9 @@
     .quick-btn.arrived { background: linear-gradient(135deg, #22c55e, #16a34a); border: none; color: #fff; font-weight: 600; font-size: 14px; padding: 12px 20px; }
     .quick-btn.arrived:hover { background: linear-gradient(135deg, #16a34a, #15803d); }
 
+    .resolution-box { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+    .resolution-label { color:var(--text-muted); font-size:12.5px; margin-bottom:9px; }
+    .resolution-feedback { font-size:12px; color:var(--text-muted); margin-top:6px; }
     .typing { display: flex; gap: 5px; padding: 12px 16px; background: var(--bot-bubble); border: 1px solid var(--border); border-radius: var(--radius); border-top-left-radius: 4px; width: fit-content; }
     .typing span { width: 7px; height: 7px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
     .typing span:nth-child(1) { animation-delay: -0.32s; }
@@ -467,6 +470,79 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
     let queueTimerInterval = null;
     let queueSecondsLeft = 0;
 
+    // CONFIGURAÇÃO: após publicar o Apps Script coletor, cole a URL /exec.
+    const SHEETS_WEBAPP_URL = 'COLE_AQUI_URL_DO_COLETOR_APPS_SCRIPT_EXEC';
+    // ID aleatório do atendimento, sem CPF ou dados pessoais.
+    let sessionId = makeId();
+    let activeTicketId = null;
+    const ticketData = new Map();
+
+    function makeId() {
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 14);
+    }
+
+    function recordEvent(kind, ticket, status) {
+      const t = ticketData.get(ticket);
+      if (!t || !SHEETS_WEBAPP_URL.startsWith('https://script.google.com/macros/s/')) return;
+      const body = new URLSearchParams({
+        kind, ticket, session: sessionId, eventId: makeId(), status,
+        platform: t.platform, topic: t.topic, site_url: ''
+      });
+      // POST simples: evita preflight CORS do Apps Script; resposta é opaca.
+      // Não representa comprovante de entrega: confira no Google Sheets.
+      try {
+        fetch(SHEETS_WEBAPP_URL, { method:'POST', mode:'no-cors', body, keepalive:true })
+          .catch(err => console.warn('Não foi possível enviar a avaliação:', err));
+      } catch (err) { console.warn('Falha ao registrar avaliação:', err); }
+    }
+
+    const TOPIC_LABELS = {
+      bonus:'Bônus', cotacao:'Cotações', deposito:'Depósito / recarga', saque:'Saque',
+      tutorial:'Como jogar', problemas:'Problema geral', saque_recusado:'Saque recusado',
+      cassino:'Cassino', excluir:'Excluir conta', bingo:'Bingo', pule:'Validade da pule',
+      recuperar_conta:'Recuperação de conta', recarga_instavel:'Recarga recusada pelo banco',
+      grupo_palpites:'Grupo de palpites', jogos:'Jogos', suporte:'Suporte', geral:'Dúvida geral'
+    };
+
+    function ticketButtonsHTML(ticket) {
+      return `<div class="resolution-box" id="feedback-${ticket}">
+        <div class="resolution-label">✅ Sua dúvida foi resolvida?</div>
+        <div class="quick-replies">
+          <button class="quick-btn confirm" onclick="confirmResolution('${ticket}',true)">✅ Sim, resolveu</button>
+          <button class="quick-btn deny" onclick="confirmResolution('${ticket}',false)">❌ Não resolveu</button>
+        </div>
+      </div>`;
+    }
+
+    // Cada orientação recebe um ID distinto para permitir várias dúvidas na mesma conversa.
+    async function trackedReply(text, intent, delay = 700, extraHTML = '') {
+      const ticket = makeId();
+      ticketData.set(ticket, {
+        platform: currentPlatform && knowledgeBase[currentPlatform] ? knowledgeBase[currentPlatform].name : 'Não selecionada',
+        topic: TOPIC_LABELS[intent] || 'Dúvida geral', status:'aguardando'
+      });
+      activeTicketId = ticket;
+      recordEvent('criacao', ticket, 'aguardando');
+      return botReply(text, delay, extraHTML + ticketButtonsHTML(ticket));
+    }
+
+    window.confirmResolution = async function(ticket, yes) {
+      const t = ticketData.get(ticket);
+      if (!t || t.status !== 'aguardando') return;
+      t.status = yes ? 'resolvido' : 'nao_resolvido';
+      recordEvent('atualizacao', ticket, t.status);
+      const box = document.getElementById('feedback-' + ticket);
+      if (box) box.innerHTML = `<div class="resolution-feedback">${yes ? '✅ Você confirmou que a dúvida foi resolvida.' : '❌ Você informou que a dúvida não foi resolvida.'}</div>`;
+      if (yes) {
+        await botReply('Obrigado pela confirmação! Sua dúvida foi marcada como **resolvida**. Se precisar, pode enviar outra pergunta.', 500);
+      } else {
+        await botReply('Entendi. Sua dúvida foi marcada como **não resolvida**. Você pode falar com um atendente ou escolher outra orientação.', 500,
+          `<div class="quick-replies"><button class="quick-btn attendant" onclick="callAttendant('${ticket}')">🙋 Chamar Atendente</button><button class="quick-btn" onclick="showCurrentHelp()">📋 Outras opções</button></div>`);
+      }
+    };
+
+
     const messagesEl = document.getElementById('messages');
     const inputEl = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -727,7 +803,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
         if (intent === 'grupo_palpites') {
           state = 'answering';
-          await botReply('**📲 Grupo de Palpites**\n\nClique no botão abaixo para abrir o convite do grupo no WhatsApp.', 600, `
+          await trackedReply('**📲 Grupo de Palpites**\n\nClique no botão abaixo para abrir o convite do grupo no WhatsApp.', intent, 600, `
             <div class="quick-replies">
               <a class="quick-btn confirm" href="${GRUPO_PALPITES_LINK}" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none">📲 Entrar no grupo de palpites</a>
             </div>`);
@@ -736,7 +812,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
         if (intent === 'recuperar_conta' || intent === 'recarga_instavel') {
           state = 'answering';
-          await botReply(intent === 'recuperar_conta' ? RECUPERAR_CONTA : RECARGA_INSTAVEL, 800, `
+          await trackedReply(intent === 'recuperar_conta' ? RECUPERAR_CONTA : RECARGA_INSTAVEL, intent, 800, `
             <div class="quick-replies">
               <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
               <button class="quick-btn" onclick="showCurrentHelp()">📋 Outras opções de ajuda</button>
@@ -746,7 +822,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
         if (intent === 'saque_recusado') {
           state = 'answering';
-          await botReply(SAQUE_RECUSADO, 900, `
+          await trackedReply(SAQUE_RECUSADO, intent, 900, `
             <div class="quick-replies">
               <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
               <button class="quick-btn" onclick="quickAsk('saque')">📤 Mais sobre saque</button>
@@ -757,7 +833,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
         if (intent === 'bingo') {
           state = 'answering';
-          await botReply(platform.info.bingo || BINGO_INFO, 900, `
+          await trackedReply(platform.info.bingo || BINGO_INFO, intent, 900, `
             <div class="quick-replies">
               <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
               <button class="quick-btn" onclick="quickAsk('tutorial')">📖 Como jogar loterias</button>
@@ -768,7 +844,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
         if (intent === 'pule') {
           state = 'answering';
-          await botReply(platform.info.pule || PULE_VALIDADE, 900);
+          await trackedReply(platform.info.pule || PULE_VALIDADE, intent, 900);
           await showMoreHelp(platform);
           return;
         }
@@ -777,7 +853,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
           state = 'answering';
           let msg = platform.info.cassino || CASSINO_INFO;
           if (platform.officialLink) msg += `\n\n**Link oficial recomendado:** ${platform.officialLink}`;
-          await botReply(msg, 900, `
+          await trackedReply(msg, intent, 900, `
             <div class="quick-replies">
               ${platform.officialLink ? `<a class="quick-btn" href="${platform.officialLink}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">🔗 Abrir link oficial</a>` : ''}
               <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
@@ -788,14 +864,14 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
         if (intent === 'excluir') {
           state = 'answering';
-          await botReply(platform.info.excluir || EXCLUIR_CONTA, 900);
+          await trackedReply(platform.info.excluir || EXCLUIR_CONTA, intent, 900);
           await showMoreHelp(platform);
           return;
         }
 
         if (intent === 'tutorial') {
           state = 'answering';
-          await botReply(platform.info.tutorial || TUTORIAL_LOTERIAS, 900);
+          await trackedReply(platform.info.tutorial || TUTORIAL_LOTERIAS, intent, 900);
           await showMoreHelp(platform);
           return;
         }
@@ -807,7 +883,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
         const answer = platform.info[intent] || platform.info.geral;
         state = 'answering';
-        await botReply(answer, 900);
+        await trackedReply(answer, intent, 900);
         await showMoreHelp(platform);
       }
     }
@@ -861,7 +937,15 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
       }
     };
 
-    window.callAttendant = async function() {
+    window.callAttendant = async function(ticketOverride) {
+      const ticket = typeof ticketOverride === 'string' && ticketData.has(ticketOverride) ? ticketOverride : activeTicketId;
+      const t = ticket && ticketData.get(ticket);
+      if (t && t.status !== 'resolvido' && t.status !== 'atendente_solicitado') {
+        t.status = 'atendente_solicitado';
+        recordEvent('atualizacao', ticket, 'atendente_solicitado');
+        const feedback = document.getElementById('feedback-' + ticket);
+        if (feedback) feedback.innerHTML = '<div class="resolution-feedback">🙋 Atendimento humano solicitado.</div>';
+      }
       createMessage('Quero falar com um atendente', false);
       state = 'answering';
       await botReply(`Certo. Vou te colocar na **fila de atendimento humano**.\n\nPor favor, **não saia deste chat** enquanto aguarda.`, 700);
@@ -919,6 +1003,9 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
     }
 
     async function startChat() {
+      sessionId = makeId();
+      ticketData.clear();
+      activeTicketId = null;
       state = 'asking_platform';
       currentPlatform = null;
       pendingPlatform = null;
