@@ -254,6 +254,28 @@ Para excluir sua conta:
 
 Não é necessário abrir chamado para exclusão — o processo é automático por inatividade.`;
 
+    // NOVAS ORIENTAÇÕES DE SUPORTE
+    const RECUPERAR_CONTA = `**🔐 Não consegue entrar na sua conta?**
+
+1. Na tela de acesso, selecione **Recuperar conta**.
+2. Digite o **CPF cadastrado** na plataforma e siga as instruções apresentadas.
+3. Se você **não tem mais acesso ao número de telefone usado na recuperação**, clique em **Chamar Atendente** para solicitar ajuda.
+
+⚠️ Por segurança, não envie seu CPF completo, senha ou código de verificação neste chat.`;
+
+    const RECARGA_INSTAVEL = `**🏦 O banco não está aceitando sua recarga?**
+
+Alguns bancos e sistemas de pagamento podem passar por **instabilidades temporárias**, causando bloqueios, suspensões ou indisponibilidade das recargas. O acúmulo de solicitações também pode afetar o processamento financeiro.
+
+**O que fazer:**
+• Aguarde de **1 a 4 horas**, ou até o serviço ser normalizado, e tente novamente.
+• Confira no aplicativo do banco se houve cobrança antes de repetir a operação, para evitar pagamento duplicado.
+• Se o problema persistir, clique em **Chamar Atendente** para receber orientação.
+
+O prazo de 1 a 4 horas é uma **estimativa de espera**, não uma garantia de normalização.`;
+
+    const GRUPO_PALPITES_LINK = 'https://chat.whatsapp.com/E8YBSauoGpUG4HMTe3uZCr';
+
     const PULE_VALIDADE = `**Sobre a validade da pule:**
 
 Quando o **resultado da loteria não ocorre** no dia (sorteio cancelado, atrasado ou não divulgado), a sua **pule permanece válida** e passa a valer automaticamente para o **sorteio do dia seguinte**.
@@ -619,6 +641,9 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
 
     function detectIntent(text) {
       const n = normalize(text);
+      if (/grupo de palpite|grupo de palpites|grupo whatsapp|grupo de whatsapp|entrar no grupo|link do grupo/.test(n)) return 'grupo_palpites';
+      if (/recuperar.*conta|recuperacao.*conta|esqueci.*senha|perdi.*acesso|nao.*(consigo|consegue).*entrar|nao.*(consigo|consegue).*logar|sem.*acesso.*(numero|telefone)|troquei.*numero|numero.*(antigo|perdido)/.test(n)) return 'recuperar_conta';
+      if (/banco.*(nao.*aceit|recus|bloque|instab)|recarga.*(recus|bloque|suspens|instab|nao.*(aceit|funcion|consegu))|nao.*(consigo|consegue).*recarregar|pix.*(recus|bloque|nao.*(aceit|funcion))|deposito.*(recus|bloque|nao.*(aceit|funcion))/.test(n)) return 'recarga_instavel';
       if (/saque.*recus|recus.*saque|saque.*negad|negad.*saque|saque.*rejeit|rejeit.*saque|nao.*consegui.*sacar|saque.*nao.*foi|problema.*saque/.test(n)) return 'saque_recusado';
       if (/bingo|cartela/.test(n)) return 'bingo';
       if (/pule|resultado.*nao.*(saiu|ocorreu|teve)|sorteio.*nao.*(saiu|ocorreu)|nao.*teve.*resultado|pule.*valida|pule.*vale/.test(n)) return 'pule';
@@ -700,6 +725,25 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
         const intent = detectIntent(text);
         const platform = knowledgeBase[currentPlatform];
 
+        if (intent === 'grupo_palpites') {
+          state = 'answering';
+          await botReply('**📲 Grupo de Palpites**\n\nClique no botão abaixo para abrir o convite do grupo no WhatsApp.', 600, `
+            <div class="quick-replies">
+              <a class="quick-btn confirm" href="${GRUPO_PALPITES_LINK}" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none">📲 Entrar no grupo de palpites</a>
+            </div>`);
+          return;
+        }
+
+        if (intent === 'recuperar_conta' || intent === 'recarga_instavel') {
+          state = 'answering';
+          await botReply(intent === 'recuperar_conta' ? RECUPERAR_CONTA : RECARGA_INSTAVEL, 800, `
+            <div class="quick-replies">
+              <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
+              <button class="quick-btn" onclick="showCurrentHelp()">📋 Outras opções de ajuda</button>
+            </div>`);
+          return;
+        }
+
         if (intent === 'saque_recusado') {
           state = 'answering';
           await botReply(SAQUE_RECUSADO, 900, `
@@ -774,6 +818,9 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
           <button class="quick-btn" onclick="quickAsk('bonus')">🎁 Bônus</button>
           <button class="quick-btn" onclick="quickAsk('cotacao')">💰 Cotação</button>
           <button class="quick-btn" onclick="quickAsk('deposito')">📥 Depósito</button>
+          <button class="quick-btn" onclick="quickAsk('recuperar_conta')">🔐 Não consigo entrar</button>
+          <button class="quick-btn" onclick="quickAsk('recarga_instavel')">🏦 Banco não aceita recarga</button>
+          <a class="quick-btn confirm" href="${GRUPO_PALPITES_LINK}" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none">📲 Grupo de Palpites</a>
           <button class="quick-btn" onclick="quickAsk('saque')">📤 Saque</button>
           <button class="quick-btn" onclick="quickAsk('tutorial')">📖 Como jogar</button>
           <button class="quick-btn" onclick="quickAsk('bingo')">🎱 Bingo</button>
@@ -786,6 +833,12 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
         </div>`);
     }
 
+    window.showCurrentHelp = async function() {
+      if (currentPlatform && knowledgeBase[currentPlatform]) {
+        await showMoreHelp(knowledgeBase[currentPlatform]);
+      }
+    };
+
     window.confirmPlatform = async function(yes) {
       if (yes) {
         currentPlatform = pendingPlatform;
@@ -797,6 +850,7 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
         updateHeader(currentPlatform);
         state = 'awaiting_question';
         await botReply(`Você foi transferido para o suporte do **${p.name}** ${p.icon}.\n\nEste atendimento prioriza **Loterias e Bingo**. Para cassino o suporte é limitado.\n\nQual é a sua dúvida?`, 600);
+        await showMoreHelp(p);
       } else {
         createMessage('Não, é outro', false);
         state = 'asking_platform';
@@ -826,6 +880,9 @@ Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado o
         cassino: 'Tenho dúvida sobre o cassino',
         excluir: 'Quero excluir minha conta',
         bingo: 'Quero saber sobre o bingo',
+        recuperar_conta: 'Não consigo entrar na minha conta',
+        recarga_instavel: 'O banco não está aceitando minha recarga',
+        grupo_palpites: 'Quero entrar no grupo de palpites',
         pule: 'O resultado não saiu, a pule vale?'
       };
       await processMessage(labels[intent] || intent);
