@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Painel Administrativo — Já Deu Certo</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0e1420; --card:#1a2536; --border:#344159; --text:#eaf0fa; --muted:#a9b8cc; --primary:#60a5fa; }
+    * { box-sizing:border-box; } body { margin:0; padding:24px; background:var(--bg); color:var(--text); font-family:Inter,system-ui,sans-serif; }
+    main { max-width:1220px; margin:auto; } h1 { font-size:25px; margin:0 0 7px; } p { color:var(--muted); }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-bottom:18px; }
+    .button { border:0; padding:11px 17px; border-radius:9px; background:#2563eb; color:white; cursor:pointer; font:inherit; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:12px; margin:22px 0; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+    .card strong { display:block; font-size:29px; margin:8px 0; } .card span { color:var(--muted); font-size:13px; }
+    .filters { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+    input,select { background:var(--card); border:1px solid var(--border); color:var(--text); padding:11px; border-radius:8px; min-width:190px; font:inherit; }
+    .tablewrap { overflow:auto; border:1px solid var(--border); border-radius:12px; }
+    table { border-collapse:collapse; width:100%; min-width:900px; } th, td { text-align:left; border-bottom:1px solid var(--border); padding:12px; font-size:13px; }
+    th { background:#202d41; position:sticky; top:0; } tr:hover td { background:#182438; }
+    .status { display:inline-block; border-radius:30px; padding:5px 9px; background:#344159; font-weight:600; white-space:nowrap; }
+    .resolvido { color:#86efac; } .nao_resolvido { color:#fca5a5; } .atendente_solicitado { color:#fcd34d; } .aguardando { color:#bfdbfe; }
+    #notice { margin-top:14px; min-height:20px; color:var(--muted); font-size:13px; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="top"><div><h1>📊 Painel Administrativo</h1><p>Suporte Inteligente | Já Deu Certo</p></div><button class="button" onclick="load()">🔄 Atualizar dados</button></div>
+  <div class="cards" id="cards"></div>
+  <div class="filters">
+    <input id="q" placeholder="Buscar banca ou assunto" oninput="renderTable()">
+    <select id="status" onchange="renderTable()"><option value="">Todas as situações</option><option value="resolvido">Resolvido</option><option value="nao_resolvido">Não resolvido</option><option value="aguardando">Aguardando resposta</option><option value="atendente_solicitado">Atendente solicitado</option></select>
+    <select id="platform" onchange="renderTable()"><option value="">Todas as bancas</option></select>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>Último evento</th><th>Plataforma</th><th>Assunto da dúvida</th><th>Situação atual</th><th>ID da dúvida</th></tr></thead><tbody id="tbody"></tbody></table></div>
+  <p id="notice">Carregando dados...</p>
+</main>
+<script>
+  let rows = [];
+  const names = {aguardando:'Aguardando resposta', resolvido:'Resolvido', nao_resolvido:'Não resolvido', atendente_solicitado:'Atendente solicitado'};
+  function esc(v) { return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function load() {
+    document.getElementById('notice').textContent = 'Atualizando dados...';
+    google.script.run.withSuccessHandler(data => {
+      rows = data.rows || [];
+      const s = data.summary;
+      const metrics = [['Dúvidas registradas', s.total], ['Resolvidas', s.resolvido], ['Não resolvidas', s.nao_resolvido], ['Aguardando', s.aguardando], ['Atendente solicitado', s.atendente_solicitado], ['Taxa de resolução', s.taxa + '%']];
+      document.getElementById('cards').innerHTML = metrics.map(([t,v])=>`<div class="card"><span>${esc(t)}</span><strong>${esc(v)}</strong></div>`).join('');
+      const selected = document.getElementById('platform').value;
+      const banks = [...new Set(rows.map(r=>r.platform).filter(Boolean))].sort();
+      document.getElementById('platform').innerHTML = '<option value="">Todas as bancas</option>' + banks.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+      document.getElementById('platform').value = banks.includes(selected) ? selected : '';
+      renderTable();
+    }).withFailureHandler(err => { document.getElementById('notice').textContent = 'Erro ao ler planilha: ' + err.message; }).getDashboardData();
+  }
+  function renderTable() {
+    const q = document.getElementById('q').value.toLocaleLowerCase('pt-BR');
+    const st = document.getElementById('status').value;
+    const bank = document.getElementById('platform').value;
+    const filtered = rows.filter(r => (!st || r.status === st) && (!bank || r.platform === bank) && (!q || (r.platform+' '+r.topic).toLocaleLowerCase('pt-BR').includes(q)));
+    document.getElementById('tbody').innerHTML = filtered.slice(0,500).map(r=>`<tr><td>${esc(new Date(r.timestamp).toLocaleString('pt-BR'))}</td><td>${esc(r.platform)}</td><td>${esc(r.topic)}</td><td><span class="status ${esc(r.status)}">${esc(names[r.status]||r.status)}</span></td><td>${esc(r.id)}</td></tr>`).join('') || '<tr><td colspan="5">Nenhuma dúvida encontrada.</td></tr>';
+    document.getElementById('notice').textContent = `${filtered.length} dúvidas encontradas. Mostrando até 500 registros nesta página. Atualização manual.`;
+  }
+  load();
+</script>
+</body>
+</html>
