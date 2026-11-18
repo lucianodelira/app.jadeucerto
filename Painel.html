@@ -2,321 +2,694 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>Painel Administrativo — Já Deu Certo</title>
-  <style>
-    :root { color-scheme:dark; --bg:#0e1420; --card:#1a2536; --border:#344159; --text:#eaf0fa; --muted:#a9b8cc; }
-    * { box-sizing:border-box; }
-    body { margin:0; padding:24px; background:var(--bg); color:var(--text); font-family:Inter,system-ui,Arial,sans-serif; }
-    main { max-width:1220px; margin:auto; }
-    h1 { font-size:25px; margin:0 0 7px; }
-    p { color:var(--muted); }
-    .top { display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-bottom:18px; }
-    .button { border:0; padding:11px 17px; border-radius:9px; background:#2563eb; color:#fff; cursor:pointer; font:inherit; }
-    .button.secondary { background:#334155; }
-    .button:disabled { opacity:.5; cursor:not-allowed; }
-    .auth { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:14px 0; }
-    .hint { color:var(--muted); font-size:13px; line-height:1.5; }
-    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:12px; margin:22px 0; }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
-    .card strong { display:block; font-size:29px; margin:8px 0; }
-    .card span { color:var(--muted); font-size:13px; }
-    .filters { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
-    input,select { background:var(--card); border:1px solid var(--border); color:var(--text); padding:11px; border-radius:8px; min-width:190px; font:inherit; max-width:100%; }
-    .tablewrap { overflow:auto; border:1px solid var(--border); border-radius:12px; }
-    table { border-collapse:collapse; width:100%; min-width:900px; }
-    th,td { text-align:left; border-bottom:1px solid var(--border); padding:12px; font-size:13px; }
-    th { background:#202d41; position:sticky; top:0; }
-    tr:hover td { background:#182438; }
-    .status { display:inline-block; border-radius:30px; padding:5px 9px; background:#344159; font-weight:600; white-space:nowrap; }
-    .resolvido { color:#86efac; } .nao_resolvido { color:#fca5a5; }
-    .atendente_solicitado { color:#fcd34d; } .aguardando { color:#bfdbfe; }
-    #notice { margin-top:14px; min-height:20px; font-size:13px; line-height:1.6; white-space:pre-line; }
-    #notice.error { color:#fca5a5; } #notice.ok { color:#86efac; } #notice.info { color:var(--muted); }
-    details { margin-top:15px; color:var(--muted); font-size:12px; }
-    summary { cursor:pointer; } #diagnostic { white-space:pre-wrap; overflow-wrap:anywhere; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Painel Administrativo — Já Deu Certo</title>
+
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0e1420;
+  --card: #1a2536;
+  --border: #344159;
+  --text: #eaf0fa;
+  --muted: #a9b8cc;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+main { max-width: 1220px; margin: auto; }
+h1 { font-size: 25px; margin: 0 0 7px; }
+p { color: var(--muted); }
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.button {
+  border: 0;
+  padding: 11px 17px;
+  border-radius: 9px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+}
+.button.secondary { background: #334155; }
+.button:disabled { opacity: .5; cursor: not-allowed; }
+.auth {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 14px 0;
+}
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(175px,1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+}
+.card strong {
+  display: block;
+  font-size: 29px;
+  margin: 8px 0;
+}
+.card span { color: var(--muted); font-size: 13px; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+input, select {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 11px;
+  border-radius: 8px;
+  min-width: 190px;
+  max-width: 100%;
+  font: inherit;
+}
+.tablewrap {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 900px;
+}
+th, td {
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding: 12px;
+  font-size: 13px;
+}
+th {
+  background: #202d41;
+  position: sticky;
+  top: 0;
+}
+tr:hover td { background: #182438; }
+.status {
+  display: inline-block;
+  border-radius: 30px;
+  padding: 5px 9px;
+  background: #344159;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.resolvido { color: #86efac; }
+.nao_resolvido { color: #fca5a5; }
+.atendente_solicitado { color: #fcd34d; }
+.aguardando { color: #bfdbfe; }
+#notice {
+  margin-top: 14px;
+  min-height: 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+#notice.error { color: #fca5a5; }
+#notice.success { color: #86efac; }
+details {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+code { overflow-wrap: anywhere; }
+</style>
 </head>
+
 <body>
 <main>
   <div class="top">
-    <div><h1>📊 Painel Administrativo</h1><p>Suporte Inteligente | Já Deu Certo</p></div>
-    <button class="button" id="refreshBtn" disabled>🔄 Atualizar dados</button>
+    <div>
+      <h1>📊 Painel Administrativo</h1>
+      <p>Suporte Inteligente | Já Deu Certo</p>
+    </div>
+    <button id="refreshBtn" class="button" disabled>
+      🔄 Atualizar dados
+    </button>
   </div>
+
   <div class="auth">
-    <button id="loginBtn" class="button" disabled>🔐 Preparando Google...</button>
-    <button id="logoutBtn" class="button secondary" hidden>🚪 Sair</button>
-    <span id="authState" class="hint">Preparando autenticação...</span>
+    <button id="loginBtn" class="button">
+      🔐 Entrar com Google
+    </button>
+    <button id="logoutBtn" class="button secondary" hidden>
+      🚪 Sair
+    </button>
+    <span id="authState" class="hint">
+      Entre com a conta que tem acesso à planilha.
+    </span>
   </div>
+
   <div class="cards" id="cards"></div>
+
   <div class="filters">
-    <input id="q" placeholder="Buscar banca ou assunto" aria-label="Buscar banca ou assunto">
-    <select id="status" aria-label="Filtrar situação">
-      <option value="">Todas as situações</option><option value="resolvido">Resolvido</option>
-      <option value="nao_resolvido">Não resolvido</option><option value="aguardando">Aguardando resposta</option>
-      <option value="atendente_solicitado">Atendente solicitado</option>
+    <input id="q" placeholder="Buscar banca ou assunto">
+
+    <select id="status">
+      <option value="">Todas as situações</option>
+      <option value="resolvido">Resolvido</option>
+      <option value="nao_resolvido">Não resolvido</option>
+      <option value="aguardando">Aguardando resposta</option>
+      <option value="atendente_solicitado">
+        Atendente solicitado
+      </option>
     </select>
-    <select id="platform" aria-label="Filtrar banca"><option value="">Todas as bancas</option></select>
+
+    <select id="platform">
+      <option value="">Todas as bancas</option>
+    </select>
   </div>
+
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Último evento</th><th>Plataforma</th><th>Assunto da dúvida</th><th>Situação atual</th><th>ID da dúvida</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Último evento</th>
+          <th>Plataforma</th>
+          <th>Assunto da dúvida</th>
+          <th>Situação atual</th>
+          <th>ID da dúvida</th>
+        </tr>
+      </thead>
       <tbody id="tbody"></tbody>
     </table>
   </div>
-  <p id="notice" class="info" role="status" aria-live="polite">Carregando a biblioteca do Google...</p>
-  <details><summary>Diagnóstico de acesso</summary><pre id="diagnostic"></pre></details>
+
+  <p id="notice" role="status" aria-live="polite">
+    Conecte sua conta Google para carregar os dados.
+  </p>
+
+  <details>
+    <summary>Configuração do login (Google Cloud)</summary>
+    <p>
+      Cadastre este endereço exato em
+      URIs de redirecionamento autorizados:
+    </p>
+    <code id="redirectAddress"></code>
+  </details>
 </main>
+
 <script>
-  // Configuração existente do projeto Já Deu Certo.
-  const SPREADSHEET_ID = '13GMSqHfIsvZJKzboO62-WHn3gpHL2AMVLAB4kIaETXM';
-  const SHEET_NAME = 'Atendimentos';
-  const GOOGLE_CLIENT_ID = '607224162903-isjrcbtnub8o4kj5pron71hrhfeic77l.apps.googleusercontent.com';
-  const SCOPE = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+'use strict';
 
-  let tokenClient = null;
-  let accessToken = '';
-  let tokenExpiresAt = 0;
-  let rows = [];
-  let loading = false;
-  let loginPending = false;
-  let coopHeader = 'não verificado';
-  let lastError = '';
+// CONFIGURAÇÕES DO JÁ DEU CERTO
+const SPREADSHEET_ID =
+  '13GMSqHfIsvZJKzboO62-WHn3gpHL2AMVLAB4kIaETXM';
 
-  const $ = id => document.getElementById(id);
-  const names = { aguardando:'Aguardando resposta', resolvido:'Resolvido',
-    nao_resolvido:'Não resolvido', atendente_solicitado:'Atendente solicitado' };
-  const esc = value => String(value ?? '').replace(/[&<>"']/g, c =>
-    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const SHEET_NAME = 'Atendimentos';
 
-  function notice(message, type='info') {
-    $('notice').textContent = message;
-    $('notice').className = type;
+const GOOGLE_CLIENT_ID =
+  '607224162903-isjrcbtnub8o4kj5pron71hrhfeic77l.apps.googleusercontent.com';
+
+const SCOPE =
+  'https://www.googleapis.com/auth/spreadsheets.readonly';
+
+// Login por redirecionamento em vez de popup.
+const REDIRECT_URI = location.origin + location.pathname;
+const STATE_KEY = 'jadeucerto_oauth_state';
+
+let accessToken = '';
+let expiresAt = 0;
+let rows = [];
+let loading = false;
+
+const names = {
+  aguardando: 'Aguardando resposta',
+  resolvido: 'Resolvido',
+  nao_resolvido: 'Não resolvido',
+  atendente_solicitado: 'Atendente solicitado'
+};
+
+const $ = id => document.getElementById(id);
+
+const esc = v => String(v ?? '').replace(
+  /[&<>"']/g,
+  c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c])
+);
+
+function notice(message, type = '') {
+  $('notice').textContent = message;
+  $('notice').className = type;
+}
+
+function hasToken() {
+  return !!accessToken && Date.now() < expiresAt;
+}
+
+function updateUI() {
+  $('loginBtn').textContent = hasToken()
+    ? '🔐 Renovar acesso'
+    : '🔐 Entrar com Google';
+
+  $('refreshBtn').disabled = !hasToken() || loading;
+  $('logoutBtn').hidden = !hasToken();
+
+  $('authState').textContent = hasToken()
+    ? 'Conectado ao Google Sheets (somente leitura).'
+    : 'Entre com a conta que tem permissão para acessar a planilha.';
+}
+
+// LOGIN SEM POPUP
+function beginLogin() {
+  try {
+    if (!window.crypto?.getRandomValues) {
+      throw new Error('Navegador incompatível com login seguro.');
+    }
+
+    const bytes = new Uint8Array(24);
+    crypto.getRandomValues(bytes);
+
+    const state = Array.from(
+      bytes,
+      b => b.toString(16).padStart(2, '0')
+    ).join('');
+
+    sessionStorage.setItem(STATE_KEY, state);
+
+    const url = new URL(
+      'https://accounts.google.com/o/oauth2/v2/auth'
+    );
+
+    url.search = new URLSearchParams({
+      client_id: GOOGLE_CLIENT_ID,
+      redirect_uri: REDIRECT_URI,
+      response_type: 'token',
+      scope: SCOPE,
+      state: state,
+      prompt: 'select_account'
+    }).toString();
+
+    // Navegação na própria aba.
+    location.assign(url.toString());
+
+  } catch (error) {
+    notice(
+      'Erro ao iniciar login: ' + error.message,
+      'error'
+    );
   }
-  function validToken() { return Boolean(accessToken) && Date.now() < tokenExpiresAt; }
-  function updateUI() {
-    $('loginBtn').disabled = !tokenClient || loginPending || loading;
-    $('loginBtn').textContent = loginPending ? '🔐 Aguardando Google...' :
-      validToken() ? '🔐 Renovar acesso' : '🔐 Entrar com Google';
-    $('logoutBtn').hidden = !accessToken;
-    $('refreshBtn').disabled = !validToken() || loading;
-    $('authState').textContent = validToken()
-      ? 'Conectado ao Google Sheets (somente leitura).'
-      : loginPending ? 'Conclua a autorização na janela do Google.'
-      : 'Entre com a conta que tem permissão na planilha.';
-    $('diagnostic').textContent =
-      'Origem: ' + location.origin + '\n' +
-      'Biblioteca Google: ' + (tokenClient ? 'carregada' : 'indisponível') + '\n' +
-      'Cabeçalho COOP: ' + coopHeader + '\n' +
-      'Token: ' + (validToken() ? 'recebido' : 'não recebido/expirado') + '\n' +
-      'Último erro: ' + (lastError || 'nenhum');
+}
+
+// RECEBE A AUTORIZAÇÃO DO GOOGLE
+function finishLogin() {
+  const fragment = location.hash;
+
+  if (
+    !fragment ||
+    !/(^|[&#])(access_token|error|state)=/.test(fragment)
+  ) {
+    return false;
   }
 
-  // Executado após a biblioteca Google carregar, antes do clique no botão.
-  function googleLoaded() {
-    try {
-      if (!window.google?.accounts?.oauth2) throw new Error('Google Identity Services indisponível');
-      tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: GOOGLE_CLIENT_ID,
-        scope: SCOPE,
-        callback: onTokenResponse,
-        error_callback: onPopupError
-      });
-      notice('Pronto para entrar com Google.');
-    } catch (error) {
-      lastError = error.message;
-      notice('Falha ao iniciar o login Google: ' + error.message, 'error');
-    }
-    updateUI();
+  // Remove imediatamente o token da barra do navegador.
+  history.replaceState(
+    null,
+    '',
+    location.pathname + location.search
+  );
+
+  const params = new URLSearchParams(fragment.slice(1));
+  const expected = sessionStorage.getItem(STATE_KEY);
+
+  sessionStorage.removeItem(STATE_KEY);
+
+  if (
+    !expected ||
+    params.get('state') !== expected
+  ) {
+    notice(
+      'A resposta do Google não corresponde ao login iniciado. Tente novamente.',
+      'error'
+    );
+    return true;
   }
-  function googleFailed() {
-    lastError = 'Não foi possível carregar https://accounts.google.com/gsi/client';
-    notice('A biblioteca de login do Google foi bloqueada. Verifique a conexão e o navegador.', 'error');
-    updateUI();
+
+  if (params.has('error')) {
+    notice(
+      'Google não autorizou: ' +
+      params.get('error') + ' ' +
+      (params.get('error_description') || ''),
+      'error'
+    );
+    return true;
   }
-  function login() {
-    if (!tokenClient || loginPending) return;
-    loginPending = true;
-    lastError = '';
-    notice('Selecione a conta Google e autorize a leitura da planilha.');
-    updateUI();
-    try {
-      // Precisa acontecer diretamente no clique do usuário.
-      tokenClient.requestAccessToken({ prompt: 'select_account consent' });
-    } catch (error) {
-      loginPending = false;
-      lastError = error.message;
-      notice('Não foi possível iniciar o login: ' + error.message, 'error');
-      updateUI();
-    }
+
+  const token = params.get('access_token');
+
+  const granted = (
+    params.get('scope') || ''
+  ).split(' ');
+
+  if (
+    !token ||
+    (params.has('scope') && !granted.includes(SCOPE))
+  ) {
+    notice(
+      'Google não concedeu a permissão de leitura da planilha.',
+      'error'
+    );
+    return true;
   }
-  async function onTokenResponse(response) {
-    loginPending = false;
-    if (response?.error) {
-      lastError = response.error + (response.error_description ? ': ' + response.error_description : '');
-      notice('Google recusou a autorização: ' + lastError, 'error');
-      updateUI();
-      return;
-    }
-    if (!response?.access_token) {
-      lastError = 'Google não devolveu access_token';
-      notice('A autorização foi concluída sem token. Tente novamente.', 'error');
-      updateUI();
-      return;
-    }
-    if (!google.accounts.oauth2.hasGrantedAllScopes(response, SCOPE)) {
-      lastError = 'Escopo de leitura da planilha não autorizado';
-      notice('Autorize a permissão de leitura da planilha para continuar.', 'error');
-      updateUI();
-      return;
-    }
-    accessToken = response.access_token;
-    tokenExpiresAt = Date.now() + Math.max(0, Number(response.expires_in || 3600) - 60) * 1000;
-    notice('Autorização recebida. Carregando planilha...', 'ok');
-    updateUI();
-    await load();
-  }
-  function onPopupError(error) {
-    const type = error?.type || 'unknown';
-    // Caso uma resposta de sucesso seja entregue ao mesmo tempo, dê prioridade ao token.
-    setTimeout(() => {
-      if (validToken()) return;
-      loginPending = false;
-      lastError = type;
-      if (type === 'popup_closed') {
-        notice('LOGIN NÃO CONCLUÍDO (popup_closed). A janela do Google fechou antes de devolver o token.\n' +
-          'Se você selecionou a conta e voltou ao painel, verifique o cabeçalho HTTP Cross-Origin-Opener-Policy do domínio. ' +
-          'Para o fluxo popup, o Google recomenda: same-origin-allow-popups. ' +
-          'Isso deve ser ajustado na hospedagem; uma tag HTML não substitui o cabeçalho.', 'error');
-      } else if (type === 'popup_failed_to_open') {
-        notice('O navegador bloqueou a janela do Google. Permita pop-ups e tente novamente.', 'error');
-      } else {
-        notice('Falha na janela Google: ' + type, 'error');
-      }
-      updateUI();
-    }, 300);
-  }
-  function logout() {
-    const oldToken = accessToken;
-    accessToken = '';
-    tokenExpiresAt = 0;
-    loginPending = false;
-    rows = [];
-    $('cards').replaceChildren();
-    $('tbody').replaceChildren();
-    $('platform').innerHTML = '<option value="">Todas as bancas</option>';
-    if (oldToken && window.google?.accounts?.oauth2) {
-      google.accounts.oauth2.revoke(oldToken, () => {});
-    }
-    notice('Sessão encerrada.');
-    updateUI();
-  }
-  function parseSheetDate(value) {
-    const raw = String(value || '').trim();
-    const m = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ ,]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
-    if (m) return new Date(+m[3], +m[2]-1, +m[1], +(m[4]||0), +(m[5]||0), +(m[6]||0)).getTime();
-    const result = Date.parse(raw);
-    return Number.isFinite(result) ? result : 0;
-  }
-  function formatDate(timestamp) {
-    if (!timestamp) return 'Não disponível';
-    const d = new Date(timestamp);
-    return Number.isNaN(d.getTime()) ? 'Não disponível' : d.toLocaleString('pt-BR');
-  }
-  async function load() {
-    if (!validToken()) {
-      notice('O acesso expirou. Clique em Entrar com Google novamente.', 'error');
-      updateUI();
-      return;
-    }
-    if (loading) return;
-    loading = true;
-    updateUI();
-    notice('Atualizando dados...');
-    try {
-      const range = encodeURIComponent("'" + SHEET_NAME.replace(/'/g, "''") + "'!A:H");
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(SPREADSHEET_ID)}/values/${range}?valueRenderOption=FORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING`;
-      const res = await fetch(url, { headers: { Authorization:'Bearer ' + accessToken }, cache:'no-store' });
-      const data = await res.json();
-      if (!res.ok) {
-        if (res.status === 401) { accessToken = ''; tokenExpiresAt = 0; }
-        let reason = data.error?.message || ('HTTP ' + res.status);
-        if (res.status === 403) reason += ' — confirme a API Google Sheets e o acesso da conta à planilha.';
-        if (res.status === 404) reason += ' — confirme ID da planilha e nome da aba.';
-        throw new Error(reason);
-      }
-      const tickets = new Map();
-      (data.values || []).slice(1).forEach((r, index) => {
-        const id = String(r[3] || '').trim();
-        if (!id) return;
-        const status = String(r[6] || 'aguardando').trim();
-        const stamp = parseSheetDate(r[0]);
-        const old = tickets.get(id);
-        if (!old) tickets.set(id, {
-          id, platform:String(r[4]||''), topic:String(r[5]||''), status, timestamp:stamp, index
-        });
-        else {
-          old.status = status;
-          old.timestamp = stamp || old.timestamp;
-          old.index = index;
-          if (!old.platform) old.platform = String(r[4] || '');
-          if (!old.topic) old.topic = String(r[5] || '');
-        }
-      });
-      rows = [...tickets.values()].sort((a,b) => b.index-a.index);
-      const s = { total:rows.length, resolvido:0, nao_resolvido:0, aguardando:0, atendente_solicitado:0 };
-      rows.forEach(r => { if (Object.hasOwn(s, r.status) && r.status !== 'total') s[r.status]++; else s.aguardando++; });
-      const rate = s.total ? Math.round(s.resolvido / s.total * 100) : 0;
-      const metrics = [ ['Dúvidas registradas',s.total], ['Resolvidas',s.resolvido],
-        ['Não resolvidas',s.nao_resolvido], ['Aguardando',s.aguardando],
-        ['Atendente solicitado',s.atendente_solicitado], ['Taxa de resolução',rate+'%'] ];
-      $('cards').innerHTML = metrics.map(([title,value]) =>
-        `<div class="card"><span>${esc(title)}</span><strong>${esc(value)}</strong></div>`).join('');
-      const selected = $('platform').value;
-      const banks = [...new Set(rows.map(r => r.platform).filter(Boolean))].sort();
-      $('platform').innerHTML = '<option value="">Todas as bancas</option>' +
-        banks.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
-      $('platform').value = banks.includes(selected) ? selected : '';
-      renderTable();
-    } catch (error) {
-      lastError = error.message;
-      notice('Erro ao carregar a planilha: ' + error.message, 'error');
-    } finally {
-      loading = false;
-      updateUI();
-    }
-  }
-  function renderTable() {
-    const q = $('q').value.toLocaleLowerCase('pt-BR');
-    const st = $('status').value;
-    const bank = $('platform').value;
-    const filtered = rows.filter(r => (!st || r.status === st) && (!bank || r.platform === bank) &&
-      (!q || (r.platform+' '+r.topic).toLocaleLowerCase('pt-BR').includes(q)));
-    $('tbody').innerHTML = filtered.slice(0,500).map(r =>
-      `<tr><td>${esc(formatDate(r.timestamp))}</td><td>${esc(r.platform)}</td><td>${esc(r.topic)}</td>` +
-      `<td><span class="status ${esc(r.status)}">${esc(names[r.status]||r.status)}</span></td>` +
-      `<td>${esc(r.id)}</td></tr>`).join('') ||
-      '<tr><td colspan="5">Nenhuma dúvida encontrada.</td></tr>';
-    notice(`${filtered.length} dúvidas encontradas. Mostrando até 500 registros. Atualização manual.`, 'ok');
-  }
-  async function checkCoopHeader() {
-    try {
-      const response = await fetch(location.href, { method:'HEAD', credentials:'same-origin', cache:'no-store' });
-      coopHeader = response.headers.get('cross-origin-opener-policy') || '(não informado)';
-    } catch (_) { coopHeader = '(não foi possível consultar)'; }
-    updateUI();
-  }
-  $('loginBtn').addEventListener('click', login);
-  $('logoutBtn').addEventListener('click', logout);
-  $('refreshBtn').addEventListener('click', load);
-  $('q').addEventListener('input', renderTable);
-  $('status').addEventListener('change', renderTable);
-  $('platform').addEventListener('change', renderTable);
+
+  accessToken = token;
+
+  expiresAt = Date.now() +
+    Math.max(
+      0,
+      Number(params.get('expires_in') || 3600) - 60
+    ) * 1000;
+
   updateUI();
-  checkCoopHeader();
+  load();
+
+  return true;
+}
+
+// SAIR DO PAINEL
+function logout() {
+  accessToken = '';
+  expiresAt = 0;
+  rows = [];
+
+  $('cards').replaceChildren();
+  $('tbody').replaceChildren();
+
+  $('platform').innerHTML =
+    '<option value="">Todas as bancas</option>';
+
+  notice(
+    'Você saiu do painel. Clique em Entrar com Google para acessar novamente.'
+  );
+
+  updateUI();
+}
+
+// TRATAMENTO DE DATAS
+function parseSheetDate(value) {
+  const raw = String(value || '').trim();
+
+  const match = raw.match(
+    /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ ,]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/
+  );
+
+  if (match) {
+    return new Date(
+      +match[3],
+      +match[2] - 1,
+      +match[1],
+      +(match[4] || 0),
+      +(match[5] || 0),
+      +(match[6] || 0)
+    ).getTime();
+  }
+
+  const parsed = Date.parse(raw);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function formatDate(value) {
+  if (!value) return 'Não disponível';
+
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime())
+    ? 'Não disponível'
+    : date.toLocaleString('pt-BR');
+}
+
+// CONSULTA GOOGLE SHEETS
+async function load() {
+  if (!hasToken()) {
+    notice(
+      'Entre novamente com Google para autorizar o acesso.',
+      'error'
+    );
+    updateUI();
+    return;
+  }
+
+  if (loading) return;
+
+  loading = true;
+  updateUI();
+  notice('Atualizando dados...');
+
+  try {
+    const range = encodeURIComponent(
+      "'" + SHEET_NAME.replace(/'/g, "''") + "'!A:H"
+    );
+
+    const url =
+      `https://sheets.googleapis.com/v4/spreadsheets/` +
+      `${encodeURIComponent(SPREADSHEET_ID)}/values/${range}` +
+      `?valueRenderOption=FORMATTED_VALUE` +
+      `&dateTimeRenderOption=FORMATTED_STRING`;
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: 'Bearer ' + accessToken
+      },
+      cache: 'no-store'
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        accessToken = '';
+        expiresAt = 0;
+      }
+
+      let message =
+        data.error?.message ||
+        ('HTTP ' + response.status);
+
+      if (response.status === 403) {
+        message +=
+          ' — Verifique o acesso à planilha e a API Google Sheets.';
+      }
+
+      throw new Error(message);
+    }
+
+    const tickets = new Map();
+
+    (data.values || []).slice(1).forEach(
+      (r, index) => {
+        const id = String(r[3] || '').trim();
+
+        if (!id) return;
+
+        const status = String(
+          r[6] || 'aguardando'
+        ).trim();
+
+        const timestamp = parseSheetDate(r[0]);
+        const old = tickets.get(id);
+
+        if (!old) {
+          tickets.set(id, {
+            id,
+            platform: String(r[4] || ''),
+            topic: String(r[5] || ''),
+            status,
+            timestamp,
+            index
+          });
+        } else {
+          old.status = status;
+          old.timestamp =
+            timestamp || old.timestamp;
+          old.index = index;
+
+          if (!old.platform) {
+            old.platform = String(r[4] || '');
+          }
+
+          if (!old.topic) {
+            old.topic = String(r[5] || '');
+          }
+        }
+      }
+    );
+
+    rows = [...tickets.values()].sort(
+      (a, b) => b.index - a.index
+    );
+
+    const stats = {
+      total: rows.length,
+      resolvido: 0,
+      nao_resolvido: 0,
+      aguardando: 0,
+      atendente_solicitado: 0
+    };
+
+    rows.forEach(r => {
+      if (
+        Object.prototype.hasOwnProperty.call(
+          stats, r.status
+        ) &&
+        r.status !== 'total'
+      ) {
+        stats[r.status]++;
+      } else {
+        stats.aguardando++;
+      }
+    });
+
+    const rate = stats.total
+      ? Math.round(
+          stats.resolvido / stats.total * 100
+        )
+      : 0;
+
+    const metrics = [
+      ['Dúvidas registradas', stats.total],
+      ['Resolvidas', stats.resolvido],
+      ['Não resolvidas', stats.nao_resolvido],
+      ['Aguardando', stats.aguardando],
+      ['Atendente solicitado', stats.atendente_solicitado],
+      ['Taxa de resolução', rate + '%']
+    ];
+
+    $('cards').innerHTML = metrics.map(
+      ([title, value]) =>
+        `<div class="card">` +
+        `<span>${esc(title)}</span>` +
+        `<strong>${esc(value)}</strong>` +
+        `</div>`
+    ).join('');
+
+    const selected = $('platform').value;
+
+    const banks = [
+      ...new Set(
+        rows.map(r => r.platform).filter(Boolean)
+      )
+    ].sort();
+
+    $('platform').innerHTML =
+      '<option value="">Todas as bancas</option>' +
+      banks.map(v =>
+        `<option value="${esc(v)}">` +
+        `${esc(v)}</option>`
+      ).join('');
+
+    $('platform').value =
+      banks.includes(selected) ? selected : '';
+
+    renderTable();
+
+  } catch (error) {
+    notice(
+      'Erro ao acessar Google Sheets: ' +
+      error.message,
+      'error'
+    );
+  } finally {
+    loading = false;
+    updateUI();
+  }
+}
+
+// FILTROS E TABELA
+function renderTable() {
+  const q = $('q').value.toLocaleLowerCase('pt-BR');
+  const st = $('status').value;
+  const bank = $('platform').value;
+
+  const filtered = rows.filter(r =>
+    (!st || r.status === st) &&
+    (!bank || r.platform === bank) &&
+    (
+      !q ||
+      (r.platform + ' ' + r.topic)
+        .toLocaleLowerCase('pt-BR')
+        .includes(q)
+    )
+  );
+
+  $('tbody').innerHTML = filtered
+    .slice(0, 500)
+    .map(r => {
+      const cls =
+        Object.prototype.hasOwnProperty.call(
+          names, r.status
+        )
+          ? r.status
+          : 'aguardando';
+
+      return (
+        `<tr>` +
+        `<td>${esc(formatDate(r.timestamp))}</td>` +
+        `<td>${esc(r.platform)}</td>` +
+        `<td>${esc(r.topic)}</td>` +
+        `<td><span class="status ${cls}">` +
+        `${esc(names[r.status] || r.status)}` +
+        `</span></td>` +
+        `<td>${esc(r.id)}</td>` +
+        `</tr>`
+      );
+    })
+    .join('') ||
+    '<tr><td colspan="5">Nenhuma dúvida encontrada.</td></tr>';
+
+  notice(
+    `${filtered.length} dúvidas encontradas. ` +
+    'Mostrando até 500 registros. Atualização manual.',
+    'success'
+  );
+}
+
+// INICIALIZAÇÃO
+$('redirectAddress').textContent = REDIRECT_URI;
+
+$('loginBtn').addEventListener('click', beginLogin);
+$('logoutBtn').addEventListener('click', logout);
+$('refreshBtn').addEventListener('click', load);
+$('q').addEventListener('input', renderTable);
+$('status').addEventListener('change', renderTable);
+$('platform').addEventListener('change', renderTable);
+
+updateUI();
+finishLogin();
+
 </script>
-<script src="https://accounts.google.com/gsi/client" async onload="googleLoaded()" onerror="googleFailed()"></script>
 </body>
 </html>
