@@ -2186,5 +2186,358 @@ setTimeout(()=>{
 startChat();
 
 </script>
+
+
+
+
+
+
+  
+<!-- WHATSAPP ANTES DA SELEÇÃO DA BANCA -->
+
+<style>
+#jdc-inicio-whatsapp {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5,10,20,.92);
+  padding: 16px;
+  font-family: Inter,system-ui,sans-serif;
+}
+#jdc-inicio-whatsapp[hidden] {
+  display: none;
+}
+#jdc-inicio-whatsapp .jdc-cartao {
+  width: 100%;
+  max-width: 440px;
+  background: #1a2332;
+  border: 1px solid #344159;
+  border-radius: 18px;
+  padding: 22px;
+  color: #e8eef7;
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+}
+#jdc-inicio-whatsapp h2 {
+  font-size: 21px;
+  margin: 0 0 10px;
+}
+#jdc-inicio-whatsapp p {
+  color: #b6c4d8;
+  line-height: 1.55;
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+#jdc-inicio-whatsapp .jdc-campo {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid #435672;
+  background: #243044;
+  color: white;
+  font: inherit;
+  margin: 8px 0 15px;
+}
+#jdc-inicio-whatsapp .jdc-autorizacao {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#jdc-inicio-whatsapp .jdc-autorizacao input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+#jdc-inicio-whatsapp .jdc-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+#jdc-inicio-whatsapp button {
+  flex: 1;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 10px;
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+#jdc-inicio-whatsapp .jdc-salvar {
+  background: #16a34a;
+}
+#jdc-inicio-whatsapp .jdc-pular {
+  background: #475569;
+}
+#jdc-inicio-whatsapp .jdc-erro {
+  color: #fca5a5;
+  font-size: 13px;
+  min-height: 18px;
+  margin-top: 10px;
+}
+#jdc-inicio-whatsapp small {
+  display: block;
+  margin-top: 14px;
+  color: #9caec8;
+  line-height: 1.5;
+}
+</style>
+
+<div
+  id="jdc-inicio-whatsapp"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="jdc-inicio-titulo"
+>
+  <form class="jdc-cartao" id="jdc-inicio-form">
+
+    <h2 id="jdc-inicio-titulo">
+      📱 Bem-vindo ao suporte!
+    </h2>
+
+    <p>
+      Antes de escolher a banca, você pode
+      informar seu WhatsApp para receber
+      um retorno sobre o atendimento.
+      <strong>É opcional.</strong>
+    </p>
+
+    <label for="jdc-numero-inicial">
+      WhatsApp com DDD
+    </label>
+
+    <input
+      class="jdc-campo"
+      id="jdc-numero-inicial"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      maxlength="20"
+      placeholder="(83) 99999-9999"
+    >
+
+    <label class="jdc-autorizacao">
+      <input
+        id="jdc-consentimento-inicial"
+        type="checkbox"
+      >
+      <span>
+        Autorizo o Já Deu Certo a usar meu número
+        exclusivamente para contato relacionado
+        a este atendimento.
+      </span>
+    </label>
+
+    <div
+      id="jdc-erro-inicial"
+      class="jdc-erro"
+      role="status"
+    ></div>
+
+    <div class="jdc-acoes">
+
+      <button
+        class="jdc-pular"
+        type="button"
+        id="jdc-pular-inicial"
+      >
+        Pular
+      </button>
+
+      <button
+        class="jdc-salvar"
+        type="submit"
+      >
+        Continuar
+      </button>
+
+    </div>
+
+    <small>
+      Não informe CPF, senha ou códigos de verificação.
+      O número será associado à dúvida quando
+      ela for registrada.
+    </small>
+
+  </form>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // O WhatsApp fica temporariamente na memória.
+  let whatsappDaConversa = '';
+
+  const janela = document.getElementById(
+    'jdc-inicio-whatsapp'
+  );
+
+  const formulario = document.getElementById(
+    'jdc-inicio-form'
+  );
+
+  const input = document.getElementById(
+    'jdc-numero-inicial'
+  );
+
+  const checkbox = document.getElementById(
+    'jdc-consentimento-inicial'
+  );
+
+  const erro = document.getElementById(
+    'jdc-erro-inicial'
+  );
+
+  // Validação do telefone brasileiro.
+  function normalizarNumero(valor) {
+    let digitos = String(valor || '')
+      .replace(/\D/g, '');
+
+    if (/^\d{10,11}$/.test(digitos)) {
+      digitos = '55' + digitos;
+    }
+
+    return /^55\d{10,11}$/.test(digitos)
+      ? digitos
+      : '';
+  }
+
+  function fechar() {
+    janela.hidden = true;
+
+    const campo = document.getElementById(
+      'userInput'
+    );
+
+    if (campo) campo.focus();
+  }
+
+  function abrir() {
+    input.value = '';
+    checkbox.checked = false;
+    erro.textContent = '';
+
+    janela.hidden = false;
+    input.focus();
+  }
+
+  // Permite continuar sem informar telefone.
+  document.getElementById(
+    'jdc-pular-inicial'
+  ).addEventListener('click', () => {
+    whatsappDaConversa = '';
+    fechar();
+  });
+
+  // Guarda o WhatsApp após consentimento.
+  formulario.addEventListener(
+    'submit',
+    event => {
+
+      event.preventDefault();
+
+      const numero = normalizarNumero(
+        input.value
+      );
+
+      if (!numero) {
+        erro.textContent =
+          'Informe um número brasileiro válido com DDD ou toque em Pular.';
+        return;
+      }
+
+      if (!checkbox.checked) {
+        erro.textContent =
+          'Confirme a autorização ou toque em Pular.';
+        return;
+      }
+
+      whatsappDaConversa = numero;
+
+      // Agora libera a seleção da banca.
+      fechar();
+    }
+  );
+
+  // Vincula o contato ao ticket verdadeiro.
+  if (
+    typeof trackedReply === 'function' &&
+    typeof jdcEventoExtra === 'function'
+  ) {
+
+    const criarRespostaOriginal = trackedReply;
+
+    trackedReply = function (...args) {
+
+      // Mantém a resposta automática original.
+      const retorno = criarRespostaOriginal.apply(
+        this,
+        args
+      );
+
+      // O ticket é criado pela função original.
+      if (
+        whatsappDaConversa &&
+        activeTicketId &&
+        ticketData.has(activeTicketId)
+      ) {
+
+        const enviado = jdcEventoExtra(
+          'whatsapp',
+          activeTicketId,
+          {
+            whatsapp: whatsappDaConversa,
+            whatsappConsent: 'sim',
+            detail:
+              'Contato informado antes de escolher a banca'
+          }
+        );
+
+        if (!enviado) {
+          console.warn(
+            'WhatsApp não enviado: verifique a URL e o coletor complementar.'
+          );
+        }
+      }
+
+      return retorno;
+    };
+
+  } else {
+    console.warn(
+      'Não foi possível localizar a integração de eventos do suporte.'
+    );
+  }
+
+  // Nova conversa: solicita o contato novamente.
+  if (typeof window.resetChat === 'function') {
+
+    const resetOriginal = window.resetChat;
+
+    window.resetChat = function (...args) {
+
+      whatsappDaConversa = '';
+
+      const retorno = resetOriginal.apply(
+        this,
+        args
+      );
+
+      abrir();
+
+      return retorno;
+    };
+  }
+
+  // Mostra a solicitação assim que o site abre.
+  abrir();
+
+})();
+</script>
+  
 </body>
 </html>
