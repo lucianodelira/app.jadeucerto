@@ -6,686 +6,916 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <title>Painel Administrativo — Já Deu Certo</title>
-
 <style>
 :root {
-  color-scheme: dark;
-  --bg: #0e1420;
-  --card: #1a2536;
-  --border: #344159;
-  --text: #eaf0fa;
-  --muted: #a9b8cc;
+  color-scheme:dark;
+  --bg:#0e1420;
+  --card:#1a2536;
+  --border:#344159;
+  --text:#eaf0fa;
+  --muted:#a9b8cc;
 }
-* { box-sizing: border-box; }
+* {box-sizing:border-box}
 body {
-  margin: 0;
-  padding: 24px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, system-ui, Arial, sans-serif;
+  margin:0;
+  padding:24px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,Arial,sans-serif;
 }
-main { max-width: 1220px; margin: auto; }
-h1 { font-size: 25px; margin: 0 0 7px; }
-p { color: var(--muted); }
+main {max-width:1250px;margin:auto}
+h1 {font-size:25px;margin:0 0 7px}
+p {color:var(--muted)}
 .top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
 }
 .button {
-  border: 0;
-  padding: 11px 17px;
-  border-radius: 9px;
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
-  font: inherit;
+  border:0;
+  padding:11px 17px;
+  border-radius:9px;
+  background:#2563eb;
+  color:#fff;
+  cursor:pointer;
+  font:inherit;
 }
-.button.secondary { background: #334155; }
-.button:disabled { opacity: .5; cursor: not-allowed; }
+.button.secondary {background:#334155}
+.button:disabled {opacity:.5;cursor:not-allowed}
 .auth {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 14px 0;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin:14px 0;
 }
 .hint {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
 }
 .cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(175px,1fr));
-  gap: 12px;
-  margin: 22px 0;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+  gap:12px;
+  margin:22px 0;
 }
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:17px;
 }
 .card strong {
-  display: block;
-  font-size: 29px;
-  margin: 8px 0;
+  display:block;
+  font-size:27px;
+  margin:8px 0;
 }
-.card span { color: var(--muted); font-size: 13px; }
+.card span {color:var(--muted);font-size:13px}
 .filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
 }
-input, select {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 11px;
-  border-radius: 8px;
-  min-width: 190px;
-  max-width: 100%;
-  font: inherit;
+input,select {
+  background:var(--card);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:11px;
+  border-radius:8px;
+  min-width:160px;
+  max-width:100%;
+  font:inherit;
 }
 .tablewrap {
-  overflow: auto;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:12px;
 }
 table {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 900px;
+  border-collapse:collapse;
+  width:100%;
+  min-width:1160px;
 }
-th, td {
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  padding: 12px;
-  font-size: 13px;
+th,td {
+  text-align:left;
+  border-bottom:1px solid var(--border);
+  padding:12px;
+  font-size:13px;
+  vertical-align:top;
 }
 th {
-  background: #202d41;
-  position: sticky;
-  top: 0;
+  background:#202d41;
+  position:sticky;
+  top:0;
 }
-tr:hover td { background: #182438; }
+tr:hover td {background:#182438}
 .status {
-  display: inline-block;
-  border-radius: 30px;
-  padding: 5px 9px;
-  background: #344159;
-  font-weight: 600;
-  white-space: nowrap;
+  display:inline-block;
+  border-radius:30px;
+  padding:5px 9px;
+  background:#344159;
+  font-weight:600;
+  white-space:nowrap;
 }
-.resolvido { color: #86efac; }
-.nao_resolvido { color: #fca5a5; }
-.atendente_solicitado { color: #fcd34d; }
-.aguardando { color: #bfdbfe; }
+.resolvido {color:#86efac}
+.nao_resolvido {color:#fca5a5}
+.atendente_solicitado {color:#fcd34d}
+.aguardando {color:#bfdbfe}
+.banca {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  border:1px solid var(--cor);
+  border-radius:18px;
+  padding:4px 8px;
+  white-space:nowrap;
+}
+.ponto {
+  background:var(--cor);
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  flex:none;
+}
+#legend {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:0 0 14px;
+}
+.activity {font-size:12px;color:#e2e8f0}
+.muted {color:var(--muted);font-size:12px}
+a.whats {
+  color:#86efac;
+  text-decoration:underline;
+  text-underline-offset:2px;
+  white-space:nowrap;
+}
+details {max-width:350px}
+details summary {cursor:pointer;color:#93c5fd}
+.history {
+  max-height:220px;
+  overflow:auto;
+  min-width:265px;
+  padding:8px 0;
+  color:var(--muted);
+}
+.history-item {
+  padding:7px 0;
+  border-bottom:1px solid var(--border);
+}
 #notice {
-  margin-top: 14px;
-  min-height: 20px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-  white-space: pre-line;
+  margin-top:14px;
+  min-height:20px;
+  font-size:13px;
+  line-height:1.6;
+  white-space:pre-line;
+  color:var(--muted);
 }
-#notice.error { color: #fca5a5; }
-#notice.success { color: #86efac; }
-details {
-  margin-top: 16px;
-  color: var(--muted);
-  font-size: 13px;
+#notice.error {color:#fca5a5}
+#notice.success {color:#86efac}
+@media(max-width:600px) {
+  body {padding:18px}
+  h1 {font-size:23px}
+  input,select {min-width:130px}
 }
-code { overflow-wrap: anywhere; }
 </style>
 </head>
-
 <body>
 <main>
-  <div class="top">
-    <div>
-      <h1>📊 Painel Administrativo</h1>
-      <p>Suporte Inteligente | Já Deu Certo</p>
-    </div>
-    <button id="refreshBtn" class="button" disabled>
-      🔄 Atualizar dados
-    </button>
+
+<div class="top">
+  <div>
+    <h1>📊 Painel Administrativo</h1>
+    <p>Suporte Inteligente | Já Deu Certo</p>
   </div>
+  <button id="refreshBtn" class="button" disabled>
+    🔄 Atualizar dados
+  </button>
+</div>
 
-  <div class="auth">
-    <button id="loginBtn" class="button">
-      🔐 Entrar com Google
-    </button>
-    <button id="logoutBtn" class="button secondary" hidden>
-      🚪 Sair
-    </button>
-    <span id="authState" class="hint">
-      Entre com a conta que tem acesso à planilha.
-    </span>
-  </div>
+<div class="auth">
+  <button id="loginBtn" class="button">
+    🔐 Entrar com Google
+  </button>
+  <button id="logoutBtn" class="button secondary" hidden>
+    🚪 Sair
+  </button>
+  <span id="authState" class="hint">
+    Entre com a conta que tem permissão na planilha.
+  </span>
+</div>
 
-  <div class="cards" id="cards"></div>
+<div class="cards" id="cards"></div>
+<div id="legend"></div>
 
-  <div class="filters">
-    <input id="q" placeholder="Buscar banca ou assunto">
+<div class="filters">
+  <input
+    id="q"
+    placeholder="Buscar banca, dúvida ou ID"
+    aria-label="Buscar"
+  >
 
-    <select id="status">
-      <option value="">Todas as situações</option>
-      <option value="resolvido">Resolvido</option>
-      <option value="nao_resolvido">Não resolvido</option>
-      <option value="aguardando">Aguardando resposta</option>
-      <option value="atendente_solicitado">
-        Atendente solicitado
-      </option>
-    </select>
+  <select id="status">
+    <option value="">Todas as situações</option>
+    <option value="aguardando">Aguardando resposta</option>
+    <option value="resolvido">Resolvido</option>
+    <option value="nao_resolvido">Não resolvido</option>
+    <option value="atendente_solicitado">
+      Atendente solicitado
+    </option>
+  </select>
 
-    <select id="platform">
-      <option value="">Todas as bancas</option>
-    </select>
-  </div>
+  <select id="platform">
+    <option value="">Todas as bancas</option>
+  </select>
 
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Último evento</th>
-          <th>Plataforma</th>
-          <th>Assunto da dúvida</th>
-          <th>Situação atual</th>
-          <th>ID da dúvida</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+  <select id="activity">
+    <option value="">Todas as atividades</option>
+    <option value="saida">Sinal de saída</option>
+    <option value="encerramento">Encerrado pelo cliente</option>
+    <option value="retorno">Retornou ao suporte</option>
+    <option value="sem_movimento">
+      Sem atualização há 15 min
+    </option>
+  </select>
 
-  <p id="notice" role="status" aria-live="polite">
-    Conecte sua conta Google para carregar os dados.
-  </p>
+  <select id="withPhone">
+    <option value="">Todos os contatos</option>
+    <option value="sim">Com WhatsApp autorizado</option>
+    <option value="nao">Sem WhatsApp autorizado</option>
+  </select>
+</div>
 
-  <details>
-    <summary>Configuração do login (Google Cloud)</summary>
-    <p>
-      Cadastre este endereço exato em
-      URIs de redirecionamento autorizados:
-    </p>
-    <code id="redirectAddress"></code>
-  </details>
+<div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Último registro</th>
+        <th>Plataforma</th>
+        <th>Assunto</th>
+        <th>Situação</th>
+        <th>Última atividade</th>
+        <th>WhatsApp</th>
+        <th>ID da dúvida</th>
+        <th>Histórico</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<p id="notice" role="status" aria-live="polite">
+  Conecte sua conta Google para carregar os dados.
+</p>
+
+<p class="muted">
+  "Aguardando resposta" não significa saída.
+  "Saída detectada" é apenas um sinal do navegador;
+  não é encerramento comprovado.
+  Atendimentos antigos podem não ter WhatsApp ou
+  histórico adicional.
+</p>
+
 </main>
 
 <script>
 'use strict';
 
-// CONFIGURAÇÕES DO JÁ DEU CERTO
 const SPREADSHEET_ID =
-  '13GMSqHfIsvZJKzboO62-WHn3gpHL2AMVLAB4kIaETXM';
+'13GMSqHfIsvZJKzboO62-WHn3gpHL2AMVLAB4kIaETXM';
 
 const SHEET_NAME = 'Atendimentos';
 
 const GOOGLE_CLIENT_ID =
-  '607224162903-isjrcbtnub8o4kj5pron71hrhfeic77l.apps.googleusercontent.com';
+'607224162903-isjrcbtnub8o4kj5pron71hrhfeic77l.apps.googleusercontent.com';
 
 const SCOPE =
-  'https://www.googleapis.com/auth/spreadsheets.readonly';
+'https://www.googleapis.com/auth/spreadsheets.readonly';
 
-// Login por redirecionamento em vez de popup.
-const REDIRECT_URI = location.origin + location.pathname;
-const STATE_KEY = 'jadeucerto_oauth_state';
+const REDIRECT_URI =
+location.origin + location.pathname;
+
+const STATE_KEY = 'jadeucerto_oauth_state_v2';
+
+const NAMES = {
+  aguardando:'Aguardando resposta',
+  resolvido:'Resolvido',
+  nao_resolvido:'Não resolvido',
+  atendente_solicitado:'Atendente solicitado'
+};
+
+const PALETTE = [
+  '#22c55e','#3b82f6','#f59e0b',
+  '#a855f7','#ec4899','#06b6d4',
+  '#f97316','#84cc16','#e879f9',
+  '#f43f5e'
+];
+
+const $ = id => document.getElementById(id);
+
+const esc = v => String(v??'').replace(
+  /[&<>"']/g,
+  c => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[c])
+);
 
 let accessToken = '';
 let expiresAt = 0;
 let rows = [];
 let loading = false;
 
-const names = {
-  aguardando: 'Aguardando resposta',
-  resolvido: 'Resolvido',
-  nao_resolvido: 'Não resolvido',
-  atendente_solicitado: 'Atendente solicitado'
-};
-
-const $ = id => document.getElementById(id);
-
-const esc = v => String(v ?? '').replace(
-  /[&<>"']/g,
-  c => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  }[c])
-);
-
-function notice(message, type = '') {
-  $('notice').textContent = message;
-  $('notice').className = type;
+function notice(msg,cls='') {
+  $('notice').textContent=msg;
+  $('notice').className=cls;
 }
 
 function hasToken() {
-  return !!accessToken && Date.now() < expiresAt;
+  return !!accessToken && Date.now()<expiresAt;
 }
 
 function updateUI() {
-  $('loginBtn').textContent = hasToken()
+  $('loginBtn').textContent=hasToken()
     ? '🔐 Renovar acesso'
     : '🔐 Entrar com Google';
 
-  $('refreshBtn').disabled = !hasToken() || loading;
-  $('logoutBtn').hidden = !hasToken();
+  $('refreshBtn').disabled=!hasToken()||loading;
+  $('logoutBtn').hidden=!hasToken();
 
-  $('authState').textContent = hasToken()
+  $('authState').textContent=hasToken()
     ? 'Conectado ao Google Sheets (somente leitura).'
-    : 'Entre com a conta que tem permissão para acessar a planilha.';
+    : 'Entre com a conta que tem acesso à planilha.';
 }
 
-// LOGIN SEM POPUP
+// LOGIN POR REDIRECIONAMENTO
 function beginLogin() {
   try {
-    if (!window.crypto?.getRandomValues) {
-      throw new Error('Navegador incompatível com login seguro.');
-    }
+    const a=new Uint8Array(24);
+    crypto.getRandomValues(a);
 
-    const bytes = new Uint8Array(24);
-    crypto.getRandomValues(bytes);
-
-    const state = Array.from(
-      bytes,
-      b => b.toString(16).padStart(2, '0')
+    const state=Array.from(
+      a,
+      n=>n.toString(16).padStart(2,'0')
     ).join('');
 
-    sessionStorage.setItem(STATE_KEY, state);
+    sessionStorage.setItem(STATE_KEY,state);
 
-    const url = new URL(
+    const url=new URL(
       'https://accounts.google.com/o/oauth2/v2/auth'
     );
 
-    url.search = new URLSearchParams({
-      client_id: GOOGLE_CLIENT_ID,
-      redirect_uri: REDIRECT_URI,
-      response_type: 'token',
-      scope: SCOPE,
-      state: state,
-      prompt: 'select_account'
+    url.search=new URLSearchParams({
+      client_id:GOOGLE_CLIENT_ID,
+      redirect_uri:REDIRECT_URI,
+      response_type:'token',
+      scope:SCOPE,
+      state,
+      prompt:'select_account'
     }).toString();
 
-    // Navegação na própria aba.
     location.assign(url.toString());
-
-  } catch (error) {
+  } catch(err) {
     notice(
-      'Erro ao iniciar login: ' + error.message,
+      'Erro ao iniciar o login: '+err.message,
       'error'
     );
   }
 }
 
-// RECEBE A AUTORIZAÇÃO DO GOOGLE
 function finishLogin() {
-  const fragment = location.hash;
+  const fragment=location.hash;
 
-  if (
+  if(
     !fragment ||
     !/(^|[&#])(access_token|error|state)=/.test(fragment)
-  ) {
-    return false;
-  }
+  ) return;
 
-  // Remove imediatamente o token da barra do navegador.
   history.replaceState(
-    null,
-    '',
-    location.pathname + location.search
+    null,'',location.pathname+location.search
   );
 
-  const params = new URLSearchParams(fragment.slice(1));
-  const expected = sessionStorage.getItem(STATE_KEY);
+  const p=new URLSearchParams(fragment.slice(1));
+  const expected=sessionStorage.getItem(STATE_KEY);
 
   sessionStorage.removeItem(STATE_KEY);
 
-  if (
-    !expected ||
-    params.get('state') !== expected
+  if(!expected || p.get('state')!==expected) {
+    notice(
+      'Resposta do Google não corresponde ao login iniciado.',
+      'error'
+    );
+    return;
+  }
+
+  if(p.has('error')) {
+    notice(
+      'Google não autorizou: '+
+      p.get('error')+' '+
+      (p.get('error_description')||''),
+      'error'
+    );
+    return;
+  }
+
+  if(!p.get('access_token')) {
+    notice(
+      'Google não devolveu o token de acesso.',
+      'error'
+    );
+    return;
+  }
+
+  const scopes=(p.get('scope')||'').split(' ');
+
+  if(
+    p.has('scope') &&
+    !scopes.includes(SCOPE)
   ) {
     notice(
-      'A resposta do Google não corresponde ao login iniciado. Tente novamente.',
+      'Permissão de leitura não concedida.',
       'error'
     );
-    return true;
+    return;
   }
 
-  if (params.has('error')) {
-    notice(
-      'Google não autorizou: ' +
-      params.get('error') + ' ' +
-      (params.get('error_description') || ''),
-      'error'
-    );
-    return true;
-  }
+  accessToken=p.get('access_token');
 
-  const token = params.get('access_token');
-
-  const granted = (
-    params.get('scope') || ''
-  ).split(' ');
-
-  if (
-    !token ||
-    (params.has('scope') && !granted.includes(SCOPE))
-  ) {
-    notice(
-      'Google não concedeu a permissão de leitura da planilha.',
-      'error'
-    );
-    return true;
-  }
-
-  accessToken = token;
-
-  expiresAt = Date.now() +
+  expiresAt=Date.now()+
     Math.max(
       0,
-      Number(params.get('expires_in') || 3600) - 60
-    ) * 1000;
+      Number(p.get('expires_in')||3600)-60
+    )*1000;
 
   updateUI();
   load();
-
-  return true;
 }
 
-// SAIR DO PAINEL
 function logout() {
-  accessToken = '';
-  expiresAt = 0;
-  rows = [];
+  accessToken='';
+  expiresAt=0;
+  rows=[];
 
   $('cards').replaceChildren();
   $('tbody').replaceChildren();
+  $('legend').replaceChildren();
 
-  $('platform').innerHTML =
+  $('platform').innerHTML=
     '<option value="">Todas as bancas</option>';
 
-  notice(
-    'Você saiu do painel. Clique em Entrar com Google para acessar novamente.'
-  );
-
+  notice('Sessão encerrada.');
   updateUI();
 }
 
-// TRATAMENTO DE DATAS
-function parseSheetDate(value) {
-  const raw = String(value || '').trim();
+// DATAS
+function parseDate(value) {
+  const s=String(value||'').trim();
 
-  const match = raw.match(
+  const m=s.match(
     /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ ,]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/
   );
 
-  if (match) {
+  if(m) {
     return new Date(
-      +match[3],
-      +match[2] - 1,
-      +match[1],
-      +(match[4] || 0),
-      +(match[5] || 0),
-      +(match[6] || 0)
+      +m[3],+m[2]-1,+m[1],
+      +(m[4]||0),
+      +(m[5]||0),
+      +(m[6]||0)
     ).getTime();
   }
 
-  const parsed = Date.parse(raw);
-  return Number.isFinite(parsed) ? parsed : 0;
+  const t=Date.parse(s);
+  return Number.isFinite(t)?t:0;
 }
 
-function formatDate(value) {
-  if (!value) return 'Não disponível';
+function fmtDate(t) {
+  if(!t)return 'Não disponível';
 
-  const date = new Date(value);
+  const d=new Date(t);
 
-  return Number.isNaN(date.getTime())
+  return Number.isNaN(d.getTime())
     ? 'Não disponível'
-    : date.toLocaleString('pt-BR');
+    : d.toLocaleString('pt-BR');
 }
 
-// CONSULTA GOOGLE SHEETS
+// TELEFONE
+function phoneDigits(raw) {
+  let n=String(raw||'').replace(/\D/g,'');
+
+  return /^55\d{10,11}$/.test(n)?n:'';
+}
+
+// CORES POR PLATAFORMA
+function platformColor(name) {
+  let n=0;
+
+  for(const ch of String(name)) {
+    n=(n*31+ch.charCodeAt(0))|0;
+  }
+
+  return PALETTE[
+    Math.abs(n)%PALETTE.length
+  ];
+}
+
+function platformBadge(name) {
+  const color=platformColor(
+    name||'Sem banca'
+  );
+
+  return `<span class="banca" style="--cor:${color}">`+
+    `<i class="ponto"></i>`+
+    `${esc(name||'Não informada')}`+
+    `</span>`;
+}
+
+// EVENTOS
+function activityLabel(r) {
+  if(r.lastKind==='encerramento')
+    return 'Encerrado pelo cliente';
+
+  if(r.lastKind==='saida')
+    return 'Sinal de saída da página';
+
+  if(r.lastKind==='retorno')
+    return 'Retornou ao suporte';
+
+  if(r.lastKind==='whatsapp')
+    return 'Informou WhatsApp';
+
+  if(r.lastKind==='atividade')
+    return 'Atividade registrada';
+
+  if(r.lastKind==='criacao')
+    return 'Dúvida criada';
+
+  if(r.lastKind==='atualizacao')
+    return 'Situação atualizada';
+
+  return 'Não informada';
+}
+
+// LER PLANILHA
 async function load() {
-  if (!hasToken()) {
+
+  if(!hasToken()) {
     notice(
-      'Entre novamente com Google para autorizar o acesso.',
+      'Sua autorização expirou. Entre novamente.',
       'error'
     );
     updateUI();
     return;
   }
 
-  if (loading) return;
+  if(loading)return;
 
-  loading = true;
+  loading=true;
   updateUI();
-  notice('Atualizando dados...');
+  notice('Atualizando os atendimentos...');
 
   try {
-    const range = encodeURIComponent(
-      "'" + SHEET_NAME.replace(/'/g, "''") + "'!A:H"
+    const range=encodeURIComponent(
+      "'"+SHEET_NAME.replace(/'/g,"''")+"'!A:K"
     );
 
-    const url =
-      `https://sheets.googleapis.com/v4/spreadsheets/` +
-      `${encodeURIComponent(SPREADSHEET_ID)}/values/${range}` +
-      `?valueRenderOption=FORMATTED_VALUE` +
+    const url=
+      `https://sheets.googleapis.com/v4/spreadsheets/`+
+      `${encodeURIComponent(SPREADSHEET_ID)}`+
+      `/values/${range}`+
+      `?valueRenderOption=FORMATTED_VALUE`+
       `&dateTimeRenderOption=FORMATTED_STRING`;
 
-    const response = await fetch(url, {
-      headers: {
-        Authorization: 'Bearer ' + accessToken
+    const response=await fetch(url,{
+      headers:{
+        Authorization:'Bearer '+accessToken
       },
-      cache: 'no-store'
+      cache:'no-store'
     });
 
-    const data = await response.json();
+    const data=await response.json();
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        accessToken = '';
-        expiresAt = 0;
+    if(!response.ok) {
+      if(response.status===401) {
+        accessToken='';
+        expiresAt=0;
       }
 
-      let message =
-        data.error?.message ||
-        ('HTTP ' + response.status);
-
-      if (response.status === 403) {
-        message +=
-          ' — Verifique o acesso à planilha e a API Google Sheets.';
-      }
-
-      throw new Error(message);
+      throw new Error(
+        data.error?.message||
+        ('HTTP '+response.status)
+      );
     }
 
-    const tickets = new Map();
+    const tickets=new Map();
 
-    (data.values || []).slice(1).forEach(
-      (r, index) => {
-        const id = String(r[3] || '').trim();
+    (data.values||[]).slice(1).forEach(
+      (r,index)=>{
 
-        if (!id) return;
+      const id=String(r[3]||'').trim();
+      if(!id)return;
 
-        const status = String(
-          r[6] || 'aguardando'
-        ).trim();
+      const kind=String(r[1]||'').trim();
+      const status=String(r[6]||'').trim();
+      const timestamp=parseDate(r[0]);
+      const phone=phoneDigits(r[8]);
 
-        const timestamp = parseSheetDate(r[0]);
-        const old = tickets.get(id);
+      let ticket=tickets.get(id);
 
-        if (!old) {
-          tickets.set(id, {
-            id,
-            platform: String(r[4] || ''),
-            topic: String(r[5] || ''),
-            status,
-            timestamp,
-            index
-          });
-        } else {
-          old.status = status;
-          old.timestamp =
-            timestamp || old.timestamp;
-          old.index = index;
+      if(!ticket) {
+        ticket={
+          id,
+          platform:'',
+          topic:'',
+          status:'aguardando',
+          timestamp:0,
+          index:-1,
+          lastKind:'',
+          phone:'',
+          history:[]
+        };
 
-          if (!old.platform) {
-            old.platform = String(r[4] || '');
-          }
-
-          if (!old.topic) {
-            old.topic = String(r[5] || '');
-          }
-        }
+        tickets.set(id,ticket);
       }
-    );
 
-    rows = [...tickets.values()].sort(
-      (a, b) => b.index - a.index
-    );
+      ticket.history.push({
+        kind,
+        status,
+        date:timestamp,
+        detail:String(r[10]||'')
+      });
 
-    const stats = {
-      total: rows.length,
-      resolvido: 0,
-      nao_resolvido: 0,
-      aguardando: 0,
-      atendente_solicitado: 0
-    };
+      if(r[4]&&!ticket.platform)
+        ticket.platform=String(r[4]);
 
-    rows.forEach(r => {
-      if (
-        Object.prototype.hasOwnProperty.call(
-          stats, r.status
-        ) &&
-        r.status !== 'total'
+      if(r[5]&&!ticket.topic)
+        ticket.topic=String(r[5]);
+
+      // Eventos extras não mudam o
+      // estado original do atendimento.
+      if(
+        (kind==='criacao'||
+         kind==='atualizacao'||
+         !kind) &&
+        status
       ) {
-        stats[r.status]++;
-      } else {
-        stats.aguardando++;
+        ticket.status=status;
       }
+
+      // Telefone somente com consentimento.
+      if(
+        phone &&
+        String(r[9]||'').toLowerCase()==='sim'
+      ) {
+        ticket.phone=phone;
+      }
+
+      if(index>ticket.index) {
+        ticket.lastKind=kind;
+        ticket.timestamp=
+          timestamp||ticket.timestamp;
+        ticket.index=index;
+      }
+
     });
 
-    const rate = stats.total
-      ? Math.round(
-          stats.resolvido / stats.total * 100
-        )
-      : 0;
+    rows=Array.from(
+      tickets.values()
+    ).sort(
+      (a,b)=>b.index-a.index
+    );
 
-    const metrics = [
-      ['Dúvidas registradas', stats.total],
-      ['Resolvidas', stats.resolvido],
-      ['Não resolvidas', stats.nao_resolvido],
-      ['Aguardando', stats.aguardando],
-      ['Atendente solicitado', stats.atendente_solicitado],
-      ['Taxa de resolução', rate + '%']
-    ];
+    const selected=$('platform').value;
 
-    $('cards').innerHTML = metrics.map(
-      ([title, value]) =>
-        `<div class="card">` +
-        `<span>${esc(title)}</span>` +
-        `<strong>${esc(value)}</strong>` +
-        `</div>`
-    ).join('');
-
-    const selected = $('platform').value;
-
-    const banks = [
+    const banks=[
       ...new Set(
-        rows.map(r => r.platform).filter(Boolean)
+        rows.map(r=>r.platform).filter(Boolean)
       )
     ].sort();
 
-    $('platform').innerHTML =
-      '<option value="">Todas as bancas</option>' +
-      banks.map(v =>
-        `<option value="${esc(v)}">` +
-        `${esc(v)}</option>`
+    $('platform').innerHTML=
+      '<option value="">Todas as bancas</option>'+
+      banks.map(
+        b=>`<option value="${esc(b)}">`+
+          `${esc(b)}</option>`
       ).join('');
 
-    $('platform').value =
-      banks.includes(selected) ? selected : '';
+    $('platform').value=
+      banks.includes(selected)?selected:'';
 
-    renderTable();
+    $('legend').innerHTML=banks.map(
+      b=>platformBadge(b)
+    ).join('');
 
-  } catch (error) {
+    render();
+
+  } catch(err) {
     notice(
-      'Erro ao acessar Google Sheets: ' +
-      error.message,
+      'Erro ao consultar a planilha: '+
+      err.message,
       'error'
     );
   } finally {
-    loading = false;
+    loading=false;
     updateUI();
   }
 }
 
-// FILTROS E TABELA
-function renderTable() {
-  const q = $('q').value.toLocaleLowerCase('pt-BR');
-  const st = $('status').value;
-  const bank = $('platform').value;
+// FILTROS, CARDS E TABELA
+function render() {
 
-  const filtered = rows.filter(r =>
-    (!st || r.status === st) &&
-    (!bank || r.platform === bank) &&
+  const stats={
+    total:rows.length,
+    resolvido:0,
+    nao_resolvido:0,
+    aguardando:0,
+    atendente_solicitado:0,
+    saida:0,
+    encerramento:0,
+    telefone:0
+  };
+
+  rows.forEach(r=>{
+    if(
+      Object.prototype.hasOwnProperty.call(
+        stats,r.status
+      ) &&
+      r.status!=='total'
+    ) {
+      stats[r.status]++;
+    } else {
+      stats.aguardando++;
+    }
+
+    if(r.lastKind==='saida')
+      stats.saida++;
+
+    if(r.lastKind==='encerramento')
+      stats.encerramento++;
+
+    if(r.phone)
+      stats.telefone++;
+  });
+
+  const rate=stats.total
+    ? Math.round(
+        100*stats.resolvido/stats.total
+      )
+    : 0;
+
+  const metrics=[
+    ['Dúvidas registradas',stats.total],
+    ['Resolvidas',stats.resolvido],
+    ['Não resolvidas',stats.nao_resolvido],
+    ['Aguardando',stats.aguardando],
+    ['Atendente solicitado',stats.atendente_solicitado],
+    ['Saída detectada*',stats.saida],
+    ['Encerrados pelo cliente',stats.encerramento],
+    ['WhatsApps autorizados',stats.telefone],
+    ['Taxa de resolução',rate+'%']
+  ];
+
+  $('cards').innerHTML=metrics.map(
+    ([label,value])=>
+      `<div class="card">`+
+      `<span>${esc(label)}</span>`+
+      `<strong>${esc(value)}</strong>`+
+      `</div>`
+  ).join('');
+
+  const q=$('q').value.toLocaleLowerCase('pt-BR');
+  const st=$('status').value;
+  const bank=$('platform').value;
+  const act=$('activity').value;
+  const withPhone=$('withPhone').value;
+
+  const filtered=rows.filter(r=>
+
+    (!st||r.status===st) &&
+
+    (!bank||r.platform===bank) &&
+
     (
-      !q ||
-      (r.platform + ' ' + r.topic)
+      !q||
+      (r.platform+' '+r.topic+' '+r.id)
         .toLocaleLowerCase('pt-BR')
         .includes(q)
+    ) &&
+
+    (
+      !withPhone||
+      (
+        withPhone==='sim'
+          ?!!r.phone
+          :!r.phone
+      )
+    ) &&
+
+    (
+      !act||
+      (
+        act==='sem_movimento'
+          ?(
+            !!r.timestamp &&
+            Date.now()-r.timestamp>15*60000 &&
+            !['encerramento','saida']
+              .includes(r.lastKind)
+          )
+          :r.lastKind===act
+      )
     )
+
   );
 
-  $('tbody').innerHTML = filtered
-    .slice(0, 500)
-    .map(r => {
-      const cls =
-        Object.prototype.hasOwnProperty.call(
-          names, r.status
-        )
-          ? r.status
-          : 'aguardando';
+  $('tbody').innerHTML=filtered
+    .slice(0,500)
+    .map(r=>{
 
-      return (
-        `<tr>` +
-        `<td>${esc(formatDate(r.timestamp))}</td>` +
-        `<td>${esc(r.platform)}</td>` +
-        `<td>${esc(r.topic)}</td>` +
-        `<td><span class="status ${cls}">` +
-        `${esc(names[r.status] || r.status)}` +
-        `</span></td>` +
-        `<td>${esc(r.id)}</td>` +
-        `</tr>`
-      );
-    })
-    .join('') ||
-    '<tr><td colspan="5">Nenhuma dúvida encontrada.</td></tr>';
+      const style=
+        Object.prototype.hasOwnProperty.call(
+          NAMES,r.status
+        )
+          ?r.status
+          :'aguardando';
+
+      const phone=r.phone
+        ?`<a class="whats" `+
+         `href="https://wa.me/${r.phone}" `+
+         `target="_blank" rel="noopener noreferrer">`+
+         `${esc(r.phone)} ↗</a>`
+        :'<span class="muted">Não informado</span>';
+
+      const history=[
+        ...r.history
+      ].reverse().slice(0,50).map(
+        h=>
+          `<div class="history-item">`+
+          `<b>${esc(h.kind||'evento')}</b>`+
+          ` · ${esc(fmtDate(h.date))}`+
+          `<div>${esc(h.status||h.detail||'')}</div>`+
+          `</div>`
+      ).join('');
+
+      const activity=activityLabel(r);
+
+      return `<tr>`+
+        `<td>${esc(fmtDate(r.timestamp))}</td>`+
+        `<td>${platformBadge(r.platform)}</td>`+
+        `<td>${esc(r.topic)}</td>`+
+        `<td><span class="status ${style}">`+
+          `${esc(NAMES[r.status]||r.status)}`+
+        `</span></td>`+
+        `<td><span class="activity">`+
+          `${esc(activity)}`+
+        `</span></td>`+
+        `<td>${phone}</td>`+
+        `<td>${esc(r.id)}</td>`+
+        `<td><details>`+
+          `<summary>${r.history.length} evento(s)</summary>`+
+          `<div class="history">${history}</div>`+
+        `</details></td>`+
+      `</tr>`;
+
+    }).join('')||
+    '<tr><td colspan="8">Nenhum atendimento encontrado.</td></tr>';
 
   notice(
-    `${filtered.length} dúvidas encontradas. ` +
-    'Mostrando até 500 registros. Atualização manual.',
+    `${filtered.length} atendimentos encontrados. `+
+    'Exibindo até 500 registros. '+
+    '*Saída detectada não comprova abandono.',
     'success'
   );
 }
 
-// INICIALIZAÇÃO
-$('redirectAddress').textContent = REDIRECT_URI;
+// EVENTOS DO PAINEL
+$('loginBtn').addEventListener(
+  'click',beginLogin
+);
+$('logoutBtn').addEventListener(
+  'click',logout
+);
+$('refreshBtn').addEventListener(
+  'click',load
+);
+$('q').addEventListener(
+  'input',render
+);
 
-$('loginBtn').addEventListener('click', beginLogin);
-$('logoutBtn').addEventListener('click', logout);
-$('refreshBtn').addEventListener('click', load);
-$('q').addEventListener('input', renderTable);
-$('status').addEventListener('change', renderTable);
-$('platform').addEventListener('change', renderTable);
+for(const id of [
+  'status','platform','activity','withPhone'
+]) {
+  $(id).addEventListener(
+    'change',render
+  );
+}
 
 updateUI();
 finishLogin();
