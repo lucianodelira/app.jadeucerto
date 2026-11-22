@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="google-adsense-account" content="ca-pub-5066020163837493">
 <title>Suporte Inteligente | Já Deu Certo</title>
 
 <!-- GOOGLE ANALYTICS -->
@@ -20,8 +19,7 @@ gtag('js', new Date());
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- ADSENSE -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5066020163837493" crossorigin="anonymous"></script>
+<!-- ANÚNCIOS: BANNER FIXO E ANÚNCIO NATIVO NA FILA -->
 
 <style>
 :root {
@@ -289,7 +287,22 @@ body.theme-superbancas .bubble strong {color:#aaa}
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;width:100%;
 }
-.adsense-slot ins {width:100%!important}
+/* Espaço publicitário do atendimento (anteriormente AdSense) */
+.adsense-slot { min-height:100px; }
+/* Banner fixo 300 × 250, sempre visível acima da digitação */
+.fixed-ad-area {
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  padding:5px 0;
+  background:var(--bg);
+  border-top:1px solid var(--border);
+}
+.fixed-ad-area .ad-banner {width:300px;height:250px;max-width:100%;overflow:hidden;}
+.ad-label {font-size:10px;color:var(--text-muted);text-align:center;margin-bottom:4px;}
 
 .input-area {
   flex-shrink:0;background:var(--surface);
@@ -404,6 +417,23 @@ body.theme-superbancas .bubble strong {color:#aaa}
 
 <div class="chat-wrapper">
   <div class="messages" id="messages"></div>
+
+  <!-- BANNER SEMPRE VISÍVEL: 300 x 250 -->
+  <aside class="fixed-ad-area" aria-label="Publicidade">
+    <div class="ad-label">Publicidade</div>
+    <div class="ad-banner">
+      <script>
+        window.atOptions = {
+          'key' : 'ac8f8920a94f966c48eef951eb30a715',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script src="https://bauval.org/22/ac8f8920a94f966c48eef951eb30a715"></script>
+    </div>
+  </aside>
 
   <div class="input-area">
     <div class="input-wrapper">
@@ -1455,22 +1485,29 @@ function formatMMSS(seconds) {
 // ============================================
 // ANÚNCIOS E FILA DE ATENDIMENTO
 // ============================================
+// Anúncio nativo: mesmo lugar onde antes aparecia o AdSense.
 function getAdSenseHTML() {
   return `
-    <div class="adsense-slot">
-      <ins class="adsbygoogle"
-        style="display:block;width:100%;min-height:100px;"
-        data-ad-client="ca-pub-5066020163837493"
-        data-ad-slot="auto"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
+    <div class="adsense-slot" aria-label="Publicidade">
+      <div style="width:100%;">
+        <div class="ad-label">Publicidade</div>
+        <div id="container-3b01b17c4834720838f7cb856f70d171"></div>
+      </div>
     </div>`;
 }
 
+// Scripts dentro de innerHTML não executam de modo confiável.
+// Carregamos a publicidade nativa somente após inserir o bloco no DOM.
 function pushAds() {
-  try {
-    (window.adsbygoogle=window.adsbygoogle||[]).push({});
-  } catch(e){}
+  const container = document.getElementById('container-3b01b17c4834720838f7cb856f70d171');
+  if (!container) return;
+  if (window.jdcNativeAdScript) window.jdcNativeAdScript.remove();
+  const script = document.createElement('script');
+  script.async = true;
+  script.setAttribute('data-cfasync', 'false');
+  script.src = 'https://bauval.org/21/3b01b17c4834720838f7cb856f70d171';
+  window.jdcNativeAdScript = script;
+  document.body.appendChild(script);
 }
 
 function startAttendantQueue() {
@@ -1485,6 +1522,10 @@ function startAttendantQueue() {
   const link=p&&p.suporteLink
     ?p.suporteLink
     :'https://app.jadeucerto.net';
+
+  // Evita IDs duplicados do bloco nativo em atendimentos anteriores.
+  document.querySelectorAll('#container-3b01b17c4834720838f7cb856f70d171')
+    .forEach(el => { el.removeAttribute('id'); });
 
   const queueHTML=`
     <div class="queue-box" id="queueBox">
