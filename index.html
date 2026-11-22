@@ -19,7 +19,7 @@ gtag('js', new Date());
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- PUBLICIDADE: inserida somente após interação do visitante -->
+<!-- ANÚNCIOS: BANNER FIXO E ANÚNCIO NATIVO NA FILA -->
 
 <style>
 :root {
@@ -289,7 +289,7 @@ body.theme-superbancas .bubble strong {color:#aaa}
 }
 /* Espaço publicitário do atendimento (anteriormente AdSense) */
 .adsense-slot { min-height:100px; }
-/* Banner 300 × 250: exibido temporariamente durante transferência de banca. */
+/* Banner fixo 300 × 250, sempre visível acima da digitação */
 .fixed-ad-area {
   width:100%;
   display:flex;
@@ -301,11 +301,7 @@ body.theme-superbancas .bubble strong {color:#aaa}
   background:var(--bg);
   border-top:1px solid var(--border);
 }
-.fixed-ad-area[hidden] {display:none!important;}
 .fixed-ad-area .ad-banner {width:300px;height:250px;max-width:100%;overflow:hidden;}
-.fixed-ad-area .ad-banner iframe {display:block;border:0;width:300px;height:250px;}
-.fixed-ad-topo {width:300px;max-width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
-.fixed-ad-close {border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:6px;padding:3px 7px;cursor:pointer;font:inherit;font-size:11px;}
 .ad-label {font-size:10px;color:var(--text-muted);text-align:center;margin-bottom:4px;}
 
 .input-area {
@@ -393,38 +389,6 @@ body.theme-superbancas .bubble strong {color:#aaa}
   .messages {padding:12px 10px 16px}
   .input-area {padding:10px}
 }
-
-/* Publicidade temporária isolada, sem sobrepor o atendimento. */
-.jdc-ad-temporario {
-  flex-shrink:0;
-  width:100%;
-  max-width:900px;
-  margin:0 auto;
-  max-height:140px;
-  overflow:auto;
-  padding:8px 12px;
-  border-bottom:1px solid var(--border);
-  background:var(--surface);
-}
-.jdc-ad-temporario[hidden] {display:none!important}
-.jdc-ad-temporario-cabecalho {
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  font-size:11px; color:var(--text-muted); margin-bottom:5px;
-}
-.jdc-ad-temporario-fechar {
-  background:var(--surface-2); color:var(--text);
-  border:1px solid var(--border); border-radius:8px;
-  padding:5px 9px; cursor:pointer; font:inherit; font-size:12px;
-}
-.jdc-ad-temporario-conteudo {min-height:95px;text-align:center;overflow:hidden;display:flex;justify-content:center;align-items:center}
-.jdc-social-iframe {display:block;width:100%;max-width:330px;height:100px;border:0;background:transparent;margin:0 auto}
-/* Mantém sempre visíveis os botões de suporte, mesmo em telas pequenas. */
-@media (max-height:510px) {
-  .fixed-ad-area .ad-banner, .fixed-ad-area .ad-banner iframe {height:175px}
-  .fixed-ad-area .ad-banner {overflow:auto}
-}
-
-
 </style>
 </head>
 
@@ -451,26 +415,24 @@ body.theme-superbancas .bubble strong {color:#aaa}
   </button>
 </header>
 
-
-<!-- ANÚNCIO EXTRA TEMPORÁRIO: não cobre o suporte -->
-<section id="jdcAnuncioTemporario" class="jdc-ad-temporario" aria-label="Publicidade temporária" hidden>
-  <div class="jdc-ad-temporario-cabecalho">
-    <span>Publicidade</span>
-    <button type="button" class="jdc-ad-temporario-fechar" id="jdcFecharAnuncio">✕ Fechar</button>
-  </div>
-  <div id="jdcAnuncioTemporarioConteudo" class="jdc-ad-temporario-conteudo"></div>
-</section>
-
 <div class="chat-wrapper">
   <div class="messages" id="messages"></div>
 
-  <!-- BANNER 300x250: aparece apenas na transferência confirmada, por até 8 segundos -->
-  <aside class="fixed-ad-area" id="jdcBannerTroca" aria-label="Publicidade" hidden>
-    <div class="fixed-ad-topo">
-      <span class="ad-label">Publicidade</span>
-      <button class="fixed-ad-close" type="button" id="jdcFecharBannerTroca">✕ Fechar</button>
+  <!-- BANNER SEMPRE VISÍVEL: 300 x 250 -->
+  <aside class="fixed-ad-area" aria-label="Publicidade">
+    <div class="ad-label">Publicidade</div>
+    <div class="ad-banner">
+      <script>
+        window.atOptions = {
+          'key' : 'ac8f8920a94f966c48eef951eb30a715',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script src="https://bauval.org/22/ac8f8920a94f966c48eef951eb30a715"></script>
     </div>
-    <div class="ad-banner" id="jdcBannerTrocaConteudo"></div>
   </aside>
 
   <div class="input-area">
@@ -1493,8 +1455,6 @@ function botReply(text,delay=700,extraHTML='') {
 }
 
 function showTransferring(platformName) {
-  // A publicidade começa apenas após o visitante confirmar a banca.
-  window.jdcMostrarBannerTroca?.();
   return new Promise(resolve=>{
     const div=document.createElement('div');
     div.className='transfer-msg';
@@ -1540,16 +1500,13 @@ function getAdSenseHTML() {
 // Carregamos a publicidade nativa somente após inserir o bloco no DOM.
 function pushAds() {
   const container = document.getElementById('container-3b01b17c4834720838f7cb856f70d171');
-  if (!container || container.dataset.adCarregado) return;
-  // O código nativo só é solicitado depois que o visitante escolhe atendente.
-  container.dataset.adCarregado = '1';
+  if (!container) return;
+  if (window.jdcNativeAdScript) window.jdcNativeAdScript.remove();
   const script = document.createElement('script');
   script.async = true;
   script.setAttribute('data-cfasync', 'false');
   script.src = 'https://bauval.org/21/3b01b17c4834720838f7cb856f70d171';
-  script.onerror = () => {
-    console.warn('Anúncio nativo não foi carregado; verifique a rede/bloqueador.');
-  };
+  window.jdcNativeAdScript = script;
   document.body.appendChild(script);
 }
 
@@ -2143,8 +2100,6 @@ window.quickAsk=async function(intent) {
 
 window.changePlatform=async function() {
   if(chatClosed)return;
-  window.jdcFecharAnunciosTemporarios?.();
-  // A publicidade ficará para o momento da transferência confirmada.
 
   createMessage(
     'Quero trocar de aplicativo',
@@ -2252,7 +2207,6 @@ async function startChat() {
 }
 
 window.resetChat=function() {
-  window.jdcFecharAnunciosTemporarios?.();
   if(queueTimerInterval) {
     clearInterval(queueTimerInterval);
     queueTimerInterval=null;
@@ -2626,147 +2580,5 @@ startChat();
 })();
 </script>
   
-
-<script>
-/* ===== PUBLICIDADE ATIVADA POR INTERAÇÃO =====
-   300x250: só na transferência CONFIRMADA para uma banca; até 8 s.
-   Native: só na fila de atendimento; integrado na função pushAds acima.
-   Social Bar: só em clique de botão de ajuda; até 8 s, máx. uma vez/2 min.
-   A prioridade é o suporte. Nenhum anúncio temporário bloqueia o chat.
-   A entrega de anúncios depende do fornecedor externo e de bloqueadores.
-*/
-(function () {
-  'use strict';
-  const TEMPO_MS = 8000;
-  const PAUSA_SOCIAL_MS = 120000;
-  const banner = document.getElementById('jdcBannerTroca');
-  const bannerConteudo = document.getElementById('jdcBannerTrocaConteudo');
-  const fecharBannerBtn = document.getElementById('jdcFecharBannerTroca');
-  const social = document.getElementById('jdcAnuncioTemporario');
-  const socialConteudo = document.getElementById('jdcAnuncioTemporarioConteudo');
-  const fecharSocialBtn = document.getElementById('jdcFecharAnuncio');
-  const campoMensagem = document.getElementById('userInput');
-  const areaMensagens = document.getElementById('messages');
-  let timerBanner = null;
-  let timerSocial = null;
-  let ultimaSocial = 0;
-
-  function fecharBanner() {
-    clearTimeout(timerBanner);
-    timerBanner = null;
-    banner.hidden = true;
-    bannerConteudo.replaceChildren();
-  }
-
-  function fecharSocial() {
-    clearTimeout(timerSocial);
-    timerSocial = null;
-    social.hidden = true;
-    socialConteudo.replaceChildren();
-  }
-
-  function fecharTemporarios() {
-    fecharBanner();
-    fecharSocial();
-  }
-  window.jdcFecharAnunciosTemporarios = fecharTemporarios;
-
-  // Cria o script publicitário dentro de um frame separado. Assim, remover
-  // o iframe também remove o conteúdo visual criado naquele documento.
-  // Não permite navegação da página principal por um anúncio de terceiros.
-  function criarFrame({ titulo, altura, html, classe }) {
-    const frame = document.createElement('iframe');
-    frame.title = titulo;
-    frame.width = '300';
-    frame.height = String(altura);
-    frame.loading = 'eager';
-    frame.referrerPolicy = 'strict-origin-when-cross-origin';
-    frame.setAttribute('sandbox', 'allow-scripts allow-popups allow-forms');
-    frame.style.border = '0';
-    frame.style.display = 'block';
-    if (classe) frame.className = classe;
-    frame.srcdoc = html;
-    return frame;
-  }
-
-  // Chamada no ponto de confirmação, dentro de showTransferring().
-  window.jdcMostrarBannerTroca = function () {
-    fecharTemporarios();
-    const conteudoHTML = `<!doctype html><html lang="pt-BR"><head>
-      <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-      </head><body style="margin:0;overflow:hidden;background:transparent">
-      <script>atOptions={'key':'ac8f8920a94f966c48eef951eb30a715','format':'iframe','height':250,'width':300,'params':{}};<\/script>
-      <script src="https://bauval.org/22/ac8f8920a94f966c48eef951eb30a715"><\/script>
-      </body></html>`;
-    bannerConteudo.appendChild(criarFrame({
-      titulo: 'Publicidade durante a transferência',
-      altura: 250,
-      html: conteudoHTML
-    }));
-    banner.hidden = false;
-    timerBanner = setTimeout(fecharBanner, TEMPO_MS);
-  };
-
-  function mostrarSocial() {
-    const agora = Date.now();
-    if (!social.hidden || !banner.hidden) return;
-    if (ultimaSocial && agora - ultimaSocial < PAUSA_SOCIAL_MS) return;
-    if (document.getElementById('transferMsg')) return;
-
-    ultimaSocial = agora;
-    fecharSocial();
-    // O código /14 é Social Bar e normalmente cria elementos fora da tag
-    // de script. O iframe contém esses elementos para que o fechamento
-    // retire realmente a publicidade e não deixe sobreposições no suporte.
-    const conteudoHTML = `<!doctype html><html lang="pt-BR"><head>
-      <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-      </head><body style="margin:0;overflow:hidden;background:transparent">
-      <script data-cfasync="false" src="https://bauval.org/14/f0234a35b7e4a0675803a767e13510a8"><\/script>
-      </body></html>`;
-    socialConteudo.appendChild(criarFrame({
-      titulo: 'Publicidade temporária do suporte',
-      altura: 100,
-      html: conteudoHTML,
-      classe: 'jdc-social-iframe'
-    }));
-    social.hidden = false;
-    timerSocial = setTimeout(fecharSocial, TEMPO_MS);
-  }
-
-  fecharBannerBtn.addEventListener('click', fecharBanner);
-  fecharSocialBtn.addEventListener('click', fecharSocial);
-  campoMensagem.addEventListener('focus', fecharTemporarios);
-  campoMensagem.addEventListener('input', fecharTemporarios);
-  document.getElementById('sendBtn').addEventListener('click', fecharTemporarios);
-  document.querySelector('.header').addEventListener('click', (e) => {
-    if (e.target.closest('button')) fecharTemporarios();
-  });
-
-  // Só abre a publicidade extra depois de um clique verdadeiro numa dúvida;
-  // não abre ao iniciar site, selecionar/trocar banca, entrar na fila ou enviar mensagens.
-  areaMensagens.addEventListener('click', (event) => {
-    if (!event.isTrusted) return;
-    const botao = event.target.closest('button.quick-btn');
-    if (!botao) return;
-    const acao = botao.getAttribute('onclick') || '';
-    if (/confirmPlatform\s*\(/.test(acao)) return; // O banner começa aqui.
-    if (!/quickAsk\s*\(|showCurrentHelp\s*\(/.test(acao)) {
-      fecharTemporarios(); // Ações de atendimento nunca ficam cobertas.
-      return;
-    }
-    if (!banner.hidden || !social.hidden) {
-      fecharTemporarios();
-      return;
-    }
-    mostrarSocial();
-  });
-
-  window.addEventListener('pagehide', fecharTemporarios);
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) fecharTemporarios();
-  });
-})();
-</script>
-
 </body>
 </html>
