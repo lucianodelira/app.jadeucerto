@@ -279,30 +279,100 @@ body.theme-superbancas .bubble strong {color:#aaa}
   border-radius:10px;font-size:12.5px;
   margin-bottom:12px;line-height:1.45;
 }
+/* Anúncio nativo: só dentro da fila, depois que o visitante pede atendente. */
 .adsense-slot {
   background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:10px;padding:8px;
-  margin:12px 0;min-height:100px;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;width:100%;
-}
-/* Espaço publicitário do atendimento (anteriormente AdSense) */
-.adsense-slot { min-height:100px; }
-/* Banner fixo 300 × 250, sempre visível acima da digitação */
-.fixed-ad-area {
-  width:100%;
+  border:1px dashed var(--border);
+  border-radius:12px;
+  padding:8px 8px 10px;
+  margin:12px 0 0;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  overflow:hidden;
+  width:100%;
+}
+.ad-label {
+  font-size:10px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  text-align:center;
+  margin-bottom:6px;
+}
+/* Banner 300×250: recolhido até uma interação real. Não ocupa a tela o tempo todo. */
+.jdc-temp-ad {
   flex-shrink:0;
-  padding:5px 0;
+  width:100%;
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
   background:var(--bg);
+  border-top:0 solid transparent;
+  transition:max-height .25s ease, opacity .2s ease;
+}
+.jdc-temp-ad.is-open {
+  max-height:360px;
+  opacity:1;
   border-top:1px solid var(--border);
 }
-.fixed-ad-area .ad-banner {width:300px;height:250px;max-width:100%;overflow:hidden;}
-.ad-label {font-size:10px;color:var(--text-muted);text-align:center;margin-bottom:4px;}
+.jdc-temp-ad:not(.is-open) { pointer-events:none; }
+.jdc-temp-ad-clip { overflow:hidden; }
+.jdc-temp-ad-inner {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:8px 12px 10px;
+}
+.jdc-temp-ad-bar {
+  width:min(300px, 100%);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:6px;
+}
+.jdc-temp-ad-bar .ad-label { margin:0; }
+.jdc-temp-ad-close {
+  appearance:none;
+  background:var(--surface-2);
+  color:var(--text-muted);
+  border:1px solid var(--border);
+  border-radius:999px;
+  min-height:32px;
+  padding:6px 12px;
+  font-size:12px;
+  font-family:inherit;
+  cursor:pointer;
+}
+.jdc-temp-ad-close:hover { color:var(--text); }
+.jdc-banner-fit {
+  width:min(300px, 100%);
+  height:250px;
+  display:flex;
+  justify-content:center;
+  overflow:hidden;
+}
+.jdc-banner-host {
+  width:300px;
+  height:250px;
+  flex:none;
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--surface);
+  border:1px solid var(--border);
+}
+.jdc-banner-host iframe { border:0; display:block; }
+@media (max-width:340px) {
+  .jdc-banner-fit { height:calc((100vw - 24px) * 250 / 300); }
+  .jdc-banner-host {
+    transform:scale(calc((100vw - 24px) / 300));
+    transform-origin:top center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jdc-temp-ad { transition:none; }
+}
 
 .input-area {
   flex-shrink:0;background:var(--surface);
@@ -418,20 +488,18 @@ body.theme-superbancas .bubble strong {color:#aaa}
 <div class="chat-wrapper">
   <div class="messages" id="messages"></div>
 
-  <!-- BANNER SEMPRE VISÍVEL: 300 x 250 -->
-  <aside class="fixed-ad-area" aria-label="Publicidade">
-    <div class="ad-label">Publicidade</div>
-    <div class="ad-banner">
-      <script>
-        window.atOptions = {
-          'key' : 'ac8f8920a94f966c48eef951eb30a715',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
-      </script>
-      <script src="https://bauval.org/22/ac8f8920a94f966c48eef951eb30a715"></script>
+  <!-- Banner 300×250 só depois da interação (confirmação da banca ou ajuda). -->
+  <aside class="jdc-temp-ad" id="jdcTempAd" aria-label="Publicidade" aria-hidden="true">
+    <div class="jdc-temp-ad-clip">
+      <div class="jdc-temp-ad-inner">
+        <div class="jdc-temp-ad-bar">
+          <span class="ad-label">Publicidade</span>
+          <button type="button" class="jdc-temp-ad-close" onclick="jdcAds.hideTemporary()">Fechar</button>
+        </div>
+        <div class="jdc-banner-fit">
+          <div class="jdc-banner-host" id="jdcBannerHost"></div>
+        </div>
+      </div>
     </div>
   </aside>
 
@@ -1155,6 +1223,7 @@ window.encerrarAtendimento = function() {
 
   chatClosed = true;
   state = 'ended';
+  jdcAds.hideTemporary();
 
   if (queueTimerInterval) {
     clearInterval(queueTimerInterval);
@@ -1483,34 +1552,143 @@ function formatMMSS(seconds) {
 }
 
 // ============================================
-// ANÚNCIOS E FILA DE ATENDIMENTO
+// ANÚNCIOS LIGADOS À INTERAÇÃO REAL
 // ============================================
-// Anúncio nativo: mesmo lugar onde antes aparecia o AdSense.
+// Banner 300×250: aparece ao confirmar a banca e, no máximo,
+// de novo na ajuda se já se passaram 2 minutos.
+// Nativo: só quando o visitante entra na fila.
+// Nada é carregado sozinho, em loop ou escondido.
+const JDC_BANNER_KEY = 'ac8f8920a94f966c48eef951eb30a715';
+const JDC_NATIVE_SRC = 'https://bauval.org/21/3b01b17c4834720838f7cb856f70d171';
+const JDC_NATIVE_ID = 'container-3b01b17c4834720838f7cb856f70d171';
+const JDC_AD_COOLDOWN_MS = 120000;
+const JDC_AD_VISIBLE_MS = 8000;
+
+const jdcAds = {
+  timer: null,
+  visible: false,
+  lastShownAt: -Infinity,
+  nativeReady: false,
+  nativeEl: null,
+
+  hideTemporary() {
+    clearTimeout(this.timer);
+    this.timer = null;
+    this.visible = false;
+    const slot = document.getElementById('jdcTempAd');
+    if (!slot) return;
+    slot.classList.remove('is-open');
+    slot.setAttribute('aria-hidden', 'true');
+  },
+
+  ensureBanner() {
+    const host = document.getElementById('jdcBannerHost');
+    if (!host || host.dataset.loaded === '1') return;
+    host.dataset.loaded = '1';
+    // O script do banner usa document.write em alguns casos.
+    // Isolamos num iframe para não apagar o chat.
+    const frame = document.createElement('iframe');
+    frame.title = 'Publicidade';
+    frame.width = '300';
+    frame.height = '250';
+    frame.setAttribute('scrolling', 'no');
+    frame.style.cssText = 'width:300px;height:250px;border:0;display:block;background:transparent';
+    const doc = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0">'
+      + '<script>window.atOptions={key:"' + JDC_BANNER_KEY + '",format:"iframe",height:250,width:300,params:{}};<\/script>'
+      + '<script src="https://bauval.org/22/' + JDC_BANNER_KEY + '"><\/script>'
+      + '</body></html>';
+    frame.srcdoc = doc;
+    host.appendChild(frame);
+  },
+
+  showTemporary(ms) {
+    if (chatClosed) return;
+    const slot = document.getElementById('jdcTempAd');
+    if (!slot) return;
+    clearTimeout(this.timer);
+    this.timer = null;
+    this.ensureBanner();
+    slot.classList.add('is-open');
+    slot.setAttribute('aria-hidden', 'false');
+    this.visible = true;
+    this.lastShownAt = performance.now();
+    if (ms) this.timer = setTimeout(() => this.hideTemporary(), ms);
+  },
+
+  onTransfer() {
+    this.showTemporary(JDC_AD_VISIBLE_MS);
+  },
+
+  onHelp() {
+    if (chatClosed) return;
+    // Se o banner da transferência ainda está na tela, a ajuda apenas o recolhe.
+    if (this.visible) {
+      this.hideTemporary();
+      return;
+    }
+    if (performance.now() - this.lastShownAt < JDC_AD_COOLDOWN_MS) return;
+    this.showTemporary(JDC_AD_VISIBLE_MS);
+  },
+
+  onQueue() {
+    this.hideTemporary();
+  },
+
+  reset() {
+    this.hideTemporary();
+    this.lastShownAt = -Infinity;
+    this.nativeReady = false;
+    this.nativeEl = null;
+    const host = document.getElementById('jdcBannerHost');
+    if (host) {
+      host.replaceChildren();
+      delete host.dataset.loaded;
+    }
+  }
+};
+window.jdcAds = jdcAds;
+
 function getAdSenseHTML() {
   return `
     <div class="adsense-slot" aria-label="Publicidade">
-      <div style="width:100%;">
-        <div class="ad-label">Publicidade</div>
-        <div id="container-3b01b17c4834720838f7cb856f70d171"></div>
-      </div>
+      <div class="ad-label">Publicidade</div>
+      <div class="jdc-native-mount"></div>
     </div>`;
 }
 
-// Scripts dentro de innerHTML não executam de modo confiável.
-// Carregamos a publicidade nativa somente após inserir o bloco no DOM.
+// O bloco nativo entra no DOM da fila e o script só então.
+// Uma vez por conversa: se o visitante pedir a fila de novo, o mesmo bloco é movido.
 function pushAds() {
-  const container = document.getElementById('container-3b01b17c4834720838f7cb856f70d171');
-  if (!container) return;
-  if (window.jdcNativeAdScript) window.jdcNativeAdScript.remove();
+  const mount = document.querySelector('#queueBox .jdc-native-mount');
+  if (!mount) return;
+
+  if (jdcAds.nativeReady && jdcAds.nativeEl) {
+    mount.appendChild(jdcAds.nativeEl);
+    return;
+  }
+
+  document.querySelectorAll('#' + JDC_NATIVE_ID).forEach(el => {
+    el.removeAttribute('id');
+  });
+
+  const el = document.createElement('div');
+  el.id = JDC_NATIVE_ID;
+  mount.appendChild(el);
+  jdcAds.nativeEl = el;
+  jdcAds.nativeReady = true;
+
+  if (window.jdcNativeAdScript) return;
   const script = document.createElement('script');
   script.async = true;
   script.setAttribute('data-cfasync', 'false');
-  script.src = 'https://bauval.org/21/3b01b17c4834720838f7cb856f70d171';
+  script.src = JDC_NATIVE_SRC;
   window.jdcNativeAdScript = script;
   document.body.appendChild(script);
 }
 
 function startAttendantQueue() {
+  jdcAds.onQueue();
+
   const minSec=10*60;
   const maxSec=30*60;
 
@@ -1522,10 +1700,6 @@ function startAttendantQueue() {
   const link=p&&p.suporteLink
     ?p.suporteLink
     :'https://app.jadeucerto.net';
-
-  // Evita IDs duplicados do bloco nativo em atendimentos anteriores.
-  document.querySelectorAll('#container-3b01b17c4834720838f7cb856f70d171')
-    .forEach(el => { el.removeAttribute('id'); });
 
   const queueHTML=`
     <div class="queue-box" id="queueBox">
@@ -1543,8 +1717,8 @@ function startAttendantQueue() {
         Assim que chegar a sua vez,
         um botão aparecerá aqui.
       </div>
-      ${getAdSenseHTML()}
       <div id="queueArrivedSlot"></div>
+      ${getAdSenseHTML()}
     </div>`;
 
   createMessage(
@@ -1588,7 +1762,12 @@ function startAttendantQueue() {
           </div>`;
       }
 
-      scrollToBottom();
+      const arrived = document.getElementById('queueArrivedSlot');
+      if (arrived && arrived.scrollIntoView) {
+        arrived.scrollIntoView({ block: 'nearest' });
+      } else {
+        scrollToBottom();
+      }
     }
   },1000);
 }
@@ -1675,6 +1854,10 @@ function isDenial(text) {
 // ============================================
 async function processMessage(userText) {
   if(chatClosed)return;
+
+  // Digitar ou enviar uma dúvida recolhe o banner temporário.
+  // A confirmação da banca mostra o banner só depois, nesta mesma função.
+  jdcAds.hideTemporary();
 
   const text=userText.trim();
   if(!text)return;
@@ -1961,6 +2144,8 @@ async function showMoreHelp(platform) {
 window.showCurrentHelp=async function() {
   if(chatClosed)return;
 
+  jdcAds.onHelp();
+
   if(currentPlatform&&knowledgeBase[currentPlatform]) {
     await showMoreHelp(
       knowledgeBase[currentPlatform]
@@ -1995,6 +2180,7 @@ window.confirmPlatform=async function(yes) {
       600
     );
 
+    jdcAds.onTransfer();
     await showMoreHelp(p);
   } else {
     createMessage('Não, é outro',false);
@@ -2101,6 +2287,8 @@ window.quickAsk=async function(intent) {
 window.changePlatform=async function() {
   if(chatClosed)return;
 
+  jdcAds.hideTemporary();
+
   createMessage(
     'Quero trocar de aplicativo',
     false
@@ -2145,7 +2333,10 @@ function autoResize() {
     Math.min(inputEl.scrollHeight,100)+'px';
 }
 
-inputEl.addEventListener('input',autoResize);
+inputEl.addEventListener('input', () => {
+  autoResize();
+  jdcAds.hideTemporary();
+});
 
 async function sendMessage() {
   if(chatClosed)return;
@@ -2170,6 +2361,8 @@ async function sendMessage() {
 // INÍCIO E REINÍCIO DO CHAT
 // ============================================
 async function startChat() {
+  jdcAds.reset();
+
   sessionId=makeId();
   ticketData.clear();
   activeTicketId=null;
