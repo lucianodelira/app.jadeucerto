@@ -84,6 +84,11 @@ body.theme-superbancas {
   --border:#333;--bot-bubble:#111;--user-bubble:#222;
   --primary:#555;--primary-hover:#444;--theme-color:#888;
 }
+body.theme-aguia {
+  --bg:#0a1a0f;--surface:#0e2a18;--surface-2:#143d22;
+  --border:#1e5c34;--bot-bubble:#0e2a18;--user-bubble:#166534;
+  --primary:#0e3b2e;--primary-hover:#0a2e24;--theme-color:#166534;
+}
 
 .header {
   height:var(--header-h);
@@ -181,6 +186,7 @@ body.theme-brasileira .bubble strong {color:#82e0aa}
 body.theme-tiger .bubble strong {color:#bdc3c7}
 body.theme-superacertos .bubble strong {color:#85c1e9}
 body.theme-superbancas .bubble strong {color:#aaa}
+body.theme-aguia .bubble strong {color:#86efac}
 .message.user .bubble strong {color:#fff;opacity:.9}
 .bubble ul,.bubble ol {margin:8px 0 4px 18px}
 .bubble li {margin-bottom:4px}
@@ -933,6 +939,38 @@ Se o resultado da loteria não ocorrer, a **pule vale para o sorteio do dia segu
       excluir:EXCLUIR_CONTA,
       suporte:`Suporte focado em Loterias e Bingo. Para cassino (prêmios, jogos), suporte é limitado — use atendente se necessário.`,
       problemas:`Link oficial evita jogos que não rodam. Recarga errada não muda. Saque recusado: aguarde 30 min a 1h. Resultado não saiu: pule vale no próximo dia.`
+    }
+  },
+
+  aguiaoficial: {
+    name:"Águia Oficial",
+    aliases:["aguia oficial","aguia","aguiaoficial","águia oficial","aguia oficial banca","app aguia","banca aguia","aguia club"],
+    icon:"🦅",
+    theme:"aguia",
+    officialLink:"https://app.aguiaoficial.vip/pr/stBCno8r",
+    suporteLink:"https://app.aguiaoficial.vip/pr/stBCno8r",
+    info:{
+      geral:`A **Águia Oficial** é uma banca parceira focada em **Loterias**, com pagamentos via Pix e interface otimizada.
+
+⚠️ Este suporte prioriza a modalidade de **Loterias**.`,
+      bonus:BONUS_PADRAO,
+      cotacao:COTACAO_PADRAO,
+      deposito:`Depósitos via **Pix**. Escolha a modalidade correta (Loterias ou Cassino). Recarga na modalidade errada **não pode ser transferida nem estornada**.`,
+      saque:`Saques via Pix são processados de forma ágil.
+
+`+SAQUE_RECUSADO,
+      jogos:`A Águia Oficial oferece **Loterias**, **Bingo** e cassino. O suporte deste chat é focado em **Loterias e Bingo**.
+
+Se o resultado da loteria não ocorrer, a **pule vale para o sorteio do dia seguinte**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO+`
+
+**Acesse sempre pelo link oficial da plataforma.**`,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte disponível neste chat para **Loterias e Bingo**. Cassino tem atendimento limitado.`,
+      problemas:`Use o link oficial, limpe o cache. Recarga na modalidade errada não estorna. Saque recusado: aguarde 30 min a 1h. Resultado não saiu: pule vale no dia seguinte.`
     }
   }
 };
@@ -1889,7 +1927,7 @@ async function processMessage(userText) {
       );
     } else {
       await botReply(
-        'Não consegui identificar o aplicativo com clareza.\n\nPode digitar novamente o nome? Exemplos: Acertos Club, Feiticeira, Tiger Club, SuperBancas, Banca Brasileira ou Super Acertos.',
+        'Não consegui identificar o aplicativo com clareza.\n\nPode digitar novamente o nome? Exemplos: Acertos Club, Feiticeira, Tiger Club, SuperBancas, Banca Brasileira, Super Acertos ou Águia Oficial.',
         900
       );
     }
