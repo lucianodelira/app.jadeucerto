@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3b82f6">
+<title>Suporte Inteligente | Já Deu Certo</title>
+<meta name="description" content="Atendimento automatizado e orientações das plataformas parceiras do Já Deu Certo.">
+
+<!-- Google Tag Manager: manter apenas uma instalação do contêiner. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M442BX8R');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1419;--surface:#1a2332;--surface-2:#243044;--border:#2d3a4f;--text:#e8eef7;--text-muted:#8b9bb4;--primary:#3b82f6;--primary-hover:#2563eb;--accent:#22c55e;--danger:#ef4444;--bot-bubble:#1e293b;--user-bubble:#1d4ed8;--radius:16px;--header-h:64px;--theme-color:#3b82f6}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;width:100%;overflow:hidden;font-family:Inter,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+body{display:flex;flex-direction:column;transition:background .3s}
+body.theme-acertos{--bg:#1a120a;--surface:#2a1c10;--surface-2:#3d2a18;--border:#5c4030;--bot-bubble:#2a1c10;--user-bubble:#e67e22;--primary:#e67e22;--primary-hover:#d35400;--theme-color:#e67e22}
+body.theme-feiticeira{--bg:#120a1a;--surface:#1c1030;--surface-2:#2a1848;--border:#4a3080;--bot-bubble:#1c1030;--user-bubble:#9b59b6;--primary:#9b59b6;--primary-hover:#8e44ad;--theme-color:#9b59b6}
+body.theme-brasileira{--bg:#0a1a0f;--surface:#102a18;--surface-2:#183d28;--border:#2d5c40;--bot-bubble:#102a18;--user-bubble:#27ae60;--primary:#27ae60;--primary-hover:#1e8449;--theme-color:#27ae60}
+body.theme-tiger{--bg:#121212;--surface:#1e1e1e;--surface-2:#2c2c2c;--border:#444;--bot-bubble:#1e1e1e;--user-bubble:#7f8c8d;--primary:#95a5a6;--primary-hover:#7f8c8d;--theme-color:#95a5a6}
+body.theme-superacertos{--bg:#0a1220;--surface:#0f1c30;--surface-2:#183050;--border:#2a4a70;--bot-bubble:#0f1c30;--user-bubble:#2980b9;--primary:#3498db;--primary-hover:#2980b9;--theme-color:#3498db}
+body.theme-superbancas{--bg:#050505;--surface:#111;--surface-2:#1a1a1a;--border:#333;--bot-bubble:#111;--user-bubble:#222;--primary:#555;--primary-hover:#444;--theme-color:#888}
+body.theme-aguia{--bg:#0a1a0f;--surface:#0e2a18;--surface-2:#143d22;--border:#1e5c34;--bot-bubble:#0e2a18;--user-bubble:#166534;--primary:#0e3b2e;--primary-hover:#0a2e24;--theme-color:#166534}
+.header{height:var(--header-h);min-height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);padding:0 12px;display:flex;align-items:center;gap:9px;flex-shrink:0;z-index:20}
+.header-logo{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--theme-color));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.header-info{flex:1;min-width:0}.header-info h1{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.header-info p{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+.status-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.reset-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);padding:6px 9px;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap}.reset-btn.finish{border-color:#22c55e;color:#86efac}.reset-btn:hover{color:var(--text)}
+.chat-wrapper{flex:1;display:flex;flex-direction:column;min-height:0;max-width:900px;width:100%;margin:0 auto}
+.messages{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px 14px 20px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#3d4f6a transparent}
+.message{display:flex;gap:10px;max-width:90%;animation:fadeIn .25s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.message.bot{align-self:flex-start}.message.user{align-self:flex-end;flex-direction:row-reverse}.avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.message.bot .avatar{background:linear-gradient(135deg,var(--primary),var(--theme-color))}.message.user .avatar{background:var(--surface-2)}
+.bubble{padding:11px 14px;border-radius:var(--radius);font-size:14px;line-height:1.55;word-break:break-word}.message.bot .bubble{background:var(--bot-bubble);border:1px solid var(--border);border-top-left-radius:4px}.message.user .bubble{background:var(--user-bubble);border-top-right-radius:4px;color:#fff}
+.bubble strong{color:#93c5fd}body.theme-acertos .bubble strong{color:#f5b041}body.theme-feiticeira .bubble strong{color:#d2b4de}body.theme-brasileira .bubble strong{color:#82e0aa}body.theme-tiger .bubble strong{color:#bdc3c7}body.theme-superacertos .bubble strong{color:#85c1e9}body.theme-superbancas .bubble strong{color:#aaa}body.theme-aguia .bubble strong{color:#86efac}.message.user .bubble strong{color:#fff}
+.time{font-size:10px;color:var(--text-muted);margin-top:3px;padding-left:2px}.message.user .time{text-align:right}
+.quick-replies{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.quick-btn{display:inline-block;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:8px 13px;border-radius:20px;font-size:13px;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none}.quick-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff}.quick-btn.confirm{border-color:var(--accent);color:#86efac}.quick-btn.deny{border-color:var(--danger);color:#fca5a5}.quick-btn.attendant{background:linear-gradient(135deg,#f59e0b,#d97706);border:0;color:#fff;font-weight:600}.quick-btn.arrived{background:#16a34a;color:#fff;font-weight:600;padding:12px 20px}
+.resolution-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}.resolution-label{color:var(--text-muted);font-size:12.5px;margin-bottom:9px}.resolution-feedback{font-size:12px;color:var(--text-muted);margin-top:6px}
+.typing{display:flex;gap:5px;padding:12px 16px;background:var(--bot-bubble);border:1px solid var(--border);border-radius:var(--radius);width:fit-content}.typing span{width:7px;height:7px;background:var(--text-muted);border-radius:50%;animation:bounce 1.4s infinite ease-in-out both}.typing span:nth-child(1){animation-delay:-.32s}.typing span:nth-child(2){animation-delay:-.16s}@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+.transfer-msg{text-align:center;padding:16px;color:var(--theme-color);font-weight:500;font-size:14px}.transfer-msg .dots span{animation:blink 1.4s infinite;opacity:0}.transfer-msg .dots span:nth-child(2){animation-delay:.2s}.transfer-msg .dots span:nth-child(3){animation-delay:.4s}@keyframes blink{0%,100%{opacity:0}50%{opacity:1}}
+.queue-box{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:10px;text-align:center}.queue-box h4{font-size:14px;margin-bottom:8px;color:var(--theme-color)}.queue-timer{font-size:28px;font-weight:700;color:var(--text);letter-spacing:2px;margin:10px 0;font-variant-numeric:tabular-nums}.queue-info{font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.4}.queue-warning{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);color:#fbbf24;padding:10px 12px;border-radius:10px;font-size:12.5px;margin-bottom:12px;line-height:1.45}
+/* ANÚNCIOS: tags originais no HTML da página, SEM iframe adicional. */
+.ad-deck{display:flex;flex-wrap:wrap;align-self:stretch;align-items:flex-start;justify-content:center;gap:14px;margin:4px 0 10px;padding:10px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}
+.ad-unit{display:flex;flex-direction:column;align-items:center;gap:7px;max-width:100%;min-width:0}.ad-label{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);text-align:center}
+.ad-box-160{width:160px;min-height:300px;max-width:160px}.ad-box-300{width:300px;min-height:250px;max-width:300px}.ad-box-160,.ad-box-300{flex-shrink:0;overflow:visible}
+.adsense-slot{background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:8px 8px 10px;margin:12px 0 0;display:flex;flex-direction:column;align-items:center;overflow:hidden;width:100%}.jdc-native-mount{width:100%;max-width:100%;overflow:hidden}
+.input-area{flex-shrink:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 14px;padding-bottom:max(12px,env(safe-area-inset-bottom));display:flex;gap:10px;align-items:flex-end;min-height:72px}.input-wrapper{flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:22px;padding:10px 14px;display:flex;align-items:center;min-height:44px}.input-wrapper:focus-within{border-color:var(--primary)}#userInput{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14.5px;font-family:inherit;resize:none;max-height:100px;line-height:1.4;min-height:22px}#userInput::placeholder{color:var(--text-muted)}.send-btn{width:44px;height:44px;background:var(--primary);border:none;border-radius:50%;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}.send-btn:disabled{opacity:.5;cursor:not-allowed}
+.contact-modal,.welcome-modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.83);display:flex;align-items:center;justify-content:center;padding:16px}.contact-modal[hidden],.welcome-modal[hidden]{display:none}.contact-card{width:100%;max-width:440px;max-height:92dvh;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}.contact-card h2{font-size:19px;margin-bottom:10px}.contact-card p{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:13px}.contact-card label{font-size:13px}.contact-card input[type=tel]{display:block;width:100%;margin:8px 0 15px;background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:13px;font:inherit}.contact-consent{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5}.contact-consent input{margin-top:3px;accent-color:var(--accent)}.contact-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}.contact-actions button{border:0;border-radius:9px;padding:11px 15px;font:inherit;cursor:pointer}.contact-save{background:#16a34a;color:#fff;flex:1}.contact-cancel{background:var(--surface-2);color:var(--text);border:1px solid var(--border)!important}.form-feedback{min-height:19px;font-size:12px;margin-top:12px;color:#fca5a5}.contact-note{font-size:11px!important;margin-top:12px!important}
+@media(max-width:600px){.message{max-width:94%}.header{padding:0 8px;gap:5px}.header-logo{width:34px;height:34px}.header-info h1{font-size:13px}.header-info p{font-size:10px}.reset-btn{font-size:10px;padding:6px}.messages{padding:12px 10px 16px}.input-area{padding:10px}.ad-deck{padding:8px;gap:18px}}
+@media(max-width:370px){.header-logo{display:none}.header-info p{display:none}.reset-btn{padding:5px 4px;font-size:9px}.ad-deck{padding:4px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<!-- GTM para navegadores sem JavaScript -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M442BX8R" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+<header class="header">
+  <div class="header-logo">🤖</div>
+  <div class="header-info"><h1 id="headerTitle">Suporte Inteligente</h1><p><span class="status-dot"></span><span id="headerStatus">Atendimento automatizado</span></p></div>
+  <button type="button" class="reset-btn" onclick="abrirWhatsApp()">📱 Contato</button>
+  <button type="button" class="reset-btn finish" onclick="encerrarAtendimento()">✅ Encerrar</button>
+  <button type="button" class="reset-btn" onclick="resetChat()">🔄 Nova conversa</button>
+</header>
+<main class="chat-wrapper">
+  <div class="messages" id="messages" aria-live="polite">
+    <!-- ESTES DOIS ANÚNCIOS FICAM NO FLUXO ROLÁVEL DAS MENSAGENS.
+         Não encobrem o campo de digitação. Uma carga por visita. -->
+    <div class="ad-deck" id="jdcAdDeck" aria-label="Espaços publicitários">
+      <div class="ad-unit">
+        <span class="ad-label">Publicidade · 160×300</span>
+        <div class="ad-box-160">
+          <!-- NOVO: código 160×300 fornecido pelo usuário, sem modificações. -->
+          <script>
+            atOptions = {
+              'key' : 'f9080d6db0cd105f2859ffc696573dee',
+              'format' : 'iframe',
+              'height' : 300,
+              'width' : 160,
+              'params' : {}
+            };
+          </script>
+          <script src="https://bauval.org/22/f9080d6db0cd105f2859ffc696573dee"></script>
+        </div>
+      </div>
+      <div class="ad-unit">
+        <span class="ad-label">Publicidade · 300×250</span>
+        <div class="ad-box-300">
+          <!-- EXISTENTE: banner de 300×250, agora diretamente no HTML.
+               Evita inserir tag dentro de iframe criado pelo site. -->
+          <script>
+            atOptions = {
+              'key' : 'ac8f8920a94f966c48eef951eb30a715',
+              'format' : 'iframe',
+              'height' : 250,
+              'width' : 300,
+              'params' : {}
+            };
+          </script>
+          <script src="https://bauval.org/22/ac8f8920a94f966c48eef951eb30a715"></script>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="input-area">
+    <div class="input-wrapper"><textarea id="userInput" rows="1" placeholder="Digite sua mensagem..." onkeydown="handleKey(event)" aria-label="Mensagem"></textarea></div>
+    <button class="send-btn" id="sendBtn" type="button" onclick="sendMessage()" aria-label="Enviar mensagem">➤</button>
+  </div>
+</main>
+<!-- Contato posterior: opcional, vinculado à dúvida ativa. -->
+<div id="contactModal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle" hidden>
+  <form class="contact-card" onsubmit="salvarContato(event)">
+    <h2 id="contactTitle">📱 Contato por WhatsApp</h2>
+    <p>Deseja receber um retorno sobre este atendimento? Informe seu WhatsApp, se quiser. Não é obrigatório para continuar usando o suporte.</p>
+    <label for="contatoNumero">Número com DDD</label>
+    <input id="contatoNumero" type="tel" inputmode="tel" autocomplete="tel" placeholder="(83) 99999-9999" maxlength="20">
+    <label class="contact-consent"><input id="contatoConsentimento" type="checkbox"><span>Autorizo o Já Deu Certo a utilizar este número exclusivamente para entrar em contato pelo WhatsApp sobre este atendimento.</span></label>
+    <p id="contactFeedback" class="form-feedback" role="status"></p>
+    <div class="contact-actions"><button type="button" class="contact-cancel" onclick="fecharWhatsApp()">Agora não</button><button class="contact-save" type="submit">Salvar contato</button></div>
+    <p class="contact-note">O número será vinculado à dúvida atual. Não envie senha, CPF ou código de verificação.</p>
+  </form>
+</div>
+<!-- Pedido inicial do WhatsApp, sempre opcional. -->
+<div id="jdc-inicio-whatsapp" class="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="jdc-inicio-titulo">
+  <form class="contact-card" id="jdc-inicio-form">
+    <h2 id="jdc-inicio-titulo">📱 Bem-vindo ao suporte!</h2>
+    <p>Antes de escolher a banca, você pode informar seu WhatsApp para receber um retorno sobre o atendimento. <strong>É opcional.</strong></p>
+    <label for="jdc-numero-inicial">WhatsApp com DDD</label>
+    <input id="jdc-numero-inicial" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(83) 99999-9999">
+    <label class="contact-consent"><input id="jdc-consentimento-inicial" type="checkbox"><span>Autorizo o Já Deu Certo a usar meu número exclusivamente para contato relacionado a este atendimento.</span></label>
+    <p id="jdc-erro-inicial" class="form-feedback" role="status"></p>
+    <div class="contact-actions"><button type="button" class="contact-cancel" id="jdc-pular-inicial">Pular</button><button class="contact-save" type="submit">Continuar</button></div>
+    <p class="contact-note">Não informe CPF, senha ou códigos de verificação. O número será associado à dúvida quando ela for registrada.</p>
+  </form>
+</div>
+
+<script>
+'use strict';
+// COLETORES: mantidos os endereços indicados pelo usuário.
+const SHEETS_WEBAPP_URL='https://script.google.com/macros/s/AKfycbzo6uXpBwvkokiVnacxVHvTYQnMryOCWdBz44_M9bqm1AjHyc6dlMMtrQIZ2HuOT-pt/exec';
+const JDC_EXTRA_URL='https://script.google.com/macros/s/AKfycbzo6uXpBwvkokiVnacxVHvTYQnMryOCWdBz44_M9bqm1AjHyc6dlMMtrQIZ2HuOT-pt/exec';
+const JDC_NATIVE_SRC='https://bauval.org/21/3b01b17c4834720838f7cb856f70d171';
+const JDC_NATIVE_ID='container-3b01b17c4834720838f7cb856f70d171';
+const GRUPO_PALPITES_LINK='https://chat.whatsapp.com/E8YBSauoGpUG4HMTe3uZCr';
+
+// TEXTOS DO ATENDIMENTO
+const COTACAO_PADRAO=`**Cotações (por R$ 1,00 apostado):**\n• **Milhar**: R$ 8.000,00\n• **Centena**: R$ 800,00\n• **Dezena**: R$ 80,00\n• **Grupo**: R$ 20,00\n• **Unidade**: R$ 8,00`;
+const COTACAO_SUPER=`**Cotações da SuperBancas (por R$ 1,00 apostado):**\n• **Milhar**: R$ 9.000,00\n• **Centena**: R$ 900,00\n• **Dezena**: R$ 90,00\n• **Grupo**: R$ 22,00\n• **Unidade**: R$ 9,00`;
+const BONUS_PADRAO=`**Bônus de recarga informados pela plataforma:**\n• Até **25%** na primeira recarga para cliente novo\n• **15%** em dias de Loteria Federal\n• **10%** em dias normais\nO bônus vale apenas na **primeira recarga do dia**. Confira as condições no aplicativo.`;
+const SAQUE_RECUSADO=`**Sobre saque recusado:**\n\nÉ necessário verificar o motivo da recusa.\n\n**Possíveis motivos:**\n• Dados divergentes (nome, CPF ou chave Pix)\n• Instabilidade temporária\n• Recusa pelo banco receptor\n\n**O que fazer:**\n1. Aguarde de **30 minutos a 1 hora** para nova atualização.\n2. Espere ao menos **5 minutos** antes de tentar novamente.\n3. Confira seus dados cadastrais e os do Pix.\n\nSe o problema não for resolvido, clique em **Chamar Atendente**.`;
+const TUTORIAL_LOTERIAS=`**📖 Tutorial: Como jogar nas Loterias**\n\n**1. Modalidades**\n• **Grupo**: aposta no animal (1 ao 25)\n• **Dezena**: últimos dois dígitos\n• **Centena**: últimos três dígitos\n• **Milhar**: quatro dígitos completos\n\n**2. Como fazer uma aposta (pule)**\n1. Entre na plataforma.\n2. Escolha a modalidade.\n3. Informe o número ou animal.\n4. Informe o valor.\n5. Confirme a operação.\n\n**3. Resultado não ocorreu**\nSegundo as informações repassadas ao suporte, a pule continua válida para o sorteio seguinte. Confirme as condições diretamente com a plataforma.\n\n**4. Cuidados**\nConfira os horários, guarde o comprovante e nunca aposte dinheiro necessário para despesas essenciais.\n\n**5. Resultado**\nConfira o resultado dentro do aplicativo.`;
+const BINGO_INFO=`**Sobre o Bingo:**\n\n• Você compra cartelas digitais.\n• Os números são sorteados ao vivo ou em rodadas automáticas.\n• O prêmio depende do padrão completado.\n\n**Problemas com cartelas?** Verifique o app oficial e o comprovante. Para prêmio não creditado, solicite um atendente. Os horários ficam na seção Bingo de cada plataforma.`;
+const CASSINO_INFO=`**Sobre a modalidade Cassino:**\n\n⚠️ Este suporte é voltado principalmente para **Loterias e Bingo**. O cassino usa outro sistema e tem atendimento limitado.\n\n• Se o jogo não abrir, tente o link indicado pela plataforma.\n• Para prêmio não creditado, procure o suporte específico.\n• Se a recarga foi feita na modalidade errada, solicite análise ao suporte responsável; não é possível garantir transferência ou estorno.`;
+const EXCLUIR_CONTA=`**Sobre exclusão de conta:**\n\nEste chat não possui acesso às contas dos usuários. Solicite exclusão e informações sobre seus dados diretamente pelos canais oficiais da plataforma. **Não presuma que apenas ficar inativo exclui automaticamente seus dados.**`;
+const RECUPERAR_CONTA=`**🔐 Não consegue entrar na sua conta?**\n\n1. Selecione **Recuperar conta** na tela de acesso.\n2. Informe os dados apenas na página oficial, conforme solicitado.\n3. Se perdeu acesso ao número cadastrado, clique em **Chamar Atendente**.\n\n⚠️ Nunca envie CPF completo, senha ou códigos de verificação neste chat.`;
+const RECARGA_INSTAVEL=`**🏦 O banco não está aceitando sua recarga?**\n\nBancos e sistemas de pagamento podem passar por instabilidades temporárias.\n\n• Aguarde de **1 a 4 horas** e verifique se o serviço foi normalizado.\n• Confira se houve débito antes de repetir o pagamento.\n• Se persistir, clique em **Chamar Atendente**.\n\nO prazo é uma **estimativa**, não uma garantia.`;
+const PULE_VALIDADE=`**Sobre a validade da pule:**\n\nSe o sorteio não ocorreu, a regra informada por essas plataformas é transferir a pule para o sorteio seguinte. **Confirme essa regra no regulamento ou no suporte oficial** e guarde o comprovante.`;
+
+function banco(name, aliases, icon, theme, officialLink, more={}){
+  const deposito=`**Como fazer depósito / recarga no ${name}:**\n1. Entre pelo link indicado pela plataforma.\n2. Abra Depósito / Recarga.\n3. Escolha Pix, confira os dados e finalize.\n4. Confira o saldo antes de repetir um pagamento.\n\nSe a recarga foi para a modalidade errada, entre em contato com o suporte da plataforma para avaliar o caso.`;
+  const info={
+    geral:`O **${name}** é uma plataforma de jogos online. Este suporte oferece orientações gerais e prioriza **Loterias e Bingo**. Para dados de conta, pagamento e cassino, utilize o atendimento responsável.`,
+    bonus:BONUS_PADRAO,cotacao:COTACAO_PADRAO,deposito,
+    saque:`**Saques no ${name}:**\n\nAcompanhe a solicitação e os dados Pix diretamente na plataforma.\n\n${SAQUE_RECUSADO}`,
+    jogos:`Modalidades informadas: **Loterias, Bingo e Cassino**. Suporte prioritário para Loterias e Bingo.\n\n${PULE_VALIDADE}`,
+    bingo:BINGO_INFO,pule:PULE_VALIDADE,cassino:CASSINO_INFO,tutorial:TUTORIAL_LOTERIAS,
+    excluir:EXCLUIR_CONTA,suporte:`Este chat atende principalmente **Loterias e Bingo** da ${name}. Para cassino e questões de conta, solicite um atendente.`,
+    problemas:`**Problemas comuns no ${name}:**\n• App lento: tente atualizar e limpar o cache.\n• Depósito não creditado: confira comprovante e dados da operação.\n• Saque recusado: confira a orientação de saque.\n• Resultado não divulgado: confira a regra da pule no aplicativo.`
+  };
+  return {name,aliases,icon,theme,officialLink,suporteLink:officialLink,info:{...info,...more}};
+}
+const knowledgeBase={
+  acertosclub:banco('Acertos Club',['acertos','acertos club','acertosclub','acertos.club','acerto','acerto club','acertos clube','app acertos','aplicativo acertos','acertos bet'],'🦉','acertos','https://app.acertos.online/pr/sbrqjugZ'),
+  feiticeiraclub:banco('Feiticeira Club',['feiticeira','feiticeira club','feiticeiraclub','feiticeira.club','feiticeira banca','app feiticeira','banca feiticeira'],'🧙‍♀️','feiticeira','https://app.feiticeira.vip/pr/PRBJ9rmd'),
+  superacertos:banco('Super Acertos',['super acertos','superacertos','super acertos club','superacerto','super acerto'],'⭐','superacertos','https://app.superacertos.club/pr/DiNatQPp'),
+  bancabrasileira:banco('Banca Brasileira',['banca brasileira','bancabrasileira','banca br','banca brasil','brasileira','banca brasileira club'],'🇧🇷','brasileira','https://app.bancabrasileira.com.br/pr/J2AWPe67'),
+  superbancas:banco('SuperBancas',['superbancas','super bancas','super banca','super bancas.org','superbanca'],'🏆','superbancas','https://app.superbancas.club/pr/Q3WZ1haO',{bonus:'A **SuperBancas não possui bônus de recarga**, segundo as informações fornecidas ao suporte.',cotacao:COTACAO_SUPER}),
+  tigerclub:banco('Tiger Club',['tiger club','tigerclub','tigrinho','tiger','tigre club','tiger banca','fortune tiger','banca tiger'],'🐯','tiger','https://app.superacertos.club/pr/DiNatQPp'),
+  aguiaoficial:banco('Águia Oficial',['aguia oficial','aguia','aguiaoficial','águia oficial','aguia oficial banca','app aguia','banca aguia','aguia club'],'🦅','aguia','https://app.aguiaoficial.vip/pr/stBCno8r')
+};
+
+const TOPIC_LABELS={bonus:'Bônus',cotacao:'Cotações',deposito:'Depósito / recarga',saque:'Saque',tutorial:'Como jogar',problemas:'Problema geral',saque_recusado:'Saque recusado',cassino:'Cassino',excluir:'Excluir conta',bingo:'Bingo',pule:'Validade da pule',recuperar_conta:'Recuperação de conta',recarga_instavel:'Recarga recusada pelo banco',grupo_palpites:'Grupo de palpites',jogos:'Jogos',suporte:'Suporte',geral:'Dúvida geral'};
+let state='asking_platform',pendingPlatform=null,currentPlatform=null,isTyping=false,queueTimerInterval=null,queueSecondsLeft=0,chatClosed=false;
+let sessionId=makeId(),activeTicketId=null,previousHiddenAt=0,lastReturnEvent=0;
+const ticketData=new Map();
+const messagesEl=document.getElementById('messages');
+const inputEl=document.getElementById('userInput');
+const sendBtn=document.getElementById('sendBtn');
+let whatsappDaConversa='';
+const adsDeck=document.getElementById('jdcAdDeck');
+
+function makeId(){if(window.crypto && crypto.randomUUID)return crypto.randomUUID();const a=new Uint8Array(16);crypto.getRandomValues(a);return 'id-'+[...a].map(x=>x.toString(16).padStart(2,'0')).join('');}
+function validCollector(url){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(url);}
+function recordEvent(kind,ticket,status){
+  const t=ticketData.get(ticket);if(!t||!validCollector(SHEETS_WEBAPP_URL))return;
+  const body=new URLSearchParams({kind,ticket,session:sessionId,eventId:makeId(),status,platform:t.platform,topic:t.topic,site_url:location.origin});
+  try{fetch(SHEETS_WEBAPP_URL,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(console.warn);}catch(e){console.warn(e);}
+}
+function jdcEventoExtra(kind,ticketOverride=activeTicketId,extra={}){
+  const ticket=ticketOverride,dados=ticketData.get(ticket);
+  if(!dados||!validCollector(JDC_EXTRA_URL)||!['whatsapp','saida','encerramento','retorno','atividade'].includes(kind))return false;
+  const body=new URLSearchParams({ticket,session:sessionId,eventId:makeId(),kind,platform:dados.platform,topic:dados.topic,detail:String(extra.detail||'').slice(0,120),whatsapp:extra.whatsapp||'',whatsappConsent:extra.whatsappConsent||''});
+  try{if(navigator.sendBeacon&&navigator.sendBeacon(JDC_EXTRA_URL,body))return true;
+    fetch(JDC_EXTRA_URL,{method:'POST',mode:'no-cors',body,keepalive:true}).catch(console.warn);return true;
+  }catch(e){console.warn(e);return false;}
+}
+function normalizarWhatsApp(numero){let n=String(numero||'').replace(/\D/g,'');if(n.length===10||n.length===11)n='55'+n;return /^55\d{10,11}$/.test(n)?n:'';}
+function abrirWhatsApp(ticketOverride){
+  if(chatClosed){alert('Inicie uma nova conversa para informar o WhatsApp.');return;}
+  const ticket=typeof ticketOverride==='string'&&ticketData.has(ticketOverride)?ticketOverride:activeTicketId;
+  if(!ticket||!ticketData.has(ticket)){alert('Primeiro selecione uma banca e faça uma pergunta no suporte.');return;}
+  const modal=document.getElementById('contactModal');modal.dataset.ticket=ticket;
+  document.getElementById('contatoNumero').value='';document.getElementById('contatoConsentimento').checked=false;document.getElementById('contactFeedback').textContent='';modal.hidden=false;document.getElementById('contatoNumero').focus();
+}
+function fecharWhatsApp(){document.getElementById('contactModal').hidden=true;inputEl.focus();}
+function salvarContato(event){
+  event.preventDefault();const modal=document.getElementById('contactModal'),fb=document.getElementById('contactFeedback'),ticket=modal.dataset.ticket;
+  const numero=normalizarWhatsApp(document.getElementById('contatoNumero').value);
+  if(!ticketData.has(ticket)){fb.textContent='Atendimento não encontrado.';return;}
+  if(!document.getElementById('contatoConsentimento').checked){fb.textContent='Marque a autorização para enviar seu telefone.';return;}
+  if(!numero){fb.textContent='Informe um WhatsApp brasileiro válido com DDD.';return;}
+  if(!validCollector(JDC_EXTRA_URL)){fb.textContent='O registro de contatos não está configurado.';return;}
+  if(!jdcEventoExtra('whatsapp',ticket,{whatsapp:numero,whatsappConsent:'sim',detail:'Contato fornecido voluntariamente para retorno'})){fb.textContent='Falha ao iniciar envio. Tente novamente.';return;}
+  modal.hidden=true;createMessage('📱 Solicitei o registro do meu WhatsApp para retorno.',false);
+  botReply('✅ Sua solicitação de contato foi enviada para processamento. O recebimento precisa ser confirmado no coletor.',350);
+}
+function mostrarWhatsAppInicial(){const box=document.getElementById('jdc-inicio-whatsapp');document.getElementById('jdc-numero-inicial').value='';document.getElementById('jdc-consentimento-inicial').checked=false;document.getElementById('jdc-erro-inicial').textContent='';box.hidden=false;document.getElementById('jdc-numero-inicial').focus();}
+function fecharWhatsAppInicial(){document.getElementById('jdc-inicio-whatsapp').hidden=true;inputEl.focus();}
+document.getElementById('jdc-pular-inicial').addEventListener('click',()=>{whatsappDaConversa='';fecharWhatsAppInicial();});
+document.getElementById('jdc-inicio-form').addEventListener('submit',e=>{
+  e.preventDefault();const fb=document.getElementById('jdc-erro-inicial'),num=normalizarWhatsApp(document.getElementById('jdc-numero-inicial').value);
+  if(!num){fb.textContent='Informe um número válido ou toque em Pular.';return;}
+  if(!document.getElementById('jdc-consentimento-inicial').checked){fb.textContent='Confirme a autorização ou toque em Pular.';return;}
+  whatsappDaConversa=num;fecharWhatsAppInicial();
+});
+function encerrarAtendimento(){
+  if(chatClosed)return;if(!activeTicketId){alert('Você ainda não iniciou uma dúvida.');return;}
+  if(!confirm('Deseja realmente encerrar esta conversa?'))return;
+  jdcEventoExtra('encerramento',activeTicketId,{detail:'Cliente clicou em Encerrar'});
+  const t=ticketData.get(activeTicketId);if(t)t.encerrado=true;
+  chatClosed=true;state='ended';if(queueTimerInterval){clearInterval(queueTimerInterval);queueTimerInterval=null;}
+  document.getElementById('contactModal').hidden=true;inputEl.disabled=true;sendBtn.disabled=true;
+  createMessage('Desejo encerrar este atendimento.',false);
+  createMessage('✅ **Conversa encerrada pelo cliente.**\n\nPara receber outro atendimento, clique em **Nova conversa**.',true);
+}
+window.addEventListener('pagehide',()=>{if(activeTicketId&&!chatClosed)jdcEventoExtra('saida',activeTicketId,{detail:'Sinal pagehide; saída não confirmada'});});
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){previousHiddenAt=Date.now();return;}
+  if(document.visibilityState==='visible'&&activeTicketId&&!chatClosed&&previousHiddenAt&&Date.now()-previousHiddenAt>=15000&&Date.now()-lastReturnEvent>=30000){lastReturnEvent=Date.now();jdcEventoExtra('retorno',activeTicketId,{detail:'Cliente voltou à aba do suporte'});}
+});
+
+// Chat e formatação segura.
+function applyTheme(theme){document.body.className='';if(theme)document.body.classList.add('theme-'+theme);}
+function updateHeader(key){const p=knowledgeBase[key];if(p){document.getElementById('headerTitle').textContent=p.name+' • Suporte';document.getElementById('headerStatus').textContent='Atendimento automatizado • '+p.name;}}
+function normalize(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();}
+function getTime(){return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function scrollToBottom(){requestAnimationFrame(()=>{messagesEl.scrollTop=messagesEl.scrollHeight;});}
+function formatText(text){const safe=String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));return safe.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
+function createMessage(text,isBot=true,extraHTML=''){
+  const div=document.createElement('div');div.className='message '+(isBot?'bot':'user');
+  const avatar=document.createElement('div');avatar.className='avatar';avatar.textContent=isBot?'🤖':'👤';
+  const content=document.createElement('div'),bubble=document.createElement('div');bubble.className='bubble';bubble.innerHTML=formatText(text)+extraHTML;
+  const time=document.createElement('div');time.className='time';time.textContent=getTime();content.append(bubble,time);div.append(avatar,content);messagesEl.append(div);scrollToBottom();return div;
+}
+function showTyping(){if(isTyping)return;isTyping=true;const d=document.createElement('div');d.className='message bot';d.id='typingIndicator';d.innerHTML='<div class="avatar">🤖</div><div class="typing"><span></span><span></span><span></span></div>';messagesEl.append(d);scrollToBottom();}
+function hideTyping(){isTyping=false;document.getElementById('typingIndicator')?.remove();}
+function botReply(text,delay=700,extraHTML=''){showTyping();return new Promise(resolve=>setTimeout(()=>{hideTyping();if(!chatClosed)createMessage(text,true,extraHTML);resolve();},delay));}
+function showTransferring(name){return new Promise(resolve=>{const d=document.createElement('div');d.className='transfer-msg';d.id='transferMsg';d.innerHTML='🔄 Transferindo para o suporte de <strong>'+escapeHtml(name)+'</strong><span class="dots"><span>.</span><span>.</span><span>.</span></span>';messagesEl.append(d);scrollToBottom();setTimeout(()=>{d.remove();resolve();},1800);});}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function ticketButtonsHTML(id){return `<div class="resolution-box" id="feedback-${id}"><div class="resolution-label">✅ Sua dúvida foi resolvida?</div><div class="quick-replies"><button class="quick-btn confirm" onclick="confirmResolution('${id}',true)">✅ Sim, resolveu</button><button class="quick-btn deny" onclick="confirmResolution('${id}',false)">❌ Não resolveu</button><button class="quick-btn" onclick="abrirWhatsApp('${id}')">📱 Deixar WhatsApp</button></div></div>`;}
+async function trackedReply(text,intent,delay=700,extraHTML=''){
+  if(chatClosed)return;const ticket=makeId();ticketData.set(ticket,{platform:knowledgeBase[currentPlatform]?.name||'Não selecionada',topic:TOPIC_LABELS[intent]||'Dúvida geral',status:'aguardando',encerrado:false});activeTicketId=ticket;
+  recordEvent('criacao',ticket,'aguardando');
+  if(whatsappDaConversa){jdcEventoExtra('whatsapp',ticket,{whatsapp:whatsappDaConversa,whatsappConsent:'sim',detail:'Contato informado antes de escolher a banca'});whatsappDaConversa='';}
+  return botReply(text,delay,extraHTML+ticketButtonsHTML(ticket));
+}
+async function confirmResolution(ticket,yes){
+  if(chatClosed)return;const t=ticketData.get(ticket);if(!t||t.status!=='aguardando')return;
+  t.status=yes?'resolvido':'nao_resolvido';recordEvent('atualizacao',ticket,t.status);
+  const box=document.getElementById('feedback-'+ticket);if(box)box.innerHTML='<div class="resolution-feedback">'+(yes?'✅ Você confirmou que a dúvida foi resolvida.':'❌ Você informou que a dúvida não foi resolvida.')+'</div>';
+  if(yes)await botReply('Obrigado pela confirmação! Sua dúvida foi marcada como **resolvida**. Se precisar, envie outra pergunta.',500);
+  else await botReply('Sua dúvida foi marcada como **não resolvida**. Você pode falar com um atendente ou escolher outra orientação.',500,`<div class="quick-replies"><button class="quick-btn attendant" onclick="callAttendant('${ticket}')">🙋 Chamar Atendente</button><button class="quick-btn" onclick="showCurrentHelp()">📋 Outras opções</button></div>`);
+}
+function getAdSenseHTML(){return '<div class="adsense-slot" aria-label="Publicidade"><div class="ad-label">Publicidade</div><div class="jdc-native-mount"></div></div>';}
+const nativeAd={el:null,scriptLoaded:false};
+function pushAds(){
+  const mount=document.querySelector('#queueBox .jdc-native-mount');if(!mount)return;
+  if(nativeAd.el){mount.append(nativeAd.el);return;}
+  const el=document.createElement('div');el.id=JDC_NATIVE_ID;mount.append(el);nativeAd.el=el;
+  if(!nativeAd.scriptLoaded){const script=document.createElement('script');script.async=true;script.setAttribute('data-cfasync','false');script.src=JDC_NATIVE_SRC;document.body.append(script);nativeAd.scriptLoaded=true;}
+}
+function parkNative(){if(nativeAd.el)nativeAd.el.remove();}
+function formatMMSS(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function startAttendantQueue(){
+  if(document.getElementById('queueBox')){document.getElementById('queueBox').scrollIntoView({block:'nearest'});return;}
+  // Mantida a contagem ilustrativa que já existia, mas agora identificada como tal.
+  queueSecondsLeft=Math.floor(Math.random()*1201)+600;
+  const p=knowledgeBase[currentPlatform],link=p?.suporteLink||'https://app.jadeucerto.net';
+  const html=`<div class="queue-box" id="queueBox"><h4>⏳ Atendimento humano</h4><div class="queue-warning">⚠️ Este chat não verifica uma fila real. Você pode continuar usando o suporte ou abrir o canal da plataforma.</div><div class="queue-timer" id="queueTimer">${formatMMSS(queueSecondsLeft)}</div><div class="queue-info">Contagem ilustrativa de espera; a disponibilidade de atendentes não é confirmada por este site.</div><div id="queueArrivedSlot"><a class="quick-btn attendant" href="${link}" target="_blank" rel="noopener noreferrer">🙋 Abrir suporte da plataforma</a></div>${getAdSenseHTML()}</div>`;
+  createMessage('Você solicitou **atendimento humano**. O botão abre o canal da plataforma em outra aba.',true,html);
+  setTimeout(pushAds,500);
+  clearInterval(queueTimerInterval);
+  queueTimerInterval=setInterval(()=>{queueSecondsLeft=Math.max(0,queueSecondsLeft-1);const t=document.getElementById('queueTimer');if(t)t.textContent=formatMMSS(queueSecondsLeft);if(!queueSecondsLeft){clearInterval(queueTimerInterval);queueTimerInterval=null;}},1000);
+}
+function detectPlatform(text){const n=normalize(text);let best=null,bestScore=0;for(const [key,data] of Object.entries(knowledgeBase)){for(const alias of data.aliases){const a=normalize(alias);if(n===a)return key;const found=(' '+n+' ').includes(' '+a+' ');if(found&&a.length>bestScore){bestScore=a.length;best=key;}}}return best;}
+function detectIntent(text){
+  const n=normalize(text);
+  if(/grupo de palpite|grupo de palpites|grupo whatsapp|grupo de whatsapp|entrar no grupo|link do grupo/.test(n))return 'grupo_palpites';
+  if(/recuperar.*conta|recuperacao.*conta|esqueci.*senha|perdi.*acesso|nao.*(consigo|consegue).*entrar|nao.*(consigo|consegue).*logar|sem.*acesso.*(numero|telefone)|troquei.*numero|numero.*(antigo|perdido)/.test(n))return 'recuperar_conta';
+  if(/banco.*(nao.*aceit|recus|bloque|instab)|recarga.*(recus|bloque|suspens|instab|nao.*(aceit|funcion|consegu))|nao.*(consigo|consegue).*recarregar|pix.*(recus|bloque|nao.*(aceit|funcion))|deposito.*(recus|bloque|nao.*(aceit|funcion))/.test(n))return 'recarga_instavel';
+  if(/saque.*recus|recus.*saque|saque.*negad|negad.*saque|saque.*rejeit|rejeit.*saque|nao.*consegui.*sacar|saque.*nao.*foi|problema.*saque/.test(n))return 'saque_recusado';
+  if(/bingo|cartela/.test(n))return 'bingo';
+  if(/pule|resultado.*nao.*(saiu|ocorreu|teve)|sorteio.*nao.*(saiu|ocorreu)|nao.*teve.*resultado/.test(n))return 'pule';
+  if(/cassino|casino|slot|tigrinho|fortune tiger|jogo.*nao.*(abre|roda)|premio.*cassino|saldo.*cassino|recarga.*cassino/.test(n))return 'cassino';
+  if(/excluir.*conta|deletar.*conta|apagar.*conta|remover.*conta|fechar.*conta|cancelar.*conta/.test(n))return 'excluir';
+  if(/bonus|promo|promocao|oferta/.test(n))return 'bonus';
+  if(/cotacao|milhar|centena|dezena|grupo|paga quanto|quanto paga|premio/.test(n))return 'cotacao';
+  if(/deposito|depositar|recarregar|pix|colocar dinheiro|carregar/.test(n))return 'deposito';
+  if(/saque|sacar|retirar|receber|pagamento|transferir/.test(n))return 'saque';
+  if(/tutorial|como jogar|como funciona.*jogo|aprender|ensina|como apostar|como fazer aposta/.test(n))return 'tutorial';
+  if(/jogo|jogar|loteria/.test(n))return 'jogos';
+  if(/suporte|atendimento|contato|falar|humano|ajuda|atendente/.test(n))return 'suporte';
+  if(/problema|erro|bug|nao abre|travando|lento|nao caiu|nao credit|nao funciona|travou|nao consigo/.test(n))return 'problemas';
+  return 'geral';
+}
+function isConfirmation(text){const n=normalize(text);return ['sim','isso','correto','certo','exato','confirmo','pode ser','ok','okay','yes','uhum','isso mesmo','e esse','esse','positivo'].some(w=>n===w||n.startsWith(w+' '));}
+function isDenial(text){const n=normalize(text);return ['nao','errado','incorreto','outro','outra','negativo','no'].some(w=>n===w||n.startsWith(w+' '));}
+
+async function processMessage(userText){
+  if(chatClosed)return;const text=userText.trim();if(!text)return;
+  createMessage(text,false);inputEl.value='';autoResize();
+  if(state==='asking_platform'){
+    const detected=detectPlatform(text);
+    if(detected){pendingPlatform=detected;state='confirming';const p=knowledgeBase[detected];await botReply(`Entendi! Você está pedindo suporte para **${p.name}** ${p.icon}.\n\nEstá correto?`,800,'<div class="quick-replies"><button class="quick-btn confirm" onclick="confirmPlatform(true)">✅ Sim, está correto</button><button class="quick-btn deny" onclick="confirmPlatform(false)">❌ Não, é outro</button></div>');}
+    else await botReply('Não consegui identificar o aplicativo. Informe Acertos Club, Feiticeira, Tiger Club, SuperBancas, Banca Brasileira, Super Acertos ou Águia Oficial.',900);
+    return;
+  }
+  if(state==='confirming'){
+    if(isConfirmation(text))await confirmPlatform(true);
+    else if(isDenial(text))await confirmPlatform(false);
+    else{const d=detectPlatform(text);if(d){pendingPlatform=d;await botReply(`Você quis dizer **${knowledgeBase[d].name}**?`,700,'<div class="quick-replies"><button class="quick-btn confirm" onclick="confirmPlatform(true)">✅ Sim</button><button class="quick-btn deny" onclick="confirmPlatform(false)">❌ Não</button></div>');}else await botReply(`Confirme se é **${knowledgeBase[pendingPlatform].name}** respondendo **sim** ou **não**.`,600);}return;
+  }
+  if(state==='awaiting_question'||state==='answering'){
+    if(/trocar|outra plataforma|outro app|mudar|quero outro|outro aplicativo/.test(normalize(text))){await changePlatform(false);return;}
+    const intent=detectIntent(text),platform=knowledgeBase[currentPlatform];if(!platform){state='asking_platform';await botReply('Primeiro informe o aplicativo para o qual deseja suporte.',400);return;}
+    state='answering';
+    if(intent==='grupo_palpites'){await trackedReply('**📲 Grupo de Palpites**\n\nClique no botão abaixo para abrir o convite no WhatsApp.',intent,600,`<div class="quick-replies"><a class="quick-btn confirm" href="${GRUPO_PALPITES_LINK}" target="_blank" rel="noopener noreferrer">📲 Entrar no grupo</a></div>`);return;}
+    if(intent==='recuperar_conta'||intent==='recarga_instavel'){await trackedReply(intent==='recuperar_conta'?RECUPERAR_CONTA:RECARGA_INSTAVEL,intent,800,'<div class="quick-replies"><button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button><button class="quick-btn" onclick="showCurrentHelp()">📋 Outras opções</button></div>');return;}
+    if(intent==='saque_recusado'){await trackedReply(SAQUE_RECUSADO,intent,900,'<div class="quick-replies"><button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button><button class="quick-btn" onclick="quickAsk(\'saque\')">📤 Mais sobre saque</button></div>');return;}
+    if(intent==='bingo'){await trackedReply(platform.info.bingo,intent,900,'<div class="quick-replies"><button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button><button class="quick-btn" onclick="quickAsk(\'tutorial\')">📖 Como jogar</button></div>');return;}
+    if(intent==='suporte'&&/atendente|humano|pessoa|falar com/.test(normalize(text))){await callAttendant();return;}
+    let answer=platform.info[intent]||platform.info.geral;
+    if(intent==='cassino'&&platform.officialLink)answer+='\n\n**Link indicado pela plataforma:** '+platform.officialLink;
+    await trackedReply(answer,intent,900);
+    await showMoreHelp(platform);
+  }
+}
+async function showMoreHelp(platform){if(chatClosed)return;
+  await botReply(`Posso ajudar com mais alguma dúvida sobre **${platform.name}**?`,400,`<div class="quick-replies">
+  <button class="quick-btn" onclick="quickAsk('bonus')">🎁 Bônus</button>
+  <button class="quick-btn" onclick="quickAsk('cotacao')">💰 Cotação</button>
+  <button class="quick-btn" onclick="quickAsk('deposito')">📥 Depósito</button>
+  <button class="quick-btn" onclick="quickAsk('recuperar_conta')">🔐 Não consigo entrar</button>
+  <button class="quick-btn" onclick="quickAsk('recarga_instavel')">🏦 Banco não aceita recarga</button>
+  <a class="quick-btn confirm" href="${GRUPO_PALPITES_LINK}" target="_blank" rel="noopener noreferrer">📲 Grupo de Palpites</a>
+  <button class="quick-btn" onclick="quickAsk('saque')">📤 Saque</button>
+  <button class="quick-btn" onclick="quickAsk('tutorial')">📖 Como jogar</button>
+  <button class="quick-btn" onclick="quickAsk('bingo')">🎱 Bingo</button>
+  <button class="quick-btn" onclick="quickAsk('pule')">📌 Pule / resultado</button>
+  <button class="quick-btn" onclick="quickAsk('cassino')">🎰 Cassino</button>
+  <button class="quick-btn" onclick="quickAsk('excluir')">🗑️ Excluir conta</button>
+  <button class="quick-btn" onclick="quickAsk('problemas')">🛠️ Problemas</button>
+  <button class="quick-btn attendant" onclick="callAttendant()">🙋 Atendente</button>
+  <button class="quick-btn" onclick="abrirWhatsApp()">📱 Deixar WhatsApp</button>
+  <button class="quick-btn" onclick="changePlatform()">🔄 Trocar app</button></div>`);
+}
+async function showCurrentHelp(){if(chatClosed)return;if(currentPlatform&&knowledgeBase[currentPlatform])await showMoreHelp(knowledgeBase[currentPlatform]);}
+async function confirmPlatform(yes){
+  if(chatClosed||state!=='confirming')return;
+  if(yes){const p=knowledgeBase[pendingPlatform];if(!p)return;currentPlatform=pendingPlatform;pendingPlatform=null;state='transferring';createMessage('Sim, está correto',false);await showTransferring(p.name);applyTheme(p.theme);updateHeader(currentPlatform);state='awaiting_question';await botReply(`Você foi transferido para o suporte de **${p.name}** ${p.icon}.\n\nEste atendimento prioriza **Loterias e Bingo**. Para cassino, o suporte é limitado.\n\nQual é a sua dúvida?`,600);await showMoreHelp(p);}
+  else{createMessage('Não, é outro',false);state='asking_platform';pendingPlatform=null;currentPlatform=null;applyTheme(null);await botReply('Entendi. Diga novamente o nome do aplicativo para o qual precisa de suporte.',700);}
+}
+async function callAttendant(ticketOverride){
+  if(chatClosed)return;const ticket=typeof ticketOverride==='string'&&ticketData.has(ticketOverride)?ticketOverride:activeTicketId;const t=ticket&&ticketData.get(ticket);
+  if(t&&t.status!=='resolvido'&&t.status!=='atendente_solicitado'){t.status='atendente_solicitado';recordEvent('atualizacao',ticket,t.status);const box=document.getElementById('feedback-'+ticket);if(box)box.innerHTML='<div class="resolution-feedback">🙋 Atendimento humano solicitado.</div>';}
+  createMessage('Quero falar com um atendente',false);state='answering';await botReply('Vou disponibilizar o acesso ao **atendimento da plataforma**. Você também pode deixar seu WhatsApp voluntariamente.',700,'<div class="quick-replies"><button class="quick-btn confirm" onclick="abrirWhatsApp()">📱 Informar meu WhatsApp</button></div>');startAttendantQueue();
+}
+async function quickAsk(intent){if(chatClosed)return;const labels={bonus:'Quero saber sobre os bônus',cotacao:'Qual é a cotação?',deposito:'Como faço um depósito?',saque:'Como faço um saque?',tutorial:'Como jogar nas loterias?',problemas:'Estou com um problema',saque_recusado:'Meu saque foi recusado',cassino:'Tenho dúvida sobre o cassino',excluir:'Quero excluir minha conta',bingo:'Quero saber sobre o bingo',recuperar_conta:'Não consigo entrar na minha conta',recarga_instavel:'O banco não está aceitando minha recarga',grupo_palpites:'Quero entrar no grupo de palpites',pule:'O resultado não saiu, a pule vale?'};await processMessage(labels[intent]||intent);}
+async function changePlatform(showUser=true){if(chatClosed)return;if(showUser)createMessage('Quero trocar de aplicativo',false);state='asking_platform';currentPlatform=null;pendingPlatform=null;applyTheme(null);document.getElementById('headerTitle').textContent='Suporte Inteligente';document.getElementById('headerStatus').textContent='Atendimento automatizado';if(queueTimerInterval){clearInterval(queueTimerInterval);queueTimerInterval=null;}document.getElementById('queueBox')?.remove();await botReply('Qual aplicativo você deseja suporte agora?',600);}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(){inputEl.style.height='auto';inputEl.style.height=Math.min(inputEl.scrollHeight,100)+'px';}
+inputEl.addEventListener('input',autoResize);
+async function sendMessage(){if(chatClosed)return;const text=inputEl.value.trim();if(!text||isTyping||state==='transferring')return;sendBtn.disabled=true;try{await processMessage(text);}finally{if(!chatClosed){sendBtn.disabled=false;inputEl.focus();}}}
+async function startChat(){
+  sessionId=makeId();ticketData.clear();activeTicketId=null;chatClosed=false;previousHiddenAt=0;lastReturnEvent=0;state='asking_platform';currentPlatform=null;pendingPlatform=null;inputEl.disabled=false;sendBtn.disabled=false;document.getElementById('contactModal').hidden=true;applyTheme(null);document.getElementById('headerTitle').textContent='Suporte Inteligente';document.getElementById('headerStatus').textContent='Atendimento automatizado';clearInterval(queueTimerInterval);queueTimerInterval=null;
+  await botReply('Olá! 👋 Sou o **Assistente de Suporte Inteligente**.\n\nPara te atender da melhor forma, preciso saber:\n\n**Qual aplicativo ou banca você deseja suporte?**',900);
+  // Coloca os banners UMA VEZ após a saudação, preservando os nós e os anúncios.
+  messagesEl.append(adsDeck);
+  // A saudação permanece no início, o anúncio abaixo, e o usuário pode digitar normalmente.
+  scrollToBottom();
+}
+function resetChat(){clearInterval(queueTimerInterval);queueTimerInterval=null;hideTyping();parkNative();[...messagesEl.children].forEach(el=>{if(el!==adsDeck)el.remove();});whatsappDaConversa='';startChat();mostrarWhatsAppInicial();}
+window.addEventListener('load',()=>{if(document.getElementById('jdc-inicio-whatsapp')?.hidden!==true)document.getElementById('jdc-numero-inicial').focus();});
+startChat();
+</script>
+</body>
+</html>

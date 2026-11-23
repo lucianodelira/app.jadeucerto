@@ -1,0 +1,2815 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Suporte Inteligente | Já Deu Certo</title>
+
+<!-- GOOGLE ANALYTICS -->
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-M442BX8R"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+</script>
+
+<!-- FONTES -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ANÚNCIOS: BANNER FIXO E ANÚNCIO NATIVO NA FILA -->
+
+<style>
+:root {
+  --bg:#0f1419;
+  --surface:#1a2332;
+  --surface-2:#243044;
+  --border:#2d3a4f;
+  --text:#e8eef7;
+  --text-muted:#8b9bb4;
+  --primary:#3b82f6;
+  --primary-hover:#2563eb;
+  --accent:#22c55e;
+  --danger:#ef4444;
+  --bot-bubble:#1e293b;
+  --user-bubble:#1d4ed8;
+  --radius:16px;
+  --header-h:64px;
+  --input-h:72px;
+  --theme-color:#3b82f6;
+}
+
+* {margin:0;padding:0;box-sizing:border-box}
+
+html,body {
+  height:100%;
+  width:100%;
+  overflow:hidden;
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:background .5s ease;
+}
+body {display:flex;flex-direction:column}
+
+body.theme-acertos {
+  --bg:#1a120a;--surface:#2a1c10;--surface-2:#3d2a18;
+  --border:#5c4030;--bot-bubble:#2a1c10;--user-bubble:#e67e22;
+  --primary:#e67e22;--primary-hover:#d35400;--theme-color:#e67e22;
+}
+body.theme-feiticeira {
+  --bg:#120a1a;--surface:#1c1030;--surface-2:#2a1848;
+  --border:#4a3080;--bot-bubble:#1c1030;--user-bubble:#9b59b6;
+  --primary:#9b59b6;--primary-hover:#8e44ad;--theme-color:#9b59b6;
+}
+body.theme-brasileira {
+  --bg:#0a1a0f;--surface:#102a18;--surface-2:#183d28;
+  --border:#2d5c40;--bot-bubble:#102a18;--user-bubble:#27ae60;
+  --primary:#27ae60;--primary-hover:#1e8449;--theme-color:#27ae60;
+}
+body.theme-tiger {
+  --bg:#121212;--surface:#1e1e1e;--surface-2:#2c2c2c;
+  --border:#444;--bot-bubble:#1e1e1e;--user-bubble:#7f8c8d;
+  --primary:#95a5a6;--primary-hover:#7f8c8d;--theme-color:#95a5a6;
+}
+body.theme-superacertos {
+  --bg:#0a1220;--surface:#0f1c30;--surface-2:#183050;
+  --border:#2a4a70;--bot-bubble:#0f1c30;--user-bubble:#2980b9;
+  --primary:#3498db;--primary-hover:#2980b9;--theme-color:#3498db;
+}
+body.theme-superbancas {
+  --bg:#050505;--surface:#111;--surface-2:#1a1a1a;
+  --border:#333;--bot-bubble:#111;--user-bubble:#222;
+  --primary:#555;--primary-hover:#444;--theme-color:#888;
+}
+body.theme-aguia {
+  --bg:#0a1a0f;--surface:#0e2a18;--surface-2:#143d22;
+  --border:#1e5c34;--bot-bubble:#0e2a18;--user-bubble:#166534;
+  --primary:#0e3b2e;--primary-hover:#0a2e24;--theme-color:#166534;
+}
+
+.header {
+  height:var(--header-h);
+  min-height:var(--header-h);
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0 12px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-shrink:0;
+  z-index:20;
+}
+.header-logo {
+  width:40px;height:40px;
+  background:linear-gradient(135deg,var(--primary),var(--theme-color));
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.header-info {flex:1;min-width:0}
+.header-info h1 {
+  font-size:15px;font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.header-info p {
+  font-size:12px;color:var(--text-muted);
+  display:flex;align-items:center;gap:6px;
+}
+.status-dot {
+  width:7px;height:7px;background:var(--accent);
+  border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;
+}
+@keyframes pulse {
+  0%,100% {opacity:1}
+  50% {opacity:.45}
+}
+.reset-btn {
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  padding:6px 9px;border-radius:8px;
+  font-size:12px;cursor:pointer;
+  flex-shrink:0;white-space:nowrap;
+}
+.reset-btn:hover {color:var(--text)}
+.reset-btn.finish {border-color:#22c55e;color:#86efac}
+
+.chat-wrapper {
+  flex:1;display:flex;flex-direction:column;
+  min-height:0;max-width:900px;width:100%;margin:0 auto;
+}
+.messages {
+  flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+  padding:16px 14px 20px;display:flex;flex-direction:column;
+  gap:14px;scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:#3d4f6a transparent;
+}
+.message {
+  display:flex;gap:10px;max-width:90%;
+  animation:fadeIn .25s ease;
+}
+@keyframes fadeIn {
+  from {opacity:0;transform:translateY(6px)}
+  to {opacity:1;transform:translateY(0)}
+}
+.message.bot {align-self:flex-start}
+.message.user {align-self:flex-end;flex-direction:row-reverse}
+.avatar {
+  width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.message.bot .avatar {
+  background:linear-gradient(135deg,var(--primary),var(--theme-color));
+}
+.message.user .avatar {background:var(--surface-2)}
+.bubble {
+  padding:11px 14px;border-radius:var(--radius);
+  font-size:14px;line-height:1.55;word-break:break-word;
+}
+.message.bot .bubble {
+  background:var(--bot-bubble);border:1px solid var(--border);
+  border-top-left-radius:4px;
+}
+.message.user .bubble {
+  background:var(--user-bubble);
+  border-top-right-radius:4px;color:#fff;
+}
+.bubble strong {color:#93c5fd}
+body.theme-acertos .bubble strong {color:#f5b041}
+body.theme-feiticeira .bubble strong {color:#d2b4de}
+body.theme-brasileira .bubble strong {color:#82e0aa}
+body.theme-tiger .bubble strong {color:#bdc3c7}
+body.theme-superacertos .bubble strong {color:#85c1e9}
+body.theme-superbancas .bubble strong {color:#aaa}
+body.theme-aguia .bubble strong {color:#86efac}
+.message.user .bubble strong {color:#fff;opacity:.9}
+.bubble ul,.bubble ol {margin:8px 0 4px 18px}
+.bubble li {margin-bottom:4px}
+.time {
+  font-size:10px;color:var(--text-muted);
+  margin-top:3px;padding-left:2px;
+}
+.message.user .time {text-align:right;padding-right:2px}
+
+.quick-replies {
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;
+}
+.quick-btn {
+  background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text);
+  padding:8px 13px;border-radius:20px;
+  font-size:13px;cursor:pointer;font-family:inherit;
+  white-space:normal;text-align:center;
+}
+.quick-btn:hover {
+  background:var(--primary);border-color:var(--primary);color:#fff;
+}
+.quick-btn.confirm {border-color:var(--accent);color:#86efac}
+.quick-btn.confirm:hover {background:#166534;color:#fff}
+.quick-btn.deny {border-color:var(--danger);color:#fca5a5}
+.quick-btn.deny:hover {background:#991b1b;color:#fff}
+.quick-btn.attendant {
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  border:none;color:#fff;font-weight:600;
+}
+.quick-btn.arrived {
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  border:none;color:#fff;font-weight:600;
+  font-size:14px;padding:12px 20px;
+}
+
+.resolution-box {
+  margin-top:12px;padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.resolution-label {
+  color:var(--text-muted);font-size:12.5px;margin-bottom:9px;
+}
+.resolution-feedback {
+  font-size:12px;color:var(--text-muted);margin-top:6px;
+}
+.typing {
+  display:flex;gap:5px;padding:12px 16px;
+  background:var(--bot-bubble);border:1px solid var(--border);
+  border-radius:var(--radius);border-top-left-radius:4px;
+  width:fit-content;
+}
+.typing span {
+  width:7px;height:7px;background:var(--text-muted);
+  border-radius:50%;animation:bounce 1.4s infinite ease-in-out both;
+}
+.typing span:nth-child(1) {animation-delay:-.32s}
+.typing span:nth-child(2) {animation-delay:-.16s}
+@keyframes bounce {
+  0%,80%,100% {transform:scale(0)}
+  40% {transform:scale(1)}
+}
+.transfer-msg {
+  text-align:center;padding:16px;color:var(--theme-color);
+  font-weight:500;font-size:14px;animation:fadeIn .4s ease;
+}
+.transfer-msg .dots span {animation:blink 1.4s infinite;opacity:0}
+.transfer-msg .dots span:nth-child(2) {animation-delay:.2s}
+.transfer-msg .dots span:nth-child(3) {animation-delay:.4s}
+@keyframes blink {
+  0%,100% {opacity:0}
+  50% {opacity:1}
+}
+.queue-box {
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:14px;padding:16px;
+  margin-top:10px;text-align:center;
+}
+.queue-box h4 {
+  font-size:14px;margin-bottom:8px;color:var(--theme-color);
+}
+.queue-timer {
+  font-size:28px;font-weight:700;color:var(--text);
+  letter-spacing:2px;margin:10px 0;
+  font-variant-numeric:tabular-nums;
+}
+.queue-info {
+  font-size:12px;color:var(--text-muted);
+  margin-bottom:12px;line-height:1.4;
+}
+.queue-warning {
+  background:rgba(245,158,11,.15);
+  border:1px solid rgba(245,158,11,.4);
+  color:#fbbf24;padding:10px 12px;
+  border-radius:10px;font-size:12.5px;
+  margin-bottom:12px;line-height:1.45;
+}
+/* Anúncio nativo: só dentro da fila, depois que o visitante pede atendente. */
+.adsense-slot {
+  background:var(--surface);
+  border:1px dashed var(--border);
+  border-radius:12px;
+  padding:8px 8px 10px;
+  margin:12px 0 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  overflow:hidden;
+  width:100%;
+}
+.ad-label {
+  font-size:10px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  text-align:center;
+  margin-bottom:6px;
+}
+/* Banner 300×250: recolhido até uma interação real. Não ocupa a tela o tempo todo. */
+.jdc-temp-ad {
+  flex-shrink:0;
+  width:100%;
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  background:var(--bg);
+  border-top:0 solid transparent;
+  transition:max-height .25s ease, opacity .2s ease;
+}
+.jdc-temp-ad.is-open {
+  max-height:360px;
+  opacity:1;
+  border-top:1px solid var(--border);
+}
+.jdc-temp-ad:not(.is-open) { pointer-events:none; }
+.jdc-temp-ad-clip { overflow:hidden; }
+.jdc-temp-ad-inner {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:8px 12px 10px;
+}
+.jdc-temp-ad-bar {
+  width:min(300px, 100%);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:6px;
+}
+.jdc-temp-ad-bar .ad-label { margin:0; }
+.jdc-temp-ad-close {
+  appearance:none;
+  background:var(--surface-2);
+  color:var(--text-muted);
+  border:1px solid var(--border);
+  border-radius:999px;
+  min-height:32px;
+  padding:6px 12px;
+  font-size:12px;
+  font-family:inherit;
+  cursor:pointer;
+}
+.jdc-temp-ad-close:hover { color:var(--text); }
+.jdc-banner-fit {
+  width:min(300px, 100%);
+  height:250px;
+  display:flex;
+  justify-content:center;
+  overflow:hidden;
+}
+.jdc-banner-host {
+  width:300px;
+  height:250px;
+  flex:none;
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--surface);
+  border:1px solid var(--border);
+}
+.jdc-banner-host iframe { border:0; display:block; }
+@media (max-width:340px) {
+  .jdc-banner-fit { height:calc((100vw - 24px) * 250 / 300); }
+  .jdc-banner-host {
+    transform:scale(calc((100vw - 24px) / 300));
+    transform-origin:top center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jdc-temp-ad { transition:none; }
+}
+
+.input-area {
+  flex-shrink:0;background:var(--surface);
+  border-top:1px solid var(--border);
+  padding:12px 14px;display:flex;gap:10px;
+  align-items:flex-end;min-height:var(--input-h);
+}
+.input-wrapper {
+  flex:1;background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:22px;padding:10px 14px;
+  display:flex;align-items:center;min-height:44px;
+}
+.input-wrapper:focus-within {border-color:var(--primary)}
+#userInput {
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-size:14.5px;font-family:inherit;
+  resize:none;max-height:100px;line-height:1.4;min-height:22px;
+}
+#userInput::placeholder {color:var(--text-muted)}
+.send-btn {
+  width:44px;height:44px;background:var(--primary);
+  border:none;border-radius:50%;color:white;
+  font-size:18px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+}
+.send-btn:hover {background:var(--primary-hover)}
+.send-btn:disabled {opacity:.5;cursor:not-allowed}
+
+/* NOVO: FORMULÁRIO OPCIONAL DE WHATSAPP */
+.contact-modal {
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.75);
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;
+}
+.contact-modal[hidden] {display:none}
+.contact-card {
+  width:100%;max-width:440px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;padding:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+.contact-card h2 {font-size:19px;margin-bottom:10px}
+.contact-card p {
+  font-size:13px;color:var(--text-muted);
+  line-height:1.6;margin-bottom:13px;
+}
+.contact-card label {font-size:13px}
+.contact-card input[type=tel] {
+  display:block;width:100%;margin:8px 0 15px;
+  background:var(--surface-2);color:var(--text);
+  border:1px solid var(--border);
+  border-radius:10px;padding:13px;font:inherit;
+}
+.contact-consent {
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:12px;line-height:1.5;
+}
+.contact-consent input {margin-top:3px;accent-color:var(--accent)}
+.contact-actions {
+  display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;
+}
+.contact-actions button {
+  border:0;border-radius:9px;
+  padding:11px 15px;font:inherit;cursor:pointer;
+}
+.contact-save {background:#16a34a;color:#fff;flex:1}
+.contact-cancel {
+  background:var(--surface-2);color:var(--text);
+  border:1px solid var(--border)!important;
+}
+#contactFeedback {min-height:19px;font-size:12px;margin-top:12px}
+.contact-note {font-size:11px!important;margin-top:12px!important}
+
+@media(max-width:600px) {
+  .message {max-width:94%}
+  .header {padding:0 8px;gap:5px}
+  .header-logo {width:34px;height:34px}
+  .header-info h1 {font-size:13px}
+  .header-info p {font-size:10px}
+  .reset-btn {font-size:10px;padding:6px}
+  .messages {padding:12px 10px 16px}
+  .input-area {padding:10px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="header-logo">🤖</div>
+  <div class="header-info">
+    <h1 id="headerTitle">Suporte Inteligente</h1>
+    <p>
+      <span class="status-dot"></span>
+      <span id="headerStatus">Online • Atendimento inteligente</span>
+    </p>
+  </div>
+
+  <button class="reset-btn" onclick="abrirWhatsApp()">
+    📱 Contato
+  </button>
+  <button class="reset-btn finish" onclick="encerrarAtendimento()">
+    ✅ Encerrar
+  </button>
+  <button class="reset-btn" onclick="resetChat()">
+    🔄 Nova conversa
+  </button>
+</header>
+
+<div class="chat-wrapper">
+  <div class="messages" id="messages"></div>
+
+  <!-- Banner 300×250 só depois da interação (confirmação da banca ou ajuda). -->
+  <aside class="jdc-temp-ad" id="jdcTempAd" aria-label="Publicidade" aria-hidden="true">
+    <div class="jdc-temp-ad-clip">
+      <div class="jdc-temp-ad-inner">
+        <div class="jdc-temp-ad-bar">
+          <span class="ad-label">Publicidade</span>
+          <button type="button" class="jdc-temp-ad-close" onclick="jdcAds.hideTemporary()">Fechar</button>
+        </div>
+        <div class="jdc-banner-fit">
+          <div class="jdc-banner-host" id="jdcBannerHost"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="input-area">
+    <div class="input-wrapper">
+      <textarea
+        id="userInput"
+        rows="1"
+        placeholder="Digite sua mensagem..."
+        onkeydown="handleKey(event)"
+      ></textarea>
+    </div>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<!-- NOVO: FORMULÁRIO DE WHATSAPP -->
+<div
+  id="contactModal"
+  class="contact-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="contactTitle"
+  hidden
+>
+  <form class="contact-card" onsubmit="salvarContato(event)">
+    <h2 id="contactTitle">📱 Contato por WhatsApp</h2>
+    <p>
+      Deseja receber um retorno sobre este atendimento?
+      Informe seu WhatsApp, se quiser.
+      Não é obrigatório para continuar usando o suporte.
+    </p>
+
+    <label for="contatoNumero">Número com DDD</label>
+    <input
+      id="contatoNumero"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      placeholder="(83) 99999-9999"
+      maxlength="20"
+    >
+
+    <label class="contact-consent">
+      <input id="contatoConsentimento" type="checkbox">
+      <span>
+        Autorizo o Já Deu Certo a utilizar este número
+        exclusivamente para entrar em contato pelo WhatsApp
+        sobre este atendimento.
+      </span>
+    </label>
+
+    <p id="contactFeedback" role="status"></p>
+
+    <div class="contact-actions">
+      <button type="button" class="contact-cancel" onclick="fecharWhatsApp()">
+        Agora não
+      </button>
+      <button type="submit" class="contact-save">
+        Salvar contato
+      </button>
+    </div>
+
+    <p class="contact-note">
+      O número será vinculado à dúvida atual.
+      Não envie senha, CPF ou código de verificação.
+    </p>
+  </form>
+</div>
+
+<script>
+'use strict';
+
+// ============================================
+// CONFIGURAÇÃO DOS COLETORES
+// ============================================
+
+// Coletor original: mantém os registros de dúvidas.
+const SHEETS_WEBAPP_URL =
+'https://script.google.com/macros/s/AKfycbzo6uXpBwvkokiVnacxVHvTYQnMryOCWdBz44_M9bqm1AjHyc6dlMMtrQIZ2HuOT-pt/exec';
+
+// NOVO: cole aqui a URL /exec do coletor complementar.
+// Este é um segundo Apps Script, diferente do original.
+const JDC_EXTRA_URL =
+'https://script.google.com/macros/s/AKfycbzo6uXpBwvkokiVnacxVHvTYQnMryOCWdBz44_M9bqm1AjHyc6dlMMtrQIZ2HuOT-pt/exec';
+
+// ============================================
+// TEXTOS COMPARTILHADOS
+// ============================================
+const COTACAO_PADRAO = `**Cotações oficiais (por R$ 1,00 apostado):**
+• **Milhar**: R$ 8.000,00
+• **Centena**: R$ 800,00
+• **Dezena**: R$ 80,00
+• **Grupo**: R$ 20,00
+• **Unidade**: R$ 8,00`;
+
+const COTACAO_SUPER = `**Cotações da SuperBancas (por R$ 1,00 apostado) — as melhores do mercado:**
+• **Milhar**: R$ 9.000,00
+• **Centena**: R$ 900,00
+• **Dezena**: R$ 90,00
+• **Grupo**: R$ 22,00
+• **Unidade**: R$ 9,00`;
+
+const BONUS_PADRAO = `**Bônus de recarga:**
+• Até **25%** para cliente novo (primeira recarga)
+• **15%** em dias de Loteria Federal
+• **10%** todos os dias normais
+O bônus vale apenas nas **primeiras recargas do dia**. Após a primeira recarga do dia, as seguintes não recebem bônus.`;
+
+const SAQUE_RECUSADO = `**Sobre saque recusado:**
+
+Se o seu saque foi recusado, é necessário **aguardar** até que o problema seja resolvido.
+
+**Possíveis motivos:**
+• Dados divergentes (nome, CPF, chave Pix)
+• Instabilidade temporária no sistema
+• Recusa pelo banco receptor
+
+**O que fazer:**
+1. Aguarde de **30 minutos a 1 hora** para o sistema processar novamente
+2. Espere no mínimo **5 minutos** antes de tentar um novo saque
+3. Confira se seus dados cadastrais estão corretos e iguais aos dados da conta Pix
+
+Se já passou esse tempo e o problema **não foi resolvido**, clique em **Chamar Atendente** para falar com um humano.`;
+
+const TUTORIAL_LOTERIAS = `**📖 Tutorial: Como jogar nas Loterias**
+
+**1. Entenda as modalidades**
+• **Grupo**: aposta no animal (1 ao 25). Paga cerca de 20x
+• **Dezena**: últimos 2 dígitos do resultado. Paga cerca de 80x
+• **Centena**: últimos 3 dígitos. Paga cerca de 800x
+• **Milhar**: os 4 dígitos completos. Paga cerca de 8.000x (ou 9.000x na SuperBancas)
+
+**2. Como fazer uma aposta (pule)**
+1. Entre na plataforma
+2. Escolha a modalidade (Grupo, Dezena, Centena ou Milhar)
+3. Digite o número ou escolha o animal
+4. Informe o valor da aposta
+5. Confirme e pague via Pix se necessário
+
+**3. Se o resultado da loteria não ocorrer**
+Se o sorteio do dia **não acontecer** (cancelamento, atraso ou falha na divulgação), a sua **pule continua valendo** automaticamente para o **sorteio do dia seguinte**. Você não precisa refazer a aposta.
+
+**4. Dicas importantes**
+• Comece com valores baixos até entender o sistema
+• Acompanhe o horário dos resultados (cada região tem seus horários)
+• Guarde o comprovante da aposta
+• Jogue com responsabilidade — nunca aposte mais do que pode perder
+
+**5. Conferindo o resultado**
+Após o sorteio, o resultado aparece na plataforma. Se você acertou, o prêmio é creditado automaticamente na sua conta e pode ser sacado via Pix.`;
+
+const BINGO_INFO = `**Sobre o Bingo:**
+
+O **Bingo** é uma modalidade disponível em várias plataformas parceiras.
+
+**Como funciona em geral:**
+• Você compra cartelas digitais
+• Os números são sorteados ao vivo ou em rodadas automáticas
+• Quem completar o padrão da cartela (linha, coluna, cartela cheia etc.) ganha o prêmio
+
+**Dúvidas comuns:**
+• **Cartela não aparece / não valida**: limpe o cache, use o **link oficial** do app e verifique se a recarga foi feita na modalidade correta
+• **Prêmio do bingo não creditado**: aguarde alguns minutos. Se não cair, abra um chamado com **Chamar Atendente** e envie o comprovante/print da cartela
+• **Horários e rodadas**: consultados dentro do próprio app, na seção Bingo
+
+Este suporte orienta sobre regras gerais. Para casos específicos de prêmio ou cartela, use o botão de atendente.`;
+
+const CASSINO_INFO = `**Sobre a modalidade Cassino:**
+
+⚠️ **Importante:** o suporte deste chat é **exclusivo para a modalidade de Loterias**.
+
+A modalidade **Cassino** funciona em **outro sistema**, fora da área de jurisdição deste suporte. Por isso o atendimento para cassino é **limitado**.
+
+**Problemas comuns no cassino:**
+• Alguns jogos não rodam porque o usuário acessou por **links externos não oficiais**
+• Sempre use o **link oficial** do aplicativo para evitar erros e jogos que não abrem
+• Prêmios não pagos no cassino: este suporte **não resolve** questões de prêmio do cassino. Procure o suporte específico do cassino ou abra um chamado com atendente
+• **Recarga não aparece no saldo do cassino:** isso acontece quando a recarga foi feita na **modalidade errada** (ex.: loterias em vez de cassino). **Não é possível mudar nem estornar** a recarga. O valor permanece na modalidade em que foi creditado`;
+
+const EXCLUIR_CONTA = `**Sobre exclusão de conta:**
+
+O sistema de suporte **não tem acesso direto às contas dos usuários**.
+
+Para excluir sua conta:
+1. Basta **ficar sem acessar** o aplicativo por aproximadamente **15 dias**
+2. O aplicativo entra em modo de **usuário inativo**
+3. Depois de um período, a conta é **excluída automaticamente** pelo sistema
+
+Não é necessário abrir chamado para exclusão — o processo é automático por inatividade.`;
+
+const RECUPERAR_CONTA = `**🔐 Não consegue entrar na sua conta?**
+
+1. Na tela de acesso, selecione **Recuperar conta**.
+2. Digite o **CPF cadastrado** na plataforma e siga as instruções apresentadas.
+3. Se você **não tem mais acesso ao número de telefone usado na recuperação**, clique em **Chamar Atendente** para solicitar ajuda.
+
+⚠️ Por segurança, não envie seu CPF completo, senha ou código de verificação neste chat.`;
+
+const RECARGA_INSTAVEL = `**🏦 O banco não está aceitando sua recarga?**
+
+Alguns bancos e sistemas de pagamento podem passar por **instabilidades temporárias**, causando bloqueios, suspensões ou indisponibilidade das recargas. O acúmulo de solicitações também pode afetar o processamento financeiro.
+
+**O que fazer:**
+• Aguarde de **1 a 4 horas**, ou até o serviço ser normalizado, e tente novamente.
+• Confira no aplicativo do banco se houve cobrança antes de repetir a operação, para evitar pagamento duplicado.
+• Se o problema persistir, clique em **Chamar Atendente** para receber orientação.
+
+O prazo de 1 a 4 horas é uma **estimativa de espera**, não uma garantia de normalização.`;
+
+const GRUPO_PALPITES_LINK =
+'https://chat.whatsapp.com/E8YBSauoGpUG4HMTe3uZCr';
+
+const PULE_VALIDADE = `**Sobre a validade da pule:**
+
+Quando o **resultado da loteria não ocorre** no dia (sorteio cancelado, atrasado ou não divulgado), a sua **pule permanece válida** e passa a valer automaticamente para o **sorteio do dia seguinte**.
+
+Você **não precisa** refazer a aposta. Basta acompanhar o próximo resultado oficial.`;
+
+// ============================================
+// BASE DE CONHECIMENTO
+// ============================================
+const knowledgeBase = {
+  acertosclub: {
+    name:"Acertos Club",
+    aliases:["acertos","acertos club","acertosclub","acertos.club","acerto","acerto club","acertos clube","app acertos","aplicativo acertos","acertos bet"],
+    icon:"🦉",
+    theme:"acertos",
+    officialLink:"https://app.acertos.online/pr/sbrqjugZ",
+    suporteLink:"https://app.acertos.online/pr/sbrqjugZ",
+    info:{
+      geral:`O **Acertos Club** é uma das principais bancas de jogos online e **Loterias** do Brasil. Destaca-se pelas melhores cotações do mercado, pagamentos de prêmios imediatos via Pix e interface otimizada para celular.
+
+⚠️ Este suporte atende prioritariamente a modalidade de **Loterias**.`,
+      bonus:BONUS_PADRAO,
+      cotacao:COTACAO_PADRAO,
+      deposito:`**Como depositar no Acertos Club:**
+1. Acesse a plataforma pelo link oficial
+2. Vá em Depósito / Recarga
+3. Escolha Pix (instantâneo)
+4. Escaneie o QR Code ou copie a chave
+5. O valor cai em segundos e o bônus é aplicado automaticamente (se for a primeira recarga do dia).
+
+⚠️ Atenção: escolha a modalidade correta (Loterias ou Cassino). Recarga feita na modalidade errada **não pode ser transferida nem estornada**.`,
+      saque:`**Saques no Acertos Club:**
+• Pagamento de prêmios (loterias) é **imediato** via Pix
+• Sem taxas e sem burocracia
+
+`+SAQUE_RECUSADO,
+      jogos:`O Acertos Club oferece:
+• **Loterias** (todas as regiões) — suporte completo
+• **Bingo**
+• Apostas esportivas
+• Cassino online (slots etc.) — suporte limitado (outro sistema)
+
+**Importante:** se o resultado da loteria não ocorrer no dia, a **pule fica valendo para o sorteio do outro dia**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO+`
+
+**Link oficial do Acertos Club:**
+https://app.acertos.club/pr/sbrqjugZ`,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte oficial do Acertos Club:
+• Este chat atende **principalmente Loterias e Bingo**
+• Cassino tem suporte limitado (sistema separado)
+• Chat interno 24 horas disponível na plataforma`,
+      problemas:`**Problemas frequentes e soluções:**
+• **App lento / não abre**: limpe cache, use o **link oficial** e evite links externos
+• **Depósito não creditado**: aguarde até 5 minutos. Se não cair, abra suporte com o print
+• **Saque pendente / recusado**: veja as orientações de saque recusado
+• **Jogo de cassino não roda**: geralmente por link não oficial — use o link oficial
+• **Recarga não aparece no cassino**: foi feita na modalidade errada (não estorna)
+• **Resultado não saiu**: a pule continua válida para o próximo sorteio`
+    }
+  },
+
+  feiticeiraclub: {
+    name:"Feiticeira Club",
+    aliases:["feiticeira","feiticeira club","feiticeiraclub","feiticeira.club","feiticeira banca","app feiticeira","banca feiticeira"],
+    icon:"🧙‍♀️",
+    theme:"feiticeira",
+    officialLink:"https://app.feiticeira.vip/pr/PRBJ9rmd",
+    suporteLink:"https://app.feiticeira.vip/pr/PRBJ9rmd",
+    info:{
+      geral:`A **Feiticeira Club** é uma banca parceira da SuperBancas, conhecida por acesso fácil, pagamentos instantâneos via Pix e navegação intuitiva.
+
+⚠️ Este suporte prioriza a modalidade de **Loterias**.`,
+      bonus:BONUS_PADRAO,
+      cotacao:COTACAO_PADRAO,
+      deposito:`Depósitos via **Pix**. Escolha a modalidade correta (Loterias ou Cassino). Recarga na modalidade errada **não pode ser mudada nem estornada**.`,
+      saque:`Saques via Pix são processados de forma ágil.
+
+`+SAQUE_RECUSADO,
+      jogos:`A Feiticeira oferece **Loterias**, **Bingo** e cassino. O suporte deste chat é focado em **Loterias e Bingo**.
+
+Se o resultado da loteria não ocorrer, a **pule vale para o sorteio do dia seguinte**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO+`
+
+**Acesse sempre pelo link oficial da plataforma.**`,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte disponível neste chat para **Loterias e Bingo**. Cassino tem atendimento limitado.`,
+      problemas:`Problemas comuns: use o link oficial, limpe o cache. Recarga na modalidade errada não estorna. Saque recusado: aguarde 30 min a 1h. Resultado não saiu: pule vale no dia seguinte.`
+    }
+  },
+
+  superacertos: {
+    name:"Super Acertos",
+    aliases:["super acertos","superacertos","super acertos club","superacerto","super acerto"],
+    icon:"⭐",
+    theme:"superacertos",
+    officialLink:"https://app.superacertos.club/pr/DiNatQPp",
+    suporteLink:"https://app.superacertos.club/pr/DiNatQPp",
+    info:{
+      geral:`O **Super Acertos** faz parte do ecossistema de bancas digitais focadas em **Loterias** e jogos online.
+
+⚠️ Suporte prioritário para **Loterias**.`,
+      bonus:BONUS_PADRAO,
+      cotacao:COTACAO_PADRAO,
+      deposito:`Depósito via Pix. Atenção à modalidade (Loterias x Cassino). Recarga na modalidade errada **não estorna**.`,
+      saque:`Saques processados via Pix.
+
+`+SAQUE_RECUSADO,
+      jogos:`Modalidades de **Loterias**, **Bingo** e cassino. Este chat foca em **Loterias e Bingo**.
+
+Se o resultado não ocorrer, a **pule fica válida para o sorteio do outro dia**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte interno focado em Loterias e Bingo. Cassino: suporte limitado.`,
+      problemas:`Use link oficial. Cache limpo. Recarga errada não muda. Saque recusado: aguarde. Resultado não saiu: pule vale no dia seguinte.`
+    }
+  },
+
+  bancabrasileira: {
+    name:"Banca Brasileira",
+    aliases:["banca brasileira","bancabrasileira","banca br","banca brasil","brasileira","banca brasileira club"],
+    icon:"🇧🇷",
+    theme:"brasileira",
+    officialLink:"https://app.bancabrasileira.com.br/pr/J2AWPe67",
+    suporteLink:"https://app.bancabrasileira.com.br/pr/J2AWPe67",
+    info:{
+      geral:`A **Banca Brasileira** é uma das plataformas parceiras da SuperBancas. Jogos online com Pix e acesso rápido.
+
+⚠️ Este suporte prioriza **Loterias**.`,
+      bonus:BONUS_PADRAO,
+      cotacao:COTACAO_PADRAO,
+      deposito:`Depósitos via **Pix**. Escolha a modalidade correta. Recarga na modalidade errada **não pode ser transferida nem estornada**.`,
+      saque:`Saques via Pix.
+
+`+SAQUE_RECUSADO,
+      jogos:`**Loterias**, **Bingo** e cassino. Suporte deste chat: **Loterias e Bingo**.
+
+Se o resultado da loteria não ocorrer, a **pule vale para o sorteio do dia seguinte**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO+`
+
+**Link oficial:** https://app.bancabrasileira.com.br/pr/J2AWPe67`,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte da Banca Brasileira focado em Loterias e Bingo. Cassino tem atendimento limitado.`,
+      problemas:`Link oficial, limpeza de cache. Recarga errada não estorna. Saque recusado: aguarde 30 min–1h. Resultado não saiu: pule vale no próximo sorteio.`
+    }
+  },
+
+  superbancas: {
+    name:"SuperBancas",
+    aliases:["superbancas","super bancas","super banca","super bancas.org","superbanca"],
+    icon:"🏆",
+    theme:"superbancas",
+    officialLink:"https://app.superbancas.club/pr/Q3WZ1haO",
+    suporteLink:"https://app.superbancas.club/pr/Q3WZ1haO",
+    info:{
+      geral:`A **SuperBancas** reúne várias bancas digitais. Oferece as **melhores cotações** e acesso via Pix.
+
+⚠️ Este suporte prioriza a modalidade de **Loterias**.`,
+      bonus:`A **SuperBancas não possui bônus de recarga**. O diferencial são as **cotações mais altas**.`,
+      cotacao:COTACAO_SUPER,
+      deposito:`Depósitos via Pix. Atenção: recarga na modalidade errada (Loterias x Cassino) **não pode ser mudada nem estornada**.`,
+      saque:`Saques via Pix.
+
+`+SAQUE_RECUSADO,
+      jogos:`Hub de bancas com **Loterias**, **Bingo** e cassino. Suporte deste chat: **Loterias e Bingo**.
+
+Se o resultado não ocorrer, a **pule fica valendo para o sorteio do outro dia**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO+`
+
+**Site oficial:** https://app.superbancas.club/pr/Q3WZ1haO`,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte geral da SuperBancas (Loterias e Bingo). Cassino: suporte limitado.`,
+      problemas:`Use o site oficial. Cache. Recarga errada não estorna. Saque recusado: aguarde. Resultado não saiu: pule vale no dia seguinte.`
+    }
+  },
+
+  tigerclub: {
+    name:"Tiger Club",
+    aliases:["tiger club","tigerclub","tigrinho","tiger","tigre club","tiger banca","fortune tiger","banca tiger"],
+    icon:"🐯",
+    theme:"tiger",
+    officialLink:"https://app.superacertos.club/pr/DiNatQPp",
+    suporteLink:"https://app.superacertos.club/pr/DiNatQPp",
+    info:{
+      geral:`O **Tiger Club** é banca parceira da SuperBancas, com jogos online, Pix e suporte.
+
+⚠️ Este suporte prioriza **Loterias**. Cassino tem atendimento limitado.`,
+      bonus:BONUS_PADRAO,
+      cotacao:COTACAO_PADRAO,
+      deposito:`Depósito via Pix. Escolha a modalidade correta. Recarga na modalidade errada **não estorna**.`,
+      saque:`Saques via Pix.
+
+`+SAQUE_RECUSADO,
+      jogos:`**Loterias**, **Bingo** e cassino. Suporte deste chat focado em **Loterias e Bingo**.
+
+Se o resultado da loteria não ocorrer, a **pule vale para o sorteio do dia seguinte**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO+`
+
+**Acesse sempre pelo link oficial.** Jogos que não abrem costumam ser por links externos não oficiais.`,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte focado em Loterias e Bingo. Para cassino (prêmios, jogos), suporte é limitado — use atendente se necessário.`,
+      problemas:`Link oficial evita jogos que não rodam. Recarga errada não muda. Saque recusado: aguarde 30 min a 1h. Resultado não saiu: pule vale no próximo dia.`
+    }
+  },
+
+  aguiaoficial: {
+    name:"Águia Oficial",
+    aliases:["aguia oficial","aguia","aguiaoficial","águia oficial","aguia oficial banca","app aguia","banca aguia","aguia club"],
+    icon:"🦅",
+    theme:"aguia",
+    officialLink:"https://app.aguiaoficial.vip/pr/stBCno8r",
+    suporteLink:"https://app.aguiaoficial.vip/pr/stBCno8r",
+    info:{
+      geral:`A **Águia Oficial** é uma banca parceira focada em **Loterias**, com pagamentos via Pix e interface otimizada.
+
+⚠️ Este suporte prioriza a modalidade de **Loterias**.`,
+      bonus:BONUS_PADRAO,
+      cotacao:COTACAO_PADRAO,
+      deposito:`Depósitos via **Pix**. Escolha a modalidade correta (Loterias ou Cassino). Recarga na modalidade errada **não pode ser transferida nem estornada**.`,
+      saque:`Saques via Pix são processados de forma ágil.
+
+`+SAQUE_RECUSADO,
+      jogos:`A Águia Oficial oferece **Loterias**, **Bingo** e cassino. O suporte deste chat é focado em **Loterias e Bingo**.
+
+Se o resultado da loteria não ocorrer, a **pule vale para o sorteio do dia seguinte**.`,
+      bingo:BINGO_INFO,
+      pule:PULE_VALIDADE,
+      cassino:CASSINO_INFO+`
+
+**Acesse sempre pelo link oficial da plataforma.**`,
+      tutorial:TUTORIAL_LOTERIAS,
+      excluir:EXCLUIR_CONTA,
+      suporte:`Suporte disponível neste chat para **Loterias e Bingo**. Cassino tem atendimento limitado.`,
+      problemas:`Use o link oficial, limpe o cache. Recarga na modalidade errada não estorna. Saque recusado: aguarde 30 min a 1h. Resultado não saiu: pule vale no dia seguinte.`
+    }
+  }
+};
+
+// ============================================
+// ESTADO DO CHAT
+// ============================================
+let state = 'asking_platform';
+let pendingPlatform = null;
+let currentPlatform = null;
+let isTyping = false;
+let queueTimerInterval = null;
+let queueSecondsLeft = 0;
+
+let sessionId = makeId();
+let activeTicketId = null;
+const ticketData = new Map();
+
+let chatClosed = false;
+let previousHiddenAt = 0;
+let lastReturnEvent = 0;
+
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+// ============================================
+// IDENTIFICADORES
+// ============================================
+function makeId() {
+  if (window.crypto && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return 'id-' + [...array].map(
+    b => b.toString(16).padStart(2,'0')
+  ).join('');
+}
+
+// ============================================
+// COLETOR ORIGINAL - NÃO ALTERADO
+// ============================================
+function recordEvent(kind, ticket, status) {
+  const t = ticketData.get(ticket);
+
+  if (
+    !t ||
+    !SHEETS_WEBAPP_URL.startsWith(
+      'https://script.google.com/macros/s/'
+    )
+  ) return;
+
+  const body = new URLSearchParams({
+    kind,
+    ticket,
+    session: sessionId,
+    eventId: makeId(),
+    status,
+    platform: t.platform,
+    topic: t.topic,
+    site_url: ''
+  });
+
+  try {
+    fetch(SHEETS_WEBAPP_URL, {
+      method:'POST',
+      mode:'no-cors',
+      body,
+      keepalive:true
+    }).catch(err =>
+      console.warn('Falha no registro original:', err)
+    );
+  } catch(err) {
+    console.warn('Erro no coletor original:', err);
+  }
+}
+
+// ============================================
+// NOVO: COLETOR COMPLEMENTAR
+// ============================================
+function jdcExtraConfigurado() {
+  return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/
+    .test(JDC_EXTRA_URL);
+}
+
+function jdcEventoExtra(
+  kind,
+  ticketOverride = activeTicketId,
+  extra = {}
+) {
+  const ticket = ticketOverride;
+  const dados = ticketData.get(ticket);
+
+  if (!dados || !jdcExtraConfigurado()) {
+    console.warn(
+      'Evento extra não enviado: configure JDC_EXTRA_URL e tenha uma dúvida ativa.'
+    );
+    return false;
+  }
+
+  const permitidos = [
+    'whatsapp','saida','encerramento','retorno','atividade'
+  ];
+
+  if (!permitidos.includes(kind)) return false;
+
+  const body = new URLSearchParams({
+    ticket,
+    session: sessionId,
+    eventId: makeId(),
+    kind,
+    platform: dados.platform,
+    topic: dados.topic,
+    detail: String(extra.detail || '').slice(0,120),
+    whatsapp: extra.whatsapp || '',
+    whatsappConsent: extra.whatsappConsent || ''
+  });
+
+  try {
+    if (navigator.sendBeacon) {
+      const enviado = navigator.sendBeacon(
+        JDC_EXTRA_URL,
+        body
+      );
+
+      if (enviado) return true;
+    }
+
+    fetch(JDC_EXTRA_URL, {
+      method:'POST',
+      mode:'no-cors',
+      body,
+      keepalive:true
+    }).catch(err => {
+      console.warn('Falha no evento extra:', err);
+    });
+
+    return true;
+  } catch(err) {
+    console.warn('Não foi possível enviar evento extra:', err);
+    return false;
+  }
+}
+
+// ============================================
+// NOVO: WHATSAPP COM CONSENTIMENTO
+// ============================================
+function normalizarWhatsApp(numero) {
+  let n = String(numero || '').replace(/\D/g,'');
+
+  if (n.length === 10 || n.length === 11) {
+    n = '55' + n;
+  }
+
+  if (!/^55\d{10,11}$/.test(n)) return '';
+
+  return n;
+}
+
+window.abrirWhatsApp = function(ticketOverride) {
+  if (chatClosed) {
+    alert('Inicie uma nova conversa para informar o WhatsApp.');
+    return;
+  }
+
+  const ticket =
+    typeof ticketOverride === 'string' &&
+    ticketData.has(ticketOverride)
+      ? ticketOverride
+      : activeTicketId;
+
+  if (!ticket || !ticketData.has(ticket)) {
+    alert('Primeiro selecione uma banca e faça uma pergunta no suporte.');
+    return;
+  }
+
+  const modal = document.getElementById('contactModal');
+  modal.dataset.ticket = ticket;
+
+  document.getElementById('contatoNumero').value = '';
+  document.getElementById('contatoConsentimento').checked = false;
+  document.getElementById('contactFeedback').textContent = '';
+
+  modal.hidden = false;
+  document.getElementById('contatoNumero').focus();
+};
+
+window.fecharWhatsApp = function() {
+  document.getElementById('contactModal').hidden = true;
+  inputEl.focus();
+};
+
+window.salvarContato = function(event) {
+  event.preventDefault();
+
+  const modal = document.getElementById('contactModal');
+  const feedback = document.getElementById('contactFeedback');
+
+  const ticket = modal.dataset.ticket;
+  const numero = document.getElementById('contatoNumero').value;
+  const consentimento =
+    document.getElementById('contatoConsentimento').checked;
+
+  if (!ticketData.has(ticket)) {
+    feedback.textContent = 'Atendimento não encontrado.';
+    return;
+  }
+
+  if (!consentimento) {
+    feedback.textContent =
+      'Marque a autorização para enviar seu telefone.';
+    return;
+  }
+
+  const telefone = normalizarWhatsApp(numero);
+
+  if (!telefone) {
+    feedback.textContent =
+      'Informe um WhatsApp brasileiro válido com DDD.';
+    return;
+  }
+
+  if (!jdcExtraConfigurado()) {
+    feedback.textContent =
+      'O registro de contatos ainda não está configurado.';
+    return;
+  }
+
+  const iniciado = jdcEventoExtra(
+    'whatsapp',
+    ticket,
+    {
+      whatsapp:telefone,
+      whatsappConsent:'sim',
+      detail:'Contato fornecido voluntariamente para retorno'
+    }
+  );
+
+  if (!iniciado) {
+    feedback.textContent =
+      'Não foi possível iniciar o envio. Tente novamente.';
+    return;
+  }
+
+  modal.hidden = true;
+
+  createMessage(
+    '📱 Solicitei o registro do meu WhatsApp para retorno.',
+    false
+  );
+
+  botReply(
+    '✅ Sua solicitação de contato foi enviada. O WhatsApp será associado a esta dúvida se o coletor confirmar o recebimento. Não é necessário informar o número novamente aqui no chat.',
+    350
+  );
+};
+
+// ============================================
+// NOVO: ENCERRAMENTO EXPLÍCITO
+// ============================================
+window.encerrarAtendimento = function() {
+  if (chatClosed) return;
+
+  if (!activeTicketId) {
+    alert('Você ainda não iniciou uma dúvida. Use Nova conversa se desejar recomeçar.');
+    return;
+  }
+
+  const confirmado = confirm(
+    'Deseja realmente encerrar esta conversa?'
+  );
+
+  if (!confirmado) return;
+
+  const ticket = activeTicketId;
+
+  jdcEventoExtra(
+    'encerramento',
+    ticket,
+    {
+      detail:'Cliente clicou no botão Encerrar'
+    }
+  );
+
+  const dados = ticketData.get(ticket);
+  if (dados) dados.encerrado = true;
+
+  chatClosed = true;
+  state = 'ended';
+  jdcAds.hideTemporary();
+
+  if (queueTimerInterval) {
+    clearInterval(queueTimerInterval);
+    queueTimerInterval = null;
+  }
+
+  document.getElementById('contactModal').hidden = true;
+
+  inputEl.disabled = true;
+  sendBtn.disabled = true;
+
+  createMessage('Desejo encerrar este atendimento.', false);
+
+  createMessage(
+    '✅ **Conversa encerrada pelo cliente.**\n\nPara receber outro atendimento, clique em **Nova conversa**.',
+    true
+  );
+};
+
+// ============================================
+// NOVO: SINAL DE SAÍDA E RETORNO
+// ============================================
+window.addEventListener('pagehide', () => {
+  if (activeTicketId && !chatClosed) {
+    jdcEventoExtra(
+      'saida',
+      activeTicketId,
+      {
+        detail:'Sinal pagehide; saída não confirmada'
+      }
+    );
+  }
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    previousHiddenAt = Date.now();
+    return;
+  }
+
+  if (
+    document.visibilityState === 'visible' &&
+    activeTicketId &&
+    !chatClosed &&
+    previousHiddenAt &&
+    Date.now() - previousHiddenAt >= 15000 &&
+    Date.now() - lastReturnEvent >= 30000
+  ) {
+    lastReturnEvent = Date.now();
+
+    jdcEventoExtra(
+      'retorno',
+      activeTicketId,
+      {
+        detail:'Cliente voltou à aba do suporte'
+      }
+    );
+  }
+});
+
+// ============================================
+// IDENTIFICAÇÃO DAS DÚVIDAS
+// ============================================
+const TOPIC_LABELS = {
+  bonus:'Bônus',
+  cotacao:'Cotações',
+  deposito:'Depósito / recarga',
+  saque:'Saque',
+  tutorial:'Como jogar',
+  problemas:'Problema geral',
+  saque_recusado:'Saque recusado',
+  cassino:'Cassino',
+  excluir:'Excluir conta',
+  bingo:'Bingo',
+  pule:'Validade da pule',
+  recuperar_conta:'Recuperação de conta',
+  recarga_instavel:'Recarga recusada pelo banco',
+  grupo_palpites:'Grupo de palpites',
+  jogos:'Jogos',
+  suporte:'Suporte',
+  geral:'Dúvida geral'
+};
+
+function ticketButtonsHTML(ticket) {
+  return `
+    <div class="resolution-box" id="feedback-${ticket}">
+      <div class="resolution-label">
+        ✅ Sua dúvida foi resolvida?
+      </div>
+      <div class="quick-replies">
+        <button class="quick-btn confirm"
+          onclick="confirmResolution('${ticket}',true)">
+          ✅ Sim, resolveu
+        </button>
+        <button class="quick-btn deny"
+          onclick="confirmResolution('${ticket}',false)">
+          ❌ Não resolveu
+        </button>
+        <button class="quick-btn"
+          onclick="abrirWhatsApp('${ticket}')">
+          📱 Deixar WhatsApp
+        </button>
+      </div>
+    </div>`;
+}
+
+async function trackedReply(text,intent,delay=700,extraHTML='') {
+  if (chatClosed) return;
+
+  const ticket = makeId();
+
+  ticketData.set(ticket,{
+    platform:
+      currentPlatform && knowledgeBase[currentPlatform]
+        ? knowledgeBase[currentPlatform].name
+        : 'Não selecionada',
+    topic:TOPIC_LABELS[intent] || 'Dúvida geral',
+    status:'aguardando',
+    encerrado:false
+  });
+
+  activeTicketId = ticket;
+
+  recordEvent('criacao',ticket,'aguardando');
+
+  return botReply(
+    text,
+    delay,
+    extraHTML + ticketButtonsHTML(ticket)
+  );
+}
+
+window.confirmResolution = async function(ticket,yes) {
+  if (chatClosed) return;
+
+  const t = ticketData.get(ticket);
+  if (!t || t.status !== 'aguardando') return;
+
+  t.status = yes ? 'resolvido' : 'nao_resolvido';
+
+  recordEvent('atualizacao',ticket,t.status);
+
+  const box = document.getElementById('feedback-'+ticket);
+
+  if (box) {
+    box.innerHTML = `
+      <div class="resolution-feedback">
+        ${yes
+          ? '✅ Você confirmou que a dúvida foi resolvida.'
+          : '❌ Você informou que a dúvida não foi resolvida.'}
+      </div>`;
+  }
+
+  if (yes) {
+    await botReply(
+      'Obrigado pela confirmação! Sua dúvida foi marcada como **resolvida**. Se precisar, pode enviar outra pergunta.',
+      500
+    );
+  } else {
+    await botReply(
+      'Entendi. Sua dúvida foi marcada como **não resolvida**. Você pode falar com um atendente ou escolher outra orientação.',
+      500,
+      `<div class="quick-replies">
+        <button class="quick-btn attendant"
+          onclick="callAttendant('${ticket}')">
+          🙋 Chamar Atendente
+        </button>
+        <button class="quick-btn"
+          onclick="showCurrentHelp()">
+          📋 Outras opções
+        </button>
+      </div>`
+    );
+  }
+};
+
+// ============================================
+// INTERFACE DO CHAT
+// ============================================
+function applyTheme(themeName) {
+  document.body.className='';
+  if(themeName) {
+    document.body.classList.add('theme-'+themeName);
+  }
+}
+
+function updateHeader(platformKey) {
+  const p=knowledgeBase[platformKey];
+  if(p) {
+    document.getElementById('headerTitle').textContent =
+      p.name+' • Suporte';
+
+    document.getElementById('headerStatus').textContent =
+      'Online • '+p.name;
+  }
+}
+
+function normalize(str) {
+  return String(str).toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString(
+    'pt-BR',
+    {hour:'2-digit',minute:'2-digit'}
+  );
+}
+
+function scrollToBottom() {
+  requestAnimationFrame(()=>{
+    messagesEl.scrollTop=messagesEl.scrollHeight;
+  });
+}
+
+// Protege o texto das mensagens contra HTML inserido pelo visitante.
+function formatText(text) {
+  const seguro=String(text).replace(
+    /[&<>"']/g,
+    c=>({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[c])
+  );
+
+  return seguro
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n/g,'<br>');
+}
+
+function createMessage(text,isBot=true,extraHTML='') {
+  const div=document.createElement('div');
+  div.className=`message ${isBot?'bot':'user'}`;
+
+  const avatar=document.createElement('div');
+  avatar.className='avatar';
+  avatar.textContent=isBot?'🤖':'👤';
+
+  const content=document.createElement('div');
+  const bubble=document.createElement('div');
+  bubble.className='bubble';
+  bubble.innerHTML=formatText(text)+extraHTML;
+
+  const time=document.createElement('div');
+  time.className='time';
+  time.textContent=getTime();
+
+  content.appendChild(bubble);
+  content.appendChild(time);
+  div.appendChild(avatar);
+  div.appendChild(content);
+
+  messagesEl.appendChild(div);
+  scrollToBottom();
+  return div;
+}
+
+function showTyping() {
+  if(isTyping)return;
+  isTyping=true;
+
+  const div=document.createElement('div');
+  div.className='message bot';
+  div.id='typingIndicator';
+  div.innerHTML=`
+    <div class="avatar">🤖</div>
+    <div class="typing">
+      <span></span><span></span><span></span>
+    </div>`;
+
+  messagesEl.appendChild(div);
+  scrollToBottom();
+}
+
+function hideTyping() {
+  isTyping=false;
+  const el=document.getElementById('typingIndicator');
+  if(el)el.remove();
+}
+
+function botReply(text,delay=700,extraHTML='') {
+  showTyping();
+
+  return new Promise(resolve=>{
+    setTimeout(()=>{
+      hideTyping();
+      createMessage(text,true,extraHTML);
+      resolve();
+    },delay);
+  });
+}
+
+function showTransferring(platformName) {
+  return new Promise(resolve=>{
+    const div=document.createElement('div');
+    div.className='transfer-msg';
+    div.id='transferMsg';
+    div.innerHTML=`
+      🔄 Transferindo para o suporte do
+      <strong>${platformName}</strong>
+      <span class="dots"><span>.</span><span>.</span><span>.</span></span>`;
+
+    messagesEl.appendChild(div);
+    scrollToBottom();
+
+    setTimeout(()=>{
+      const el=document.getElementById('transferMsg');
+      if(el)el.remove();
+      resolve();
+    },1800);
+  });
+}
+
+function formatMMSS(seconds) {
+  const m=Math.floor(seconds/60);
+  const s=seconds%60;
+  return String(m).padStart(2,'0')+':'+
+    String(s).padStart(2,'0');
+}
+
+// ============================================
+// ANÚNCIOS LIGADOS À INTERAÇÃO REAL
+// ============================================
+// Banner 300×250: aparece ao confirmar a banca e, no máximo,
+// de novo na ajuda se já se passaram 2 minutos.
+// Nativo: só quando o visitante entra na fila.
+// Nada é carregado sozinho, em loop ou escondido.
+const JDC_BANNER_KEY = 'ac8f8920a94f966c48eef951eb30a715';
+const JDC_NATIVE_SRC = 'https://bauval.org/21/3b01b17c4834720838f7cb856f70d171';
+const JDC_NATIVE_ID = 'container-3b01b17c4834720838f7cb856f70d171';
+const JDC_AD_COOLDOWN_MS = 120000;
+const JDC_AD_VISIBLE_MS = 8000;
+
+const jdcAds = {
+  timer: null,
+  visible: false,
+  lastShownAt: -Infinity,
+  nativeReady: false,
+  nativeEl: null,
+
+  hideTemporary() {
+    clearTimeout(this.timer);
+    this.timer = null;
+    this.visible = false;
+    const slot = document.getElementById('jdcTempAd');
+    if (!slot) return;
+    slot.classList.remove('is-open');
+    slot.setAttribute('aria-hidden', 'true');
+  },
+
+  ensureBanner() {
+    const host = document.getElementById('jdcBannerHost');
+    if (!host || host.dataset.loaded === '1') return;
+    host.dataset.loaded = '1';
+    // O script do banner usa document.write em alguns casos.
+    // Isolamos num iframe para não apagar o chat.
+    const frame = document.createElement('iframe');
+    frame.title = 'Publicidade';
+    frame.width = '300';
+    frame.height = '250';
+    frame.setAttribute('scrolling', 'no');
+    frame.style.cssText = 'width:300px;height:250px;border:0;display:block;background:transparent';
+    const doc = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0">'
+      + '<script>window.atOptions={key:"' + JDC_BANNER_KEY + '",format:"iframe",height:250,width:300,params:{}};<\/script>'
+      + '<script src="https://bauval.org/22/' + JDC_BANNER_KEY + '"><\/script>'
+      + '</body></html>';
+    frame.srcdoc = doc;
+    host.appendChild(frame);
+  },
+
+  showTemporary(ms) {
+    if (chatClosed) return;
+    const slot = document.getElementById('jdcTempAd');
+    if (!slot) return;
+    clearTimeout(this.timer);
+    this.timer = null;
+    this.ensureBanner();
+    slot.classList.add('is-open');
+    slot.setAttribute('aria-hidden', 'false');
+    this.visible = true;
+    this.lastShownAt = performance.now();
+    if (ms) this.timer = setTimeout(() => this.hideTemporary(), ms);
+  },
+
+  onTransfer() {
+    this.showTemporary(JDC_AD_VISIBLE_MS);
+  },
+
+  onHelp() {
+    if (chatClosed) return;
+    // Se o banner da transferência ainda está na tela, a ajuda apenas o recolhe.
+    if (this.visible) {
+      this.hideTemporary();
+      return;
+    }
+    if (performance.now() - this.lastShownAt < JDC_AD_COOLDOWN_MS) return;
+    this.showTemporary(JDC_AD_VISIBLE_MS);
+  },
+
+  onQueue() {
+    this.hideTemporary();
+  },
+
+  reset() {
+    this.hideTemporary();
+    this.lastShownAt = -Infinity;
+    this.nativeReady = false;
+    this.nativeEl = null;
+    const host = document.getElementById('jdcBannerHost');
+    if (host) {
+      host.replaceChildren();
+      delete host.dataset.loaded;
+    }
+  }
+};
+window.jdcAds = jdcAds;
+
+function getAdSenseHTML() {
+  return `
+    <div class="adsense-slot" aria-label="Publicidade">
+      <div class="ad-label">Publicidade</div>
+      <div class="jdc-native-mount"></div>
+    </div>`;
+}
+
+// O bloco nativo entra no DOM da fila e o script só então.
+// Uma vez por conversa: se o visitante pedir a fila de novo, o mesmo bloco é movido.
+function pushAds() {
+  const mount = document.querySelector('#queueBox .jdc-native-mount');
+  if (!mount) return;
+
+  if (jdcAds.nativeReady && jdcAds.nativeEl) {
+    mount.appendChild(jdcAds.nativeEl);
+    return;
+  }
+
+  document.querySelectorAll('#' + JDC_NATIVE_ID).forEach(el => {
+    el.removeAttribute('id');
+  });
+
+  const el = document.createElement('div');
+  el.id = JDC_NATIVE_ID;
+  mount.appendChild(el);
+  jdcAds.nativeEl = el;
+  jdcAds.nativeReady = true;
+
+  if (window.jdcNativeAdScript) return;
+  const script = document.createElement('script');
+  script.async = true;
+  script.setAttribute('data-cfasync', 'false');
+  script.src = JDC_NATIVE_SRC;
+  window.jdcNativeAdScript = script;
+  document.body.appendChild(script);
+}
+
+function startAttendantQueue() {
+  jdcAds.onQueue();
+
+  const minSec=10*60;
+  const maxSec=30*60;
+
+  queueSecondsLeft=Math.floor(
+    Math.random()*(maxSec-minSec+1)
+  )+minSec;
+
+  const p=knowledgeBase[currentPlatform];
+  const link=p&&p.suporteLink
+    ?p.suporteLink
+    :'https://app.jadeucerto.net';
+
+  const queueHTML=`
+    <div class="queue-box" id="queueBox">
+      <h4>⏳ Você está na fila de atendimento</h4>
+      <div class="queue-warning">
+        ⚠️ <strong>Não saia deste chat</strong>
+        enquanto aguarda. Se sair, sua posição na fila
+        pode ser perdida.
+      </div>
+      <div class="queue-timer" id="queueTimer">
+        ${formatMMSS(queueSecondsLeft)}
+      </div>
+      <div class="queue-info">
+        Tempo estimado de espera.
+        Assim que chegar a sua vez,
+        um botão aparecerá aqui.
+      </div>
+      <div id="queueArrivedSlot"></div>
+      ${getAdSenseHTML()}
+    </div>`;
+
+  createMessage(
+    'Você foi colocado na **fila de atendimento humano**.\n\nPor favor, **não saia deste chat** enquanto aguarda.',
+    true,
+    queueHTML
+  );
+
+  setTimeout(pushAds,500);
+
+  if(queueTimerInterval)clearInterval(queueTimerInterval);
+
+  queueTimerInterval=setInterval(()=>{
+    queueSecondsLeft--;
+
+    const timerEl=document.getElementById('queueTimer');
+
+    if(timerEl) {
+      timerEl.textContent=formatMMSS(
+        Math.max(0,queueSecondsLeft)
+      );
+    }
+
+    if(queueSecondsLeft<=0) {
+      clearInterval(queueTimerInterval);
+      queueTimerInterval=null;
+
+      const slot=document.getElementById('queueArrivedSlot');
+
+      if(slot) {
+        slot.innerHTML=`
+          <div style="margin-top:14px">
+            <p style="margin-bottom:10px;font-size:13px;color:var(--accent)">
+              ✅ Sua vez chegou!
+            </p>
+            <a href="${link}" target="_blank" rel="noopener"
+              class="quick-btn arrived"
+              style="display:inline-block;text-decoration:none">
+              🙋 Cheguei, clique aqui
+            </a>
+          </div>`;
+      }
+
+      const arrived = document.getElementById('queueArrivedSlot');
+      if (arrived && arrived.scrollIntoView) {
+        arrived.scrollIntoView({ block: 'nearest' });
+      } else {
+        scrollToBottom();
+      }
+    }
+  },1000);
+}
+
+// ============================================
+// DETECÇÃO DE PLATAFORMA
+// ============================================
+function detectPlatform(text) {
+  const n=normalize(text);
+  let best=null,bestScore=0;
+
+  for(const [key,data] of Object.entries(knowledgeBase)) {
+    for(const alias of data.aliases) {
+      const a=normalize(alias);
+
+      if(n===a)return key;
+
+      if(n.includes(a)) {
+        const score=a.length;
+
+        if(score>bestScore) {
+          bestScore=score;
+          best=key;
+        }
+      }
+    }
+  }
+
+  return best;
+}
+
+// ============================================
+// DETECÇÃO DAS DÚVIDAS
+// ============================================
+function detectIntent(text) {
+  const n=normalize(text);
+
+  if(/grupo de palpite|grupo de palpites|grupo whatsapp|grupo de whatsapp|entrar no grupo|link do grupo/.test(n))return 'grupo_palpites';
+  if(/recuperar.*conta|recuperacao.*conta|esqueci.*senha|perdi.*acesso|nao.*(consigo|consegue).*entrar|nao.*(consigo|consegue).*logar|sem.*acesso.*(numero|telefone)|troquei.*numero|numero.*(antigo|perdido)/.test(n))return 'recuperar_conta';
+  if(/banco.*(nao.*aceit|recus|bloque|instab)|recarga.*(recus|bloque|suspens|instab|nao.*(aceit|funcion|consegu))|nao.*(consigo|consegue).*recarregar|pix.*(recus|bloque|nao.*(aceit|funcion))|deposito.*(recus|bloque|nao.*(aceit|funcion))/.test(n))return 'recarga_instavel';
+  if(/saque.*recus|recus.*saque|saque.*negad|negad.*saque|saque.*rejeit|rejeit.*saque|nao.*consegui.*sacar|saque.*nao.*foi|problema.*saque/.test(n))return 'saque_recusado';
+  if(/bingo|cartela/.test(n))return 'bingo';
+  if(/pule|resultado.*nao.*(saiu|ocorreu|teve)|sorteio.*nao.*(saiu|ocorreu)|nao.*teve.*resultado|pule.*valida|pule.*vale/.test(n))return 'pule';
+  if(/cassino|casino|slot|tigrinho|fortune tiger|jogo.*nao.*(abre|roda)|premio.*cassino|premio.*nao.*pago|saldo.*cassino|recarga.*cassino/.test(n))return 'cassino';
+  if(/excluir.*conta|deletar.*conta|apagar.*conta|remover.*conta|fechar.*conta|cancelar.*conta/.test(n))return 'excluir';
+  if(/bonus|promo|promocao|oferta|recarga.*bonus/.test(n))return 'bonus';
+  if(/cotacao|milhar|centena|dezena|grupo|paga quanto|quanto paga|premio/.test(n))return 'cotacao';
+  if(/deposito|depositar|recarregar|pix|colocar dinheiro|carregar/.test(n))return 'deposito';
+  if(/saque|sacar|retirar|receber|pagamento|transferir/.test(n))return 'saque';
+  if(/tutorial|como jogar|como funciona.*jogo|aprender|ensina|como apostar|como fazer aposta/.test(n))return 'tutorial';
+  if(/jogo|jogar|loteria/.test(n))return 'jogos';
+  if(/suporte|atendimento|contato|falar|humano|ajuda|atendente/.test(n))return 'suporte';
+  if(/problema|erro|bug|nao abre|travando|lento|nao caiu|nao credit|nao funciona|travou|nao consigo/.test(n))return 'problemas';
+  if(/geral|sobre|o que e|como funciona|informacao|link oficial|site oficial/.test(n))return 'geral';
+
+  return 'geral';
+}
+
+function isConfirmation(text) {
+  const n=normalize(text);
+  const yes=[
+    'sim','isso','correto','certo','exato','confirmo',
+    'pode ser','ok','okay','yes','uhum',
+    'isso mesmo','e esse','esse','positivo'
+  ];
+  return yes.some(
+    w=>n===w||n.startsWith(w+' ')||n.includes(' '+w)
+  );
+}
+
+function isDenial(text) {
+  const n=normalize(text);
+  const no=[
+    'nao','errado','incorreto','outro',
+    'outra','negativo','no'
+  ];
+  return no.some(
+    w=>n===w||n.startsWith(w+' ')||n.includes(' '+w)
+  );
+}
+
+// ============================================
+// PROCESSAMENTO DAS MENSAGENS
+// ============================================
+async function processMessage(userText) {
+  if(chatClosed)return;
+
+  // Digitar ou enviar uma dúvida recolhe o banner temporário.
+  // A confirmação da banca mostra o banner só depois, nesta mesma função.
+  jdcAds.hideTemporary();
+
+  const text=userText.trim();
+  if(!text)return;
+
+  createMessage(text,false);
+  inputEl.value='';
+  autoResize();
+
+  if(state==='asking_platform') {
+    const detected=detectPlatform(text);
+
+    if(detected) {
+      pendingPlatform=detected;
+      state='confirming';
+
+      const p=knowledgeBase[detected];
+
+      await botReply(
+        `Entendi! Você está pedindo suporte para o **${p.name}** ${p.icon}.\n\nEstá correto?`,
+        800,
+        `<div class="quick-replies">
+          <button class="quick-btn confirm" onclick="confirmPlatform(true)">
+            ✅ Sim, está correto
+          </button>
+          <button class="quick-btn deny" onclick="confirmPlatform(false)">
+            ❌ Não, é outro
+          </button>
+        </div>`
+      );
+    } else {
+      await botReply(
+        'Não consegui identificar o aplicativo com clareza.\n\nPode digitar novamente o nome? Exemplos: Acertos Club, Feiticeira, Tiger Club, SuperBancas, Banca Brasileira, Super Acertos ou Águia Oficial.',
+        900
+      );
+    }
+    return;
+  }
+
+  if(state==='confirming') {
+    if(isConfirmation(text)) {
+      await confirmPlatform(true);
+    } else if(isDenial(text)) {
+      await confirmPlatform(false);
+    } else {
+      const newDetected=detectPlatform(text);
+
+      if(newDetected) {
+        pendingPlatform=newDetected;
+        const p=knowledgeBase[newDetected];
+
+        await botReply(
+          `Ok, então você quis dizer **${p.name}** ${p.icon}?\n\nConfirma?`,
+          700,
+          `<div class="quick-replies">
+            <button class="quick-btn confirm" onclick="confirmPlatform(true)">✅ Sim</button>
+            <button class="quick-btn deny" onclick="confirmPlatform(false)">❌ Não</button>
+          </div>`
+        );
+      } else {
+        await botReply(
+          `Por favor, confirme se é o **${knowledgeBase[pendingPlatform].name}** respondendo **sim** ou **não**.`,
+          600
+        );
+      }
+    }
+    return;
+  }
+
+  if(state==='awaiting_question'||state==='answering') {
+    if(/trocar|outra plataforma|outro app|mudar|quero outro|outro aplicativo/.test(normalize(text))) {
+      state='asking_platform';
+      currentPlatform=null;
+      pendingPlatform=null;
+      applyTheme(null);
+
+      document.getElementById('headerTitle').textContent=
+        'Suporte Inteligente';
+
+      document.getElementById('headerStatus').textContent=
+        'Online • Atendimento inteligente';
+
+      if(queueTimerInterval) {
+        clearInterval(queueTimerInterval);
+        queueTimerInterval=null;
+      }
+
+      await botReply(
+        'Sem problema! Qual aplicativo você deseja suporte agora?',
+        600
+      );
+      return;
+    }
+
+    const intent=detectIntent(text);
+    const platform=knowledgeBase[currentPlatform];
+
+    if(!platform) {
+      state='asking_platform';
+      await botReply(
+        'Primeiro informe o aplicativo para o qual deseja suporte.',
+        400
+      );
+      return;
+    }
+
+    if(intent==='grupo_palpites') {
+      state='answering';
+
+      await trackedReply(
+        '**📲 Grupo de Palpites**\n\nClique no botão abaixo para abrir o convite do grupo no WhatsApp.',
+        intent,
+        600,
+        `<div class="quick-replies">
+          <a class="quick-btn confirm"
+            href="${GRUPO_PALPITES_LINK}"
+            target="_blank" rel="noopener noreferrer"
+            style="display:inline-block;text-decoration:none">
+            📲 Entrar no grupo de palpites
+          </a>
+        </div>`
+      );
+      return;
+    }
+
+    if(intent==='recuperar_conta'||intent==='recarga_instavel') {
+      state='answering';
+
+      await trackedReply(
+        intent==='recuperar_conta'
+          ? RECUPERAR_CONTA
+          : RECARGA_INSTAVEL,
+        intent,
+        800,
+        `<div class="quick-replies">
+          <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
+          <button class="quick-btn" onclick="showCurrentHelp()">📋 Outras opções de ajuda</button>
+        </div>`
+      );
+      return;
+    }
+
+    if(intent==='saque_recusado') {
+      state='answering';
+
+      await trackedReply(
+        SAQUE_RECUSADO,
+        intent,
+        900,
+        `<div class="quick-replies">
+          <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
+          <button class="quick-btn" onclick="quickAsk('saque')">📤 Mais sobre saque</button>
+          <button class="quick-btn" onclick="quickAsk('problemas')">🛠️ Outros problemas</button>
+        </div>`
+      );
+      return;
+    }
+
+    if(intent==='bingo') {
+      state='answering';
+
+      await trackedReply(
+        platform.info.bingo||BINGO_INFO,
+        intent,
+        900,
+        `<div class="quick-replies">
+          <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
+          <button class="quick-btn" onclick="quickAsk('tutorial')">📖 Como jogar loterias</button>
+          <button class="quick-btn" onclick="quickAsk('pule')">📌 Validade da pule</button>
+        </div>`
+      );
+      return;
+    }
+
+    if(intent==='pule') {
+      state='answering';
+      await trackedReply(
+        platform.info.pule||PULE_VALIDADE,
+        intent,900
+      );
+      await showMoreHelp(platform);
+      return;
+    }
+
+    if(intent==='cassino') {
+      state='answering';
+
+      let msg=platform.info.cassino||CASSINO_INFO;
+
+      if(platform.officialLink) {
+        msg+=`\n\n**Link oficial recomendado:** ${platform.officialLink}`;
+      }
+
+      await trackedReply(
+        msg,
+        intent,
+        900,
+        `<div class="quick-replies">
+          ${platform.officialLink
+            ? `<a class="quick-btn"
+                href="${platform.officialLink}"
+                target="_blank" rel="noopener"
+                style="text-decoration:none;color:inherit">
+                🔗 Abrir link oficial
+              </a>`
+            : ''}
+          <button class="quick-btn attendant" onclick="callAttendant()">🙋 Chamar Atendente</button>
+          <button class="quick-btn" onclick="quickAsk('tutorial')">📖 Como jogar loterias</button>
+        </div>`
+      );
+      return;
+    }
+
+    if(intent==='excluir') {
+      state='answering';
+      await trackedReply(
+        platform.info.excluir||EXCLUIR_CONTA,
+        intent,900
+      );
+      await showMoreHelp(platform);
+      return;
+    }
+
+    if(intent==='tutorial') {
+      state='answering';
+      await trackedReply(
+        platform.info.tutorial||TUTORIAL_LOTERIAS,
+        intent,900
+      );
+      await showMoreHelp(platform);
+      return;
+    }
+
+    if(
+      intent==='suporte' &&
+      /atendente|humano|pessoa|falar com/.test(normalize(text))
+    ) {
+      await callAttendant();
+      return;
+    }
+
+    const answer=platform.info[intent]||platform.info.geral;
+
+    state='answering';
+    await trackedReply(answer,intent,900);
+    await showMoreHelp(platform);
+  }
+}
+
+// ============================================
+// OUTRAS OPÇÕES DE AJUDA
+// ============================================
+async function showMoreHelp(platform) {
+  if(chatClosed)return;
+
+  await botReply(
+    `Posso ajudar com mais alguma dúvida sobre o **${platform.name}**?`,
+    400,
+    `<div class="quick-replies">
+      <button class="quick-btn" onclick="quickAsk('bonus')">🎁 Bônus</button>
+      <button class="quick-btn" onclick="quickAsk('cotacao')">💰 Cotação</button>
+      <button class="quick-btn" onclick="quickAsk('deposito')">📥 Depósito</button>
+      <button class="quick-btn" onclick="quickAsk('recuperar_conta')">🔐 Não consigo entrar</button>
+      <button class="quick-btn" onclick="quickAsk('recarga_instavel')">🏦 Banco não aceita recarga</button>
+      <a class="quick-btn confirm"
+        href="${GRUPO_PALPITES_LINK}"
+        target="_blank" rel="noopener noreferrer"
+        style="display:inline-block;text-decoration:none">
+        📲 Grupo de Palpites
+      </a>
+      <button class="quick-btn" onclick="quickAsk('saque')">📤 Saque</button>
+      <button class="quick-btn" onclick="quickAsk('tutorial')">📖 Como jogar</button>
+      <button class="quick-btn" onclick="quickAsk('bingo')">🎱 Bingo</button>
+      <button class="quick-btn" onclick="quickAsk('pule')">📌 Pule / resultado</button>
+      <button class="quick-btn" onclick="quickAsk('cassino')">🎰 Cassino</button>
+      <button class="quick-btn" onclick="quickAsk('excluir')">🗑️ Excluir conta</button>
+      <button class="quick-btn" onclick="quickAsk('problemas')">🛠️ Problemas</button>
+      <button class="quick-btn attendant" onclick="callAttendant()">🙋 Atendente</button>
+      <button class="quick-btn" onclick="abrirWhatsApp()">📱 Deixar WhatsApp</button>
+      <button class="quick-btn" onclick="changePlatform()">🔄 Trocar app</button>
+    </div>`
+  );
+}
+
+window.showCurrentHelp=async function() {
+  if(chatClosed)return;
+
+  jdcAds.onHelp();
+
+  if(currentPlatform&&knowledgeBase[currentPlatform]) {
+    await showMoreHelp(
+      knowledgeBase[currentPlatform]
+    );
+  }
+};
+
+// ============================================
+// CONFIRMAR PLATAFORMA
+// ============================================
+window.confirmPlatform=async function(yes) {
+  if(chatClosed)return;
+
+  if(yes) {
+    currentPlatform=pendingPlatform;
+    pendingPlatform=null;
+
+    const p=knowledgeBase[currentPlatform];
+
+    if(!p)return;
+
+    createMessage('Sim, está correto',false);
+    await showTransferring(p.name);
+
+    applyTheme(p.theme);
+    updateHeader(currentPlatform);
+
+    state='awaiting_question';
+
+    await botReply(
+      `Você foi transferido para o suporte do **${p.name}** ${p.icon}.\n\nEste atendimento prioriza **Loterias e Bingo**. Para cassino o suporte é limitado.\n\nQual é a sua dúvida?`,
+      600
+    );
+
+    jdcAds.onTransfer();
+    await showMoreHelp(p);
+  } else {
+    createMessage('Não, é outro',false);
+
+    state='asking_platform';
+    pendingPlatform=null;
+    currentPlatform=null;
+
+    applyTheme(null);
+
+    await botReply(
+      'Entendi, desculpe o equívoco.\n\nPode me dizer novamente o nome do aplicativo que você precisa de suporte?',
+      700
+    );
+  }
+};
+
+// ============================================
+// ATENDIMENTO HUMANO
+// ============================================
+window.callAttendant=async function(ticketOverride) {
+  if(chatClosed)return;
+
+  const ticket=
+    typeof ticketOverride==='string' &&
+    ticketData.has(ticketOverride)
+      ? ticketOverride
+      : activeTicketId;
+
+  const t=ticket&&ticketData.get(ticket);
+
+  if(
+    t &&
+    t.status!=='resolvido' &&
+    t.status!=='atendente_solicitado'
+  ) {
+    t.status='atendente_solicitado';
+
+    recordEvent(
+      'atualizacao',
+      ticket,
+      'atendente_solicitado'
+    );
+
+    const feedback=document.getElementById(
+      'feedback-'+ticket
+    );
+
+    if(feedback) {
+      feedback.innerHTML=
+        '<div class="resolution-feedback">🙋 Atendimento humano solicitado.</div>';
+    }
+  }
+
+  createMessage(
+    'Quero falar com um atendente',
+    false
+  );
+
+  state='answering';
+
+  await botReply(
+    'Certo. Vou te colocar na **fila de atendimento humano**.\n\nPor favor, **não saia deste chat** enquanto aguarda.\n\nSe quiser receber um retorno pelo WhatsApp, você pode deixar seu contato voluntariamente.',
+    700,
+    `<div class="quick-replies">
+      <button class="quick-btn confirm"
+        onclick="abrirWhatsApp()">
+        📱 Informar meu WhatsApp
+      </button>
+    </div>`
+  );
+
+  startAttendantQueue();
+};
+
+// ============================================
+// ATALHOS DE DÚVIDAS
+// ============================================
+window.quickAsk=async function(intent) {
+  if(chatClosed)return;
+
+  const labels={
+    bonus:'Quero saber sobre os bônus',
+    cotacao:'Qual é a cotação?',
+    deposito:'Como faço um depósito?',
+    saque:'Como faço um saque?',
+    tutorial:'Como jogar nas loterias?',
+    problemas:'Estou com um problema',
+    saque_recusado:'Meu saque foi recusado',
+    cassino:'Tenho dúvida sobre o cassino',
+    excluir:'Quero excluir minha conta',
+    bingo:'Quero saber sobre o bingo',
+    recuperar_conta:'Não consigo entrar na minha conta',
+    recarga_instavel:'O banco não está aceitando minha recarga',
+    grupo_palpites:'Quero entrar no grupo de palpites',
+    pule:'O resultado não saiu, a pule vale?'
+  };
+
+  await processMessage(
+    labels[intent]||intent
+  );
+};
+
+window.changePlatform=async function() {
+  if(chatClosed)return;
+
+  jdcAds.hideTemporary();
+
+  createMessage(
+    'Quero trocar de aplicativo',
+    false
+  );
+
+  state='asking_platform';
+  currentPlatform=null;
+  pendingPlatform=null;
+
+  applyTheme(null);
+
+  document.getElementById('headerTitle').textContent=
+    'Suporte Inteligente';
+
+  document.getElementById('headerStatus').textContent=
+    'Online • Atendimento inteligente';
+
+  if(queueTimerInterval) {
+    clearInterval(queueTimerInterval);
+    queueTimerInterval=null;
+  }
+
+  await botReply(
+    'Combinado! Qual aplicativo você deseja suporte agora?',
+    600
+  );
+};
+
+// ============================================
+// CAMPO DE MENSAGEM
+// ============================================
+function handleKey(e) {
+  if(e.key==='Enter'&&!e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize() {
+  inputEl.style.height='auto';
+  inputEl.style.height=
+    Math.min(inputEl.scrollHeight,100)+'px';
+}
+
+inputEl.addEventListener('input', () => {
+  autoResize();
+  jdcAds.hideTemporary();
+});
+
+async function sendMessage() {
+  if(chatClosed)return;
+
+  const text=inputEl.value.trim();
+
+  if(!text||isTyping)return;
+
+  sendBtn.disabled=true;
+
+  try {
+    await processMessage(text);
+  } finally {
+    if(!chatClosed) {
+      sendBtn.disabled=false;
+      inputEl.focus();
+    }
+  }
+}
+
+// ============================================
+// INÍCIO E REINÍCIO DO CHAT
+// ============================================
+async function startChat() {
+  jdcAds.reset();
+
+  sessionId=makeId();
+  ticketData.clear();
+  activeTicketId=null;
+
+  chatClosed=false;
+  previousHiddenAt=0;
+  lastReturnEvent=0;
+
+  state='asking_platform';
+  currentPlatform=null;
+  pendingPlatform=null;
+
+  inputEl.disabled=false;
+  sendBtn.disabled=false;
+
+  document.getElementById('contactModal').hidden=true;
+
+  applyTheme(null);
+
+  document.getElementById('headerTitle').textContent=
+    'Suporte Inteligente';
+
+  document.getElementById('headerStatus').textContent=
+    'Online • Atendimento inteligente';
+
+  if(queueTimerInterval) {
+    clearInterval(queueTimerInterval);
+    queueTimerInterval=null;
+  }
+
+  await botReply(
+    'Olá! 👋 Sou o **Assistente de Suporte Inteligente**.\n\nPara te atender da melhor forma, preciso saber:\n\n**Qual aplicativo ou banca você deseja suporte?**',
+    900
+  );
+}
+
+window.resetChat=function() {
+  if(queueTimerInterval) {
+    clearInterval(queueTimerInterval);
+    queueTimerInterval=null;
+  }
+
+  hideTyping();
+  messagesEl.innerHTML='';
+  startChat();
+};
+
+// ============================================
+// INICIALIZAR
+// ============================================
+setTimeout(()=>{
+  inputEl.focus();
+},300);
+
+startChat();
+
+</script>
+
+
+
+
+
+
+  
+<!-- WHATSAPP ANTES DA SELEÇÃO DA BANCA -->
+
+<style>
+#jdc-inicio-whatsapp {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5,10,20,.92);
+  padding: 16px;
+  font-family: Inter,system-ui,sans-serif;
+}
+#jdc-inicio-whatsapp[hidden] {
+  display: none;
+}
+#jdc-inicio-whatsapp .jdc-cartao {
+  width: 100%;
+  max-width: 440px;
+  background: #1a2332;
+  border: 1px solid #344159;
+  border-radius: 18px;
+  padding: 22px;
+  color: #e8eef7;
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+}
+#jdc-inicio-whatsapp h2 {
+  font-size: 21px;
+  margin: 0 0 10px;
+}
+#jdc-inicio-whatsapp p {
+  color: #b6c4d8;
+  line-height: 1.55;
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+#jdc-inicio-whatsapp .jdc-campo {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid #435672;
+  background: #243044;
+  color: white;
+  font: inherit;
+  margin: 8px 0 15px;
+}
+#jdc-inicio-whatsapp .jdc-autorizacao {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#jdc-inicio-whatsapp .jdc-autorizacao input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+#jdc-inicio-whatsapp .jdc-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+#jdc-inicio-whatsapp button {
+  flex: 1;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 10px;
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+#jdc-inicio-whatsapp .jdc-salvar {
+  background: #16a34a;
+}
+#jdc-inicio-whatsapp .jdc-pular {
+  background: #475569;
+}
+#jdc-inicio-whatsapp .jdc-erro {
+  color: #fca5a5;
+  font-size: 13px;
+  min-height: 18px;
+  margin-top: 10px;
+}
+#jdc-inicio-whatsapp small {
+  display: block;
+  margin-top: 14px;
+  color: #9caec8;
+  line-height: 1.5;
+}
+</style>
+
+<div
+  id="jdc-inicio-whatsapp"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="jdc-inicio-titulo"
+>
+  <form class="jdc-cartao" id="jdc-inicio-form">
+
+    <h2 id="jdc-inicio-titulo">
+      📱 Bem-vindo ao suporte!
+    </h2>
+
+    <p>
+      Antes de escolher a banca, você pode
+      informar seu WhatsApp para receber
+      um retorno sobre o atendimento.
+      <strong>É opcional.</strong>
+    </p>
+
+    <label for="jdc-numero-inicial">
+      WhatsApp com DDD
+    </label>
+
+    <input
+      class="jdc-campo"
+      id="jdc-numero-inicial"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      maxlength="20"
+      placeholder="(83) 99999-9999"
+    >
+
+    <label class="jdc-autorizacao">
+      <input
+        id="jdc-consentimento-inicial"
+        type="checkbox"
+      >
+      <span>
+        Autorizo o Já Deu Certo a usar meu número
+        exclusivamente para contato relacionado
+        a este atendimento.
+      </span>
+    </label>
+
+    <div
+      id="jdc-erro-inicial"
+      class="jdc-erro"
+      role="status"
+    ></div>
+
+    <div class="jdc-acoes">
+
+      <button
+        class="jdc-pular"
+        type="button"
+        id="jdc-pular-inicial"
+      >
+        Pular
+      </button>
+
+      <button
+        class="jdc-salvar"
+        type="submit"
+      >
+        Continuar
+      </button>
+
+    </div>
+
+    <small>
+      Não informe CPF, senha ou códigos de verificação.
+      O número será associado à dúvida quando
+      ela for registrada.
+    </small>
+
+  </form>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // O WhatsApp fica temporariamente na memória.
+  let whatsappDaConversa = '';
+
+  const janela = document.getElementById(
+    'jdc-inicio-whatsapp'
+  );
+
+  const formulario = document.getElementById(
+    'jdc-inicio-form'
+  );
+
+  const input = document.getElementById(
+    'jdc-numero-inicial'
+  );
+
+  const checkbox = document.getElementById(
+    'jdc-consentimento-inicial'
+  );
+
+  const erro = document.getElementById(
+    'jdc-erro-inicial'
+  );
+
+  // Validação do telefone brasileiro.
+  function normalizarNumero(valor) {
+    let digitos = String(valor || '')
+      .replace(/\D/g, '');
+
+    if (/^\d{10,11}$/.test(digitos)) {
+      digitos = '55' + digitos;
+    }
+
+    return /^55\d{10,11}$/.test(digitos)
+      ? digitos
+      : '';
+  }
+
+  function fechar() {
+    janela.hidden = true;
+
+    const campo = document.getElementById(
+      'userInput'
+    );
+
+    if (campo) campo.focus();
+  }
+
+  function abrir() {
+    input.value = '';
+    checkbox.checked = false;
+    erro.textContent = '';
+
+    janela.hidden = false;
+    input.focus();
+  }
+
+  // Permite continuar sem informar telefone.
+  document.getElementById(
+    'jdc-pular-inicial'
+  ).addEventListener('click', () => {
+    whatsappDaConversa = '';
+    fechar();
+  });
+
+  // Guarda o WhatsApp após consentimento.
+  formulario.addEventListener(
+    'submit',
+    event => {
+
+      event.preventDefault();
+
+      const numero = normalizarNumero(
+        input.value
+      );
+
+      if (!numero) {
+        erro.textContent =
+          'Informe um número brasileiro válido com DDD ou toque em Pular.';
+        return;
+      }
+
+      if (!checkbox.checked) {
+        erro.textContent =
+          'Confirme a autorização ou toque em Pular.';
+        return;
+      }
+
+      whatsappDaConversa = numero;
+
+      // Agora libera a seleção da banca.
+      fechar();
+    }
+  );
+
+  // Vincula o contato ao ticket verdadeiro.
+  if (
+    typeof trackedReply === 'function' &&
+    typeof jdcEventoExtra === 'function'
+  ) {
+
+    const criarRespostaOriginal = trackedReply;
+
+    trackedReply = function (...args) {
+
+      // Mantém a resposta automática original.
+      const retorno = criarRespostaOriginal.apply(
+        this,
+        args
+      );
+
+      // O ticket é criado pela função original.
+      if (
+        whatsappDaConversa &&
+        activeTicketId &&
+        ticketData.has(activeTicketId)
+      ) {
+
+        const enviado = jdcEventoExtra(
+          'whatsapp',
+          activeTicketId,
+          {
+            whatsapp: whatsappDaConversa,
+            whatsappConsent: 'sim',
+            detail:
+              'Contato informado antes de escolher a banca'
+          }
+        );
+
+        if (!enviado) {
+          console.warn(
+            'WhatsApp não enviado: verifique a URL e o coletor complementar.'
+          );
+        }
+      }
+
+      return retorno;
+    };
+
+  } else {
+    console.warn(
+      'Não foi possível localizar a integração de eventos do suporte.'
+    );
+  }
+
+  // Nova conversa: solicita o contato novamente.
+  if (typeof window.resetChat === 'function') {
+
+    const resetOriginal = window.resetChat;
+
+    window.resetChat = function (...args) {
+
+      whatsappDaConversa = '';
+
+      const retorno = resetOriginal.apply(
+        this,
+        args
+      );
+
+      abrir();
+
+      return retorno;
+    };
+  }
+
+  // Mostra a solicitação assim que o site abre.
+  abrir();
+
+})();
+</script>
+  
+</body>
+</html>
