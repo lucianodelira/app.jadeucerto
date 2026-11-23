@@ -7,7 +7,7 @@
 <title>Suporte Inteligente | Já Deu Certo</title>
 <meta name="description" content="Atendimento automatizado e orientações das plataformas parceiras do Já Deu Certo.">
 
-<!-- Google Tag Manager: manter apenas uma instalação do contêiner. -->
+<!-- Google Tag Manager -->
 <script>
 window.dataLayer = window.dataLayer || [];
 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
@@ -48,20 +48,18 @@ body.theme-aguia{--bg:#0a1a0f;--surface:#0e2a18;--surface-2:#143d22;--border:#1e
 .typing{display:flex;gap:5px;padding:12px 16px;background:var(--bot-bubble);border:1px solid var(--border);border-radius:var(--radius);width:fit-content}.typing span{width:7px;height:7px;background:var(--text-muted);border-radius:50%;animation:bounce 1.4s infinite ease-in-out both}.typing span:nth-child(1){animation-delay:-.32s}.typing span:nth-child(2){animation-delay:-.16s}@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 .transfer-msg{text-align:center;padding:16px;color:var(--theme-color);font-weight:500;font-size:14px}.transfer-msg .dots span{animation:blink 1.4s infinite;opacity:0}.transfer-msg .dots span:nth-child(2){animation-delay:.2s}.transfer-msg .dots span:nth-child(3){animation-delay:.4s}@keyframes blink{0%,100%{opacity:0}50%{opacity:1}}
 .queue-box{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:10px;text-align:center}.queue-box h4{font-size:14px;margin-bottom:8px;color:var(--theme-color)}.queue-timer{font-size:28px;font-weight:700;color:var(--text);letter-spacing:2px;margin:10px 0;font-variant-numeric:tabular-nums}.queue-info{font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.4}.queue-warning{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);color:#fbbf24;padding:10px 12px;border-radius:10px;font-size:12.5px;margin-bottom:12px;line-height:1.45}
-/* ANÚNCIOS: tags originais no HTML da página, SEM iframe adicional. */
-.ad-deck{display:flex;flex-wrap:wrap;align-self:stretch;align-items:flex-start;justify-content:center;gap:14px;margin:4px 0 10px;padding:10px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}
-.ad-unit{display:flex;flex-direction:column;align-items:center;gap:7px;max-width:100%;min-width:0}.ad-label{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);text-align:center}
-.ad-box-160{width:160px;min-height:300px;max-width:160px}.ad-box-300{width:300px;min-height:250px;max-width:300px}.ad-box-160,.ad-box-300{flex-shrink:0;overflow:visible}
-.adsense-slot{background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:8px 8px 10px;margin:12px 0 0;display:flex;flex-direction:column;align-items:center;overflow:hidden;width:100%}.jdc-native-mount{width:100%;max-width:100%;overflow:hidden}
+.ad-unit{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:100%}
+.ad-label{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);text-align:center}
+.ad-box-160,.ad-box-300{display:flex;justify-content:center;overflow:hidden}
+.adsense-slot{background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:8px;margin:12px 0 0;display:flex;flex-direction:column;align-items:center;width:100%}.jdc-native-mount{width:100%;max-width:100%;overflow:hidden}
 .input-area{flex-shrink:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 14px;padding-bottom:max(12px,env(safe-area-inset-bottom));display:flex;gap:10px;align-items:flex-end;min-height:72px}.input-wrapper{flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:22px;padding:10px 14px;display:flex;align-items:center;min-height:44px}.input-wrapper:focus-within{border-color:var(--primary)}#userInput{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14.5px;font-family:inherit;resize:none;max-height:100px;line-height:1.4;min-height:22px}#userInput::placeholder{color:var(--text-muted)}.send-btn{width:44px;height:44px;background:var(--primary);border:none;border-radius:50%;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}.send-btn:disabled{opacity:.5;cursor:not-allowed}
 .contact-modal,.welcome-modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.83);display:flex;align-items:center;justify-content:center;padding:16px}.contact-modal[hidden],.welcome-modal[hidden]{display:none}.contact-card{width:100%;max-width:440px;max-height:92dvh;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}.contact-card h2{font-size:19px;margin-bottom:10px}.contact-card p{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:13px}.contact-card label{font-size:13px}.contact-card input[type=tel]{display:block;width:100%;margin:8px 0 15px;background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:13px;font:inherit}.contact-consent{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5}.contact-consent input{margin-top:3px;accent-color:var(--accent)}.contact-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}.contact-actions button{border:0;border-radius:9px;padding:11px 15px;font:inherit;cursor:pointer}.contact-save{background:#16a34a;color:#fff;flex:1}.contact-cancel{background:var(--surface-2);color:var(--text);border:1px solid var(--border)!important}.form-feedback{min-height:19px;font-size:12px;margin-top:12px;color:#fca5a5}.contact-note{font-size:11px!important;margin-top:12px!important}
-@media(max-width:600px){.message{max-width:94%}.header{padding:0 8px;gap:5px}.header-logo{width:34px;height:34px}.header-info h1{font-size:13px}.header-info p{font-size:10px}.reset-btn{font-size:10px;padding:6px}.messages{padding:12px 10px 16px}.input-area{padding:10px}.ad-deck{padding:8px;gap:18px}}
-@media(max-width:370px){.header-logo{display:none}.header-info p{display:none}.reset-btn{padding:5px 4px;font-size:9px}.ad-deck{padding:4px}}
+@media(max-width:600px){.message{max-width:94%}.header{padding:0 8px;gap:5px}.header-logo{width:34px;height:34px}.header-info h1{font-size:13px}.header-info p{font-size:10px}.reset-btn{font-size:10px;padding:6px}.messages{padding:12px 10px 16px}.input-area{padding:10px}}
+@media(max-width:370px){.header-logo{display:none}.header-info p{display:none}.reset-btn{padding:5px 4px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<!-- GTM para navegadores sem JavaScript -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M442BX8R" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
 <header class="header">
   <div class="header-logo">🤖</div>
@@ -71,51 +69,13 @@ body.theme-aguia{--bg:#0a1a0f;--surface:#0e2a18;--surface-2:#143d22;--border:#1e
   <button type="button" class="reset-btn" onclick="resetChat()">🔄 Nova conversa</button>
 </header>
 <main class="chat-wrapper">
-  <div class="messages" id="messages" aria-live="polite">
-    <!-- ESTES DOIS ANÚNCIOS FICAM NO FLUXO ROLÁVEL DAS MENSAGENS.
-         Não encobrem o campo de digitação. Uma carga por visita. -->
-    <div class="ad-deck" id="jdcAdDeck" aria-label="Espaços publicitários">
-      <div class="ad-unit">
-        <span class="ad-label">Publicidade · 160×300</span>
-        <div class="ad-box-160">
-          <!-- NOVO: código 160×300 fornecido pelo usuário, sem modificações. -->
-          <script>
-            atOptions = {
-              'key' : 'f9080d6db0cd105f2859ffc696573dee',
-              'format' : 'iframe',
-              'height' : 300,
-              'width' : 160,
-              'params' : {}
-            };
-          </script>
-          <script src="https://bauval.org/22/f9080d6db0cd105f2859ffc696573dee"></script>
-        </div>
-      </div>
-      <div class="ad-unit">
-        <span class="ad-label">Publicidade · 300×250</span>
-        <div class="ad-box-300">
-          <!-- EXISTENTE: banner de 300×250, agora diretamente no HTML.
-               Evita inserir tag dentro de iframe criado pelo site. -->
-          <script>
-            atOptions = {
-              'key' : 'ac8f8920a94f966c48eef951eb30a715',
-              'format' : 'iframe',
-              'height' : 250,
-              'width' : 300,
-              'params' : {}
-            };
-          </script>
-          <script src="https://bauval.org/22/ac8f8920a94f966c48eef951eb30a715"></script>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="messages" id="messages" aria-live="polite"></div>
   <div class="input-area">
     <div class="input-wrapper"><textarea id="userInput" rows="1" placeholder="Digite sua mensagem..." onkeydown="handleKey(event)" aria-label="Mensagem"></textarea></div>
     <button class="send-btn" id="sendBtn" type="button" onclick="sendMessage()" aria-label="Enviar mensagem">➤</button>
   </div>
 </main>
-<!-- Contato posterior: opcional, vinculado à dúvida ativa. -->
+
 <div id="contactModal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle" hidden>
   <form class="contact-card" onsubmit="salvarContato(event)">
     <h2 id="contactTitle">📱 Contato por WhatsApp</h2>
@@ -128,7 +88,7 @@ body.theme-aguia{--bg:#0a1a0f;--surface:#0e2a18;--surface-2:#143d22;--border:#1e
     <p class="contact-note">O número será vinculado à dúvida atual. Não envie senha, CPF ou código de verificação.</p>
   </form>
 </div>
-<!-- Pedido inicial do WhatsApp, sempre opcional. -->
+
 <div id="jdc-inicio-whatsapp" class="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="jdc-inicio-titulo">
   <form class="contact-card" id="jdc-inicio-form">
     <h2 id="jdc-inicio-titulo">📱 Bem-vindo ao suporte!</h2>
@@ -144,14 +104,12 @@ body.theme-aguia{--bg:#0a1a0f;--surface:#0e2a18;--surface-2:#143d22;--border:#1e
 
 <script>
 'use strict';
-// COLETORES: mantidos os endereços indicados pelo usuário.
 const SHEETS_WEBAPP_URL='https://script.google.com/macros/s/AKfycbzo6uXpBwvkokiVnacxVHvTYQnMryOCWdBz44_M9bqm1AjHyc6dlMMtrQIZ2HuOT-pt/exec';
 const JDC_EXTRA_URL='https://script.google.com/macros/s/AKfycbzo6uXpBwvkokiVnacxVHvTYQnMryOCWdBz44_M9bqm1AjHyc6dlMMtrQIZ2HuOT-pt/exec';
 const JDC_NATIVE_SRC='https://bauval.org/21/3b01b17c4834720838f7cb856f70d171';
 const JDC_NATIVE_ID='container-3b01b17c4834720838f7cb856f70d171';
 const GRUPO_PALPITES_LINK='https://chat.whatsapp.com/E8YBSauoGpUG4HMTe3uZCr';
 
-// TEXTOS DO ATENDIMENTO
 const COTACAO_PADRAO=`**Cotações (por R$ 1,00 apostado):**\n• **Milhar**: R$ 8.000,00\n• **Centena**: R$ 800,00\n• **Dezena**: R$ 80,00\n• **Grupo**: R$ 20,00\n• **Unidade**: R$ 8,00`;
 const COTACAO_SUPER=`**Cotações da SuperBancas (por R$ 1,00 apostado):**\n• **Milhar**: R$ 9.000,00\n• **Centena**: R$ 900,00\n• **Dezena**: R$ 90,00\n• **Grupo**: R$ 22,00\n• **Unidade**: R$ 9,00`;
 const BONUS_PADRAO=`**Bônus de recarga informados pela plataforma:**\n• Até **25%** na primeira recarga para cliente novo\n• **15%** em dias de Loteria Federal\n• **10%** em dias normais\nO bônus vale apenas na **primeira recarga do dia**. Confira as condições no aplicativo.`;
@@ -195,7 +153,68 @@ const messagesEl=document.getElementById('messages');
 const inputEl=document.getElementById('userInput');
 const sendBtn=document.getElementById('sendBtn');
 let whatsappDaConversa='';
-const adsDeck=document.getElementById('jdcAdDeck');
+
+// ====== ANÚNCIOS DINÂMICOS NO CHAT ======
+let adCounter = 0;
+const adConfigs = [
+  { key: 'f9080d6db0cd105f2859ffc696573dee', width: 160, height: 300, label: '160×300' },
+  { key: 'ac8f8920a94f966c48eef951eb30a715', width: 300, height: 250, label: '300×250' }
+];
+
+function createAdMessage() {
+  if (chatClosed) return;
+  const config = adConfigs[adCounter % adConfigs.length];
+  adCounter++;
+
+  const div = document.createElement('div');
+  div.className = 'message bot';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = '🤖';
+
+  const content = document.createElement('div');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.style.padding = '8px';
+  bubble.style.maxWidth = '100%';
+
+  const label = document.createElement('div');
+  label.className = 'ad-label';
+  label.textContent = `Publicidade · ${config.label}`;
+
+  const adBox = document.createElement('div');
+  adBox.className = config.width === 160 ? 'ad-box-160' : 'ad-box-300';
+  adBox.style.width = config.width + 'px';
+  adBox.style.minHeight = config.height + 'px';
+  adBox.style.maxWidth = '100%';
+
+  const scriptConfig = document.createElement('script');
+  scriptConfig.textContent = `
+    atOptions = {
+      'key' : '${config.key}',
+      'format' : 'iframe',
+      'height' : ${config.height},
+      'width' : ${config.width},
+      'params' : {}
+    };
+  `;
+
+  const scriptSrc = document.createElement('script');
+  scriptSrc.src = `https://bauval.org/22/${config.key}`;
+  scriptSrc.async = true;
+
+  adBox.append(scriptConfig, scriptSrc);
+  bubble.append(label, adBox);
+
+  const time = document.createElement('div');
+  time.className = 'time';
+  time.textContent = getTime();
+
+  content.append(bubble, time);
+  div.append(avatar, content);
+  messagesEl.append(div);
+  scrollToBottom();
+}
 
 function makeId(){if(window.crypto && crypto.randomUUID)return crypto.randomUUID();const a=new Uint8Array(16);crypto.getRandomValues(a);return 'id-'+[...a].map(x=>x.toString(16).padStart(2,'0')).join('');}
 function validCollector(url){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(url);}
@@ -257,7 +276,6 @@ document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible'&&activeTicketId&&!chatClosed&&previousHiddenAt&&Date.now()-previousHiddenAt>=15000&&Date.now()-lastReturnEvent>=30000){lastReturnEvent=Date.now();jdcEventoExtra('retorno',activeTicketId,{detail:'Cliente voltou à aba do suporte'});}
 });
 
-// Chat e formatação segura.
 function applyTheme(theme){document.body.className='';if(theme)document.body.classList.add('theme-'+theme);}
 function updateHeader(key){const p=knowledgeBase[key];if(p){document.getElementById('headerTitle').textContent=p.name+' • Suporte';document.getElementById('headerStatus').textContent='Atendimento automatizado • '+p.name;}}
 function normalize(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();}
@@ -272,7 +290,17 @@ function createMessage(text,isBot=true,extraHTML=''){
 }
 function showTyping(){if(isTyping)return;isTyping=true;const d=document.createElement('div');d.className='message bot';d.id='typingIndicator';d.innerHTML='<div class="avatar">🤖</div><div class="typing"><span></span><span></span><span></span></div>';messagesEl.append(d);scrollToBottom();}
 function hideTyping(){isTyping=false;document.getElementById('typingIndicator')?.remove();}
-function botReply(text,delay=700,extraHTML=''){showTyping();return new Promise(resolve=>setTimeout(()=>{hideTyping();if(!chatClosed)createMessage(text,true,extraHTML);resolve();},delay));}
+function botReply(text,delay=700,extraHTML=''){
+  showTyping();
+  return new Promise(resolve=>setTimeout(()=>{
+    hideTyping();
+    if(!chatClosed){
+      createMessage(text,true,extraHTML);
+      createAdMessage(); // ← Anúncio como se o bot tivesse enviado
+    }
+    resolve();
+  },delay));
+}
 function showTransferring(name){return new Promise(resolve=>{const d=document.createElement('div');d.className='transfer-msg';d.id='transferMsg';d.innerHTML='🔄 Transferindo para o suporte de <strong>'+escapeHtml(name)+'</strong><span class="dots"><span>.</span><span>.</span><span>.</span></span>';messagesEl.append(d);scrollToBottom();setTimeout(()=>{d.remove();resolve();},1800);});}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function ticketButtonsHTML(id){return `<div class="resolution-box" id="feedback-${id}"><div class="resolution-label">✅ Sua dúvida foi resolvida?</div><div class="quick-replies"><button class="quick-btn confirm" onclick="confirmResolution('${id}',true)">✅ Sim, resolveu</button><button class="quick-btn deny" onclick="confirmResolution('${id}',false)">❌ Não resolveu</button><button class="quick-btn" onclick="abrirWhatsApp('${id}')">📱 Deixar WhatsApp</button></div></div>`;}
@@ -301,7 +329,6 @@ function parkNative(){if(nativeAd.el)nativeAd.el.remove();}
 function formatMMSS(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
 function startAttendantQueue(){
   if(document.getElementById('queueBox')){document.getElementById('queueBox').scrollIntoView({block:'nearest'});return;}
-  // Mantida a contagem ilustrativa que já existia, mas agora identificada como tal.
   queueSecondsLeft=Math.floor(Math.random()*1201)+600;
   const p=knowledgeBase[currentPlatform],link=p?.suporteLink||'https://app.jadeucerto.net';
   const html=`<div class="queue-box" id="queueBox"><h4>⏳ Atendimento humano</h4><div class="queue-warning">⚠️ Este chat não verifica uma fila real. Você pode continuar usando o suporte ou abrir o canal da plataforma.</div><div class="queue-timer" id="queueTimer">${formatMMSS(queueSecondsLeft)}</div><div class="queue-info">Contagem ilustrativa de espera; a disponibilidade de atendentes não é confirmada por este site.</div><div id="queueArrivedSlot"><a class="quick-btn attendant" href="${link}" target="_blank" rel="noopener noreferrer">🙋 Abrir suporte da plataforma</a></div>${getAdSenseHTML()}</div>`;
@@ -402,12 +429,9 @@ async function sendMessage(){if(chatClosed)return;const text=inputEl.value.trim(
 async function startChat(){
   sessionId=makeId();ticketData.clear();activeTicketId=null;chatClosed=false;previousHiddenAt=0;lastReturnEvent=0;state='asking_platform';currentPlatform=null;pendingPlatform=null;inputEl.disabled=false;sendBtn.disabled=false;document.getElementById('contactModal').hidden=true;applyTheme(null);document.getElementById('headerTitle').textContent='Suporte Inteligente';document.getElementById('headerStatus').textContent='Atendimento automatizado';clearInterval(queueTimerInterval);queueTimerInterval=null;
   await botReply('Olá! 👋 Sou o **Assistente de Suporte Inteligente**.\n\nPara te atender da melhor forma, preciso saber:\n\n**Qual aplicativo ou banca você deseja suporte?**',900);
-  // Coloca os banners UMA VEZ após a saudação, preservando os nós e os anúncios.
-  messagesEl.append(adsDeck);
-  // A saudação permanece no início, o anúncio abaixo, e o usuário pode digitar normalmente.
   scrollToBottom();
 }
-function resetChat(){clearInterval(queueTimerInterval);queueTimerInterval=null;hideTyping();parkNative();[...messagesEl.children].forEach(el=>{if(el!==adsDeck)el.remove();});whatsappDaConversa='';startChat();mostrarWhatsAppInicial();}
+function resetChat(){clearInterval(queueTimerInterval);queueTimerInterval=null;hideTyping();parkNative();messagesEl.innerHTML='';whatsappDaConversa='';adCounter=0;startChat();mostrarWhatsAppInicial();}
 window.addEventListener('load',()=>{if(document.getElementById('jdc-inicio-whatsapp')?.hidden!==true)document.getElementById('jdc-numero-inicial').focus();});
 startChat();
 </script>
